@@ -13,10 +13,10 @@ public class AddressablesManager : ScriptableObject
 
     public void Init()
     {
-         InstantiateAsset(_loadAtStart);
+         InstantiatesAsset(_loadAtStart);
     }
 
-    public async void LoadAsset<T>(AssetReference[] references) where T : Object
+    public async void LoadAssets<T>(AssetReference[] references) where T : Object
     {
         foreach(AssetReference reference in references)
         {
@@ -25,13 +25,16 @@ public class AddressablesManager : ScriptableObject
         }
     }
 
-    public async void LoadAsset<T>(AssetLabelReference label) where T : Object
+    public async void LoadAssets<T>(AssetLabelReference label) where T : Object
     {
-        AsyncOperationHandle<T> handle = Addressables.LoadAssetAsync<T>(label);
+        AsyncOperationHandle<IList<T>> handle = Addressables.LoadAssetsAsync<T>(label, callback => 
+        {
+            Debug.Log(callback.ToString() + " Succeeded to Load");
+        });
         await handle.Task;
     }
 
-    public async void InstantiateAsset(AssetReference[] references)
+    public async void InstantiatesAsset(AssetReference[] references)
     {
         for (int i = 0; i < references.Length; i++)
         {
@@ -40,9 +43,12 @@ public class AddressablesManager : ScriptableObject
         }
     }
 
-    public async void InstantiateAsset(AssetLabelReference label)
+    public async void InstantiatesAsset(AssetLabelReference label)
     {
-        AsyncOperationHandle<GameObject> handle = Addressables.InstantiateAsync(label);
+        AsyncOperationHandle<IList<GameObject>> handle = Addressables.LoadAssetsAsync<GameObject>(label, obj =>
+        {
+            Instantiate(obj);
+        });
         await handle.Task;
     }
 }

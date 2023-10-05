@@ -1,3 +1,4 @@
+using OSC;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,8 @@ public class GameManager : MonoBehaviour
     {
         if (Instance == null)
         {
-            Instance = this; 
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
             return;
         }
         
@@ -32,9 +34,17 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     AddressablesManager _addressablesManager;
 
+    public OSC_Manager OSCManager => _oscManager;
+    [SerializeField]
+    OSC_Manager _oscManager;
+
+    public GameSceneManager GameSceneManager => _gameSceneManager;
+    [SerializeField]
+    GameSceneManager _gameSceneManager;
+
     #endregion
 
-    
+
 
 
     private void Start()
