@@ -165,8 +165,8 @@ namespace OSC
             message.TryGet(1, out impactY);
             impactY *= Screen.height;
 
-            var receiveParents = FindObjectsOfType<MonoBehaviour>().OfType<IReceiveParent>();
-            foreach (IReceiveParent rp in receiveParents)
+            var receiveParents = FindObjectsOfType<MonoBehaviour>().OfType<IReceivePoint>();
+            foreach (IReceivePoint rp in receiveParents)
             {
                 rp.ReceivePoint(impactX, impactY);
             }
