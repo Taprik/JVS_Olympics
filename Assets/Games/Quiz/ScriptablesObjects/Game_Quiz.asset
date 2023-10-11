@@ -22,3 +22,30 @@ MonoBehaviour:
     - Les deux
     - Je sais pas
     correctAnswer: 1
+  - sentence: "O\xC3\xB9 se trouve charlie ?"
+    image: {fileID: 0}
+    category: 0
+    answers:
+    - Ici
+    - La
+    - Nul Part
+    - "Tu fais chier avec tes questions \xC3\_ la con!"
+    correctAnswer: 3
+  - sentence: 1 + 1 ?
+    image: {fileID: 0}
+    category: 0
+    answers:
+    - 2
+    - 1
+    - 11
+    - 1000
+    correctAnswer: 3
+  - sentence: Qui va gagner la coupe du monde de rugby ?
+    image: {fileID: 0}
+    category: 1
+    answers:
+    - La France
+    - L'Afrique du Sub
+    - L'Irlande
+    - La Nouvelle Zelande
+    correctAnswer: 0

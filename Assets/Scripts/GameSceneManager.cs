@@ -16,15 +16,21 @@ public class GameSceneManager : ScriptableObject
 
     public GameObject CurrentSceneObject { get; set; }
 
+    public bool IsRunning { get; private set; }
+
     public void Init()
     {
         _currentScene = SceneName.MainScene;
+        IsRunning = false;
     }
 
 
     public async void LoadScene(SceneName scene)
     {
-        if(CurrentScene != SceneName.MainScene)
+        if(IsRunning) return;
+
+        IsRunning = true;
+        if (CurrentScene != SceneName.MainScene)
             await UnloadScene(CurrentScene, scene != SceneName.MainScene);
 
 
@@ -33,6 +39,7 @@ public class GameSceneManager : ScriptableObject
 
 
         _currentScene = scene;
+        IsRunning = false;
     }
 
     public async Task LoadScene(SceneName scene, LoadSceneMode mode)

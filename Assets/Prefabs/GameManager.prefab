@@ -162,6 +162,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3889585140071283014}
   - component: {fileID: 6091421969335932996}
+  - component: {fileID: 2823194597761941685}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -201,7 +202,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameScriptableObjects: []
-  _currentGame: {fileID: 0}
   _addressablesManager: {fileID: 11400000, guid: b0bd4255c28e4e848a96a43bfc58c20c, type: 2}
   _oscManager: {fileID: 7449095230273829685}
   _gameSceneManager: {fileID: 11400000, guid: e2bf6f267c5e5e940a7729b6e2f812c2, type: 2}
@@ -209,6 +209,18 @@ MonoBehaviour:
   _loadScreenBar: {fileID: 8851982206767907621}
   _loadScreenText: {fileID: 8771612394511853198}
   _mainSceneObject: {fileID: 0}
+--- !u!114 &2823194597761941685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6617834252124186603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfe4e564a6a3d3949b490f7a89680bc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5475493532866124870
 PrefabInstance:
   m_ObjectHideFlags: 0

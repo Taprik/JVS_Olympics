@@ -17,7 +17,7 @@ public class AddressablesManager : ScriptableObject
 
     public async void Init()
     {
-         await LoadAssets<Object>(_loadAtStart);
+        await LoadAssets<Object>(_loadAtStart);
     }
 
     public async Task LoadAssets<T>(AssetReference[] references) where T : Object
@@ -58,7 +58,6 @@ public class AddressablesManager : ScriptableObject
 
     public async Task LoadScreen(AsyncOperationHandle handle)
     {
-        GameManager.Instance.MainSceneObject.SetActive(false);
         GameManager.Instance.LoadScreenText.text = "0%";
         GameManager.Instance.LoadScreenBar.value = 0;
         GameManager.Instance.LoadScreen.SetActive(true);
@@ -70,7 +69,6 @@ public class AddressablesManager : ScriptableObject
             GameManager.Instance.LoadScreenBar.DOValue(1, 0.1f);
             await Task.Delay(500);
             GameManager.Instance.LoadScreen.SetActive(false);
-            GameManager.Instance.MainSceneObject.SetActive(true);
         };
 
         while(!handle.IsDone)
@@ -81,6 +79,26 @@ public class AddressablesManager : ScriptableObject
 
             await tween.AsyncWaitForCompletion();
         }
+
+    }
+
+    public async Task LoadScreen(Task task)
+    {
+        GameManager.Instance.LoadScreenText.text = "0%";
+        GameManager.Instance.LoadScreenBar.value = 0;
+        GameManager.Instance.LoadScreen.SetActive(true);
+        await Task.Delay(50);
+
+
+        while (!task.IsCompleted)
+        {
+            await Task.Delay(50);
+        }
+
+        GameManager.Instance.LoadScreenText.text = "100%";
+        GameManager.Instance.LoadScreenBar.DOValue(1, 0.1f);
+        await Task.Delay(500);
+        GameManager.Instance.LoadScreen.SetActive(false);
 
     }
 

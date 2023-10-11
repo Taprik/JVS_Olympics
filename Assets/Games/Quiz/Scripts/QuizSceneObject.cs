@@ -46,11 +46,18 @@ public class QuizSceneObject : GameSceneObject
     [SerializeField]
     GameObject _answersHolder;
 
-    List<GameObject> instantiateAnswers;
-
     public GameObject[] AnswersObject => _answersObject;
     [SerializeField]
     GameObject[] _answersObject;
+
+    public QuizTeam[] Teams => _teams;
+    [SerializeField]
+    QuizTeam[] _teams;
+
+    Quiz_Question _currentQuestion;
+
+
+    public Category debugCategory;
 
     #endregion
 
@@ -65,17 +72,18 @@ public class QuizSceneObject : GameSceneObject
 
 
 
-    public override void Awake()
+    public override async void Awake()
     {
         base.Awake();
-
+        GameManager.Instance.CurrentGame = GameQuiz;
+        await GameManager.Instance.AddressablesManager.LoadScreen(Read());
     }
 
     public void Update()
     {
         if (Input.GetKeyUp(KeyCode.B))
         {
-            SetSelectedQuestion(Category.GeneralCulture);
+            SetSelectedQuestion(debugCategory);
         }
 
         if(Input.GetKeyUp(KeyCode.N))
@@ -87,19 +95,18 @@ public class QuizSceneObject : GameSceneObject
 
     public void SetQuestion(Quiz_Question question)
     {
+        _currentQuestion = question;
         QuestionText.text = question.sentence;
         QuestionImage.sprite = question.image;
-        instantiateAnswers = new();
         for (int i = 0; i < question.answers.Length; i++)
         {
-            instantiateAnswers.Add(Instantiate(AnswersObject[i], AnswersHolder.transform));
-            instantiateAnswers[i].GetComponentInChildren<TextMeshProUGUI>().text = question.answers[i];
+            AnswersObject[i].GetComponentInChildren<TextMeshProUGUI>().text = question.answers[i];
         }
+        SetTeamsButton();
     }
 
-    public async void SetSelectedQuestion(Category category)
+    public void SetSelectedQuestion(Category category)
     {
-        await Read();
         selectedQuestion = GameQuiz.questions.FindAll(x => x.category == category);
     }
 
@@ -110,7 +117,7 @@ public class QuizSceneObject : GameSceneObject
 #if UNITY_EDITOR
         = "C:\\Users\\psuchet\\Documents\\JVS_Olympics\\Personnalisation\\Quizz";
 #else
-         = "Personnalisation\\Quizz\\";
+         = "C:\\Users\\psuchet\\Documents\\JVS_Olympics\\Personnalisation\\Quizz";
 #endif 
 
 
@@ -135,7 +142,12 @@ public class QuizSceneObject : GameSceneObject
     //}
     private async Task Read()
     {
-        Debug.Log("Start Reading");
+        if (IsReady())
+            return;
+
+
+        Debug.Log("Read !");
+        _ready = false;
         GameQuiz.questions.Clear();
         string appPath = Application.dataPath;
 
@@ -176,11 +188,9 @@ public class QuizSceneObject : GameSceneObject
             Task<Sprite> sprite = ToolBox.CreateSpriteFromPath(Path.Combine(newPath, data[lineLength * i + 1]));
             await sprite;
             currentQuestion.image = sprite.Result;
-            Debug.Log((sprite.Result == null) + " | " + Path.Combine(newPath, data[lineLength * i + 1]));
 
             currentQuestion.category = CategoryFromString(data[lineLength * i + 7]);
             GameQuiz.questions.Add(currentQuestion);
-            QuestionImage.sprite = currentQuestion.image;
         }
         _ready = true;
         //_currentQuestions = new List<Question>(_questions);
@@ -189,7 +199,6 @@ public class QuizSceneObject : GameSceneObject
 
     private int ValueFromString(string text)
     {
-        int res = 0;
         text = text.ToLower();
         text = text.Trim();
         if (text[0] == 'a')
@@ -206,6 +215,8 @@ public class QuizSceneObject : GameSceneObject
 
     Category CategoryFromString(string text)
     {
+        text = text.Replace("\r", String.Empty);
+        text = text.Replace("\n", String.Empty);
         switch (text)
         {
             case "GeneralCulture":
@@ -218,10 +229,69 @@ public class QuizSceneObject : GameSceneObject
                 return Category.People;
 
             default:
-                return Category.GeneralCulture;
+                Debug.Log(text);
+                return Category.Sport;
         }
     }
 
     #endregion
+
+    public void AddScoreToTeam(int id)
+    {
+        int teamID = 0;
+        if (id > 3)
+        {
+            id -= 4;
+            teamID = 1;
+        }
+
+        if (id != _currentQuestion.correctAnswer)
+            return;
+
+        Teams[teamID].TeamScore += GetScore();
+    }
+
+    int GetScore()
+    {
+        int score = 1000;
+
+        if(score < 100) score = 100;
+
+        return score;
+    }
+
+    public void SetTeamsButton()
+    {
+        foreach (var t in Teams)
+        {
+            for (int i = 0; i < t.TeamAnswers.Length; i++)
+            {
+                t.TeamAnswers[i].SetActive(true);
+            }
+        }
+    }
+
+    public void DestroyTeamButton(int id)
+    {
+        if (id > 3)
+        {
+            id -= 4;
+            Teams[1].TeamAnswers[id].GetComponent<Animator>().SetTrigger("IsDestroy");
+            return;
+        }
+
+        Teams[0].TeamAnswers[id].GetComponent<Animator>().SetTrigger("IsDestroy");
+
+    }
+}
+
+[System.Serializable]
+public struct QuizTeam
+{
+    public string Name;
+    public int TeamScore;
+
+    public GameObject TeamAnswersHolder;
+    public GameObject[] TeamAnswers;
 
 }

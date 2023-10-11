@@ -24,5 +24,5 @@ public enum Category
 {
     GeneralCulture,
     Sport,
-    People
+    People,
 }

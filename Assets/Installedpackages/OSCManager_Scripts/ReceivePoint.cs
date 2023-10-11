@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IReceivePoint
 {
-    void ReceivePoint(float xPoint, float yPoint);
+    abstract void ReceivePoint(float xPoint, float yPoint);
 }

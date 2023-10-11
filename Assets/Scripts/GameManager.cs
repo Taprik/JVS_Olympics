@@ -28,9 +28,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GameSO[] _gameScriptableObjects;
 
-    public GameSO CurrentGame => _currentGame;
-    [SerializeField]
-    GameSO _currentGame;
+    public GameSO CurrentGame { get; set; }
 
     #region Manager
 
