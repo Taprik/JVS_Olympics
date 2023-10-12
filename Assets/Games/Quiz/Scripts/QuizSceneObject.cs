@@ -23,6 +23,18 @@ public class QuizSceneObject : GameSceneObject
     [SerializeField, Header("HomePage")]
     GameObject _homePage;
 
+    public GameObject PlayButtonHolder => _playButtonHolder;
+    [SerializeField]
+    GameObject _playButtonHolder;
+
+    public GameObject SelectCategoryHolder => _selectCategoryHolder;
+    [SerializeField]
+    GameObject _selectCategoryHolder;
+
+    public GameObject[] CategoryButtons => _categoryButtons;
+    [SerializeField]
+    GameObject[] _categoryButtons;
+
 
     #endregion
 
@@ -40,6 +52,7 @@ public class QuizSceneObject : GameSceneObject
     [SerializeField]
     TextMeshProUGUI _questionText;
 
+    int selectedQuestionID = 0;
     List<Quiz_Question> selectedQuestion;
 
     public GameObject AnswersHolder => _answersHolder;
@@ -54,7 +67,13 @@ public class QuizSceneObject : GameSceneObject
     [SerializeField]
     QuizTeam[] _teams;
 
+    public Animator FadeAnimator => _fadeAnimator;
+    [SerializeField]
+    Animator _fadeAnimator;
+
     Quiz_Question _currentQuestion;
+
+    public bool ATeamScore { get; set; }
 
 
     public Category debugCategory;
@@ -75,26 +94,81 @@ public class QuizSceneObject : GameSceneObject
     public override async void Awake()
     {
         base.Awake();
+        HomePage.SetActive(true);
+        GamePage.SetActive(false);
+        ScorePage.SetActive(false);
+
         GameManager.Instance.CurrentGame = GameQuiz;
+
+        for (int i = 0; i < Teams.Length; i++)
+        {
+            Teams[i].TeamAnswersHolder.SetActive(false);
+        }
+
+        SetCategoryButton();
+
         await GameManager.Instance.AddressablesManager.LoadScreen(Read());
     }
 
     public void Update()
     {
-        if (Input.GetKeyUp(KeyCode.B))
-        {
+        if (Input.GetKeyDown(KeyCode.B))
             SetSelectedQuestion(debugCategory);
+
+        if(Input.GetKeyDown(KeyCode.N))
+            SetQuestion(selectedQuestion[selectedQuestionID]);
+
+        if (Input.GetKeyDown(KeyCode.P))
+            PlayQuestion();
+    }
+
+    public async void PlayQuestion()
+    {
+        ATeamScore = false;
+        if (selectedQuestionID < 0)
+        {
+            //call End Selected Question 
+            return;
         }
 
-        if(Input.GetKeyUp(KeyCode.N))
+        float reflectionTimer = SetQuestion(selectedQuestion[selectedQuestionID]);
+
+        await Task.Delay(Mathf.RoundToInt((reflectionTimer - 1f) * 1000));
+        FadeAnimator.SetTrigger("FadeIn");
+        await Task.Delay(Mathf.RoundToInt(1000));
+
+
+        SetTeamsButton();
+
+        await Task.Delay(50);
+
+        Task[] waitTimerOrRightAnswer = new Task[2];
+
+        waitTimerOrRightAnswer[0] = Task.Run(async () =>
         {
-            SetQuestion(selectedQuestion[0]);
-        }
+            await Task.Delay(Mathf.RoundToInt(_currentQuestion.answersTime * 1000));
+        });
+
+        waitTimerOrRightAnswer[1] = Task.Run(async () => 
+        {
+            while (!ATeamScore)
+                await Task.Delay(50);
+        });
+
+        await Task.WhenAny(waitTimerOrRightAnswer);
+        ATeamScore = false;
+
+        HideTeamsButton();
+        FadeAnimator.SetTrigger("FadeOut");
+
     }
 
 
-    public void SetQuestion(Quiz_Question question)
+    public float SetQuestion(Quiz_Question question)
     {
+        if (selectedQuestionID < 0)
+            return selectedQuestionID;
+
         _currentQuestion = question;
         QuestionText.text = question.sentence;
         QuestionImage.sprite = question.image;
@@ -102,12 +176,46 @@ public class QuizSceneObject : GameSceneObject
         {
             AnswersObject[i].GetComponentInChildren<TextMeshProUGUI>().text = question.answers[i];
         }
-        SetTeamsButton();
+        for (int i = 0; i < Teams.Length; i++)
+        {
+            Teams[i].TeamAnswersHolder.SetActive(false);
+        }
+
+        selectedQuestionID = NextQuestionID(selectedQuestionID);
+        return question.reflectionTime;
     }
+
+    int NextQuestionID(int id)
+    {
+        int newID = id + 1;
+
+        if (newID >= selectedQuestion.Count)
+            newID = -1;
+
+        return newID;
+    }
+
 
     public void SetSelectedQuestion(Category category)
     {
         selectedQuestion = GameQuiz.questions.FindAll(x => x.category == category);
+        selectedQuestionID = 0;
+    }
+
+    public void SetSelectedQuestion(string categoryText)
+    {
+        Category cat = CategoryFromString(categoryText);
+        selectedQuestion = GameQuiz.questions.FindAll(x => x.category == cat);
+        selectedQuestionID = 0;
+        PlayQuestion();
+    }
+
+    public void SetCategoryButton()
+    {
+        for (int i = 0; i < CategoryButtons.Length; i++)
+        {
+            CategoryButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = CategoryFromInt(i).ToString();
+        }
     }
 
     #region Read Question
@@ -190,6 +298,10 @@ public class QuizSceneObject : GameSceneObject
             currentQuestion.image = sprite.Result;
 
             currentQuestion.category = CategoryFromString(data[lineLength * i + 7]);
+            Int32.TryParse(data[lineLength * i + 8], out int reflectionTimer);
+            currentQuestion.reflectionTime = reflectionTimer;
+            Int32.TryParse(data[lineLength * i + 9], out int answersTimer);
+            currentQuestion.answersTime = answersTimer;
             GameQuiz.questions.Add(currentQuestion);
         }
         _ready = true;
@@ -234,6 +346,25 @@ public class QuizSceneObject : GameSceneObject
         }
     }
 
+    Category CategoryFromInt(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                return Category.GeneralCulture;
+
+            case 1:
+                return Category.Sport;
+
+            case 2:
+                return Category.People;
+
+            default:
+                Debug.Log(id);
+                return Category.Sport;
+        }
+    }
+
     #endregion
 
     public void AddScoreToTeam(int id)
@@ -248,6 +379,7 @@ public class QuizSceneObject : GameSceneObject
         if (id != _currentQuestion.correctAnswer)
             return;
 
+        ATeamScore = true;
         Teams[teamID].TeamScore += GetScore();
     }
 
@@ -264,9 +396,22 @@ public class QuizSceneObject : GameSceneObject
     {
         foreach (var t in Teams)
         {
+            t.TeamAnswersHolder.SetActive(true);
             for (int i = 0; i < t.TeamAnswers.Length; i++)
             {
                 t.TeamAnswers[i].SetActive(true);
+            }
+        }
+    }
+
+    public void HideTeamsButton()
+    {
+        foreach (var t in Teams)
+        {
+            t.TeamAnswersHolder.SetActive(false);
+            for (int i = 0; i < t.TeamAnswers.Length; i++)
+            {
+                t.TeamAnswers[i].SetActive(false);
             }
         }
     }

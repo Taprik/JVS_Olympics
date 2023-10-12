@@ -6,9 +6,9 @@ using UnityEngine.Events;
 public class ButtonActiveDesactive : MonoBehaviour, IReceivePoint
 {
     [SerializeField]
-    GameObject activeObject;
+    GameObject[] activeObject;
     [SerializeField]
-    GameObject desactiveObject;
+    GameObject[] desactiveObject;
 
     public void ReceivePoint(float xPoint, float yPoint)
     {
@@ -17,8 +17,14 @@ public class ButtonActiveDesactive : MonoBehaviour, IReceivePoint
 
         if (ToolBox.CheckPos(hit, this.transform))
         {
-            desactiveObject.SetActive(false);
-            activeObject.SetActive(true);
+            foreach (var obj in desactiveObject)
+            {
+                obj.SetActive(false);
+            }
+            foreach (var obj in activeObject)
+            {
+                obj.SetActive(true);
+            }
         }
     }
 }

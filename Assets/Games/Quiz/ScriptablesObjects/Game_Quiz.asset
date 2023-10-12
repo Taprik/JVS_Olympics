@@ -16,24 +16,30 @@ MonoBehaviour:
   - sentence: Qui est arrive le premier ?
     image: {fileID: 0}
     category: 2
+    reflectionTime: 5
+    answersTime: 10
     answers:
     - Poule
     - Oeuf
     - Les deux
     - Je sais pas
     correctAnswer: 1
-  - sentence: "O\xC3\xB9 se trouve charlie ?"
+  - sentence: Ou se trouve charlie ?
     image: {fileID: 0}
     category: 0
+    reflectionTime: 2
+    answersTime: 5
     answers:
     - Ici
     - La
     - Nul Part
-    - "Tu fais chier avec tes questions \xC3\_ la con!"
+    - Au Mexique
     correctAnswer: 3
   - sentence: 1 + 1 ?
     image: {fileID: 0}
     category: 0
+    reflectionTime: 3
+    answersTime: 5
     answers:
     - 2
     - 1
@@ -43,6 +49,8 @@ MonoBehaviour:
   - sentence: Qui va gagner la coupe du monde de rugby ?
     image: {fileID: 0}
     category: 1
+    reflectionTime: 4
+    answersTime: 7
     answers:
     - La France
     - L'Afrique du Sub

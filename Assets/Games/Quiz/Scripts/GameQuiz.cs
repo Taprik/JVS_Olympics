@@ -14,6 +14,8 @@ public class Quiz_Question
     public string sentence;
     public Sprite image;
     public Category category;
+    public float reflectionTime;
+    public float answersTime;
 
     public string[] answers;
     public int correctAnswer;

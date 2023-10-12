@@ -32,6 +32,21 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - LoadAtStart
+  - m_GUID: acceab4a4e358184190312643d76d0b7
+    m_Address: Assets/Games/Quiz/Anim
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 4955830310c419b4aa881af8b7b5d9cd
+    m_Address: Assets/Games/Quiz/Sprites
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: f1237c7b227692245b8754ea2fd8e7eb
+    m_Address: Assets/Games/Quiz/Fonts
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 023023c01781d1b4093446c137e3b907, type: 2}
   m_SchemaSet:

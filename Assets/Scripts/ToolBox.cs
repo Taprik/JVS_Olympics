@@ -78,7 +78,6 @@ public static class ToolBox
             var fileData = await File.ReadAllBytesAsync(filePath);
             tex2D = new Texture2D(2, 2);
 
-            Debug.Log(ImageConversion.LoadImage(tex2D, fileData));
             if (ImageConversion.LoadImage(tex2D, fileData))
             {
                 Texture2D spriteTexture = tex2D;
