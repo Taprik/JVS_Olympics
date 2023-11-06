@@ -223,9 +223,9 @@ public class QuizSceneObject : GameSceneObject
     private bool _ready = false;
     private string _fileLocation
 #if UNITY_EDITOR
-        = "C:\\Users\\psuchet\\Documents\\JVS_Olympics\\Personnalisation\\Quizz";
+        = "C:\\Users\\smartJeux\\Documents\\Capteur\\Personnalisation\\Quizz";
 #else
-         = "C:\\Users\\psuchet\\Documents\\JVS_Olympics\\Personnalisation\\Quizz";
+         = "C:\\Users\\smartJeux\\Documents\\Capteur\\Personnalisation\\Quizz"";
 #endif 
 
 
@@ -263,18 +263,12 @@ public class QuizSceneObject : GameSceneObject
         newPath = Path.GetFullPath(Path.Combine(newPath, _fileLocation));
 
         string csv = File.ReadAllText(_fileLocation + "\\Questions.csv", Encoding.GetEncoding("ISO-8859-1"));
-        //Debug.Log(csv.Contains("’"));
         csv = csv.Replace("\u0092", "'");
         int collum = csv.Split(new string[] { "\n" }, StringSplitOptions.None).Length;
         int line = csv.Split(new string[] { "," }, StringSplitOptions.None).Length;
         int lineLength = (line + collum) / collum;
         Debug.Log(lineLength);
         string[] data = csv.Split(new string[] { ",", "\n" }, StringSplitOptions.None);
-        //for(int i =0; i < data.Length;i++)
-        //{
-        //    data[i] = data[i].Replace("'", "&rsquo;");
-        //}
-        //
         int tableSize = (data.Length / lineLength) - 1;
 
 

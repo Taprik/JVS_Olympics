@@ -458,7 +458,7 @@ MonoBehaviour:
     - {fileID: 1619041018635972465}
     - {fileID: 2789100873303874413}
     - {fileID: 3743210462396882536}
-  _fadeAnimator: {fileID: 0}
+  _fadeAnimator: {fileID: 4046018337352045326}
   debugCategory: 0
   _scorePage: {fileID: 3111847904449736842}
 --- !u!1 &3111847905477589509
