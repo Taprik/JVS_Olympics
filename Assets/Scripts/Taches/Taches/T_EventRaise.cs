@@ -4,17 +4,17 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu(fileName = "T_UnityAction", menuName = "Game/Taches/T_UnityAction")]
-public class T_UnityAction : Tache
+[CreateAssetMenu(fileName = "T_EventRaise", menuName = "Game/Taches/EventRaise")]
+public class T_EventRaise : Tache
 {
     [SerializeField]
-    UnityAction _action;
+    EventSO _event;
 
     public override async Task DoTask()
     {
         await Task.Run(() =>
         {
-            _action?.Invoke();
+            _event.Raise();
         });
     }
 }

@@ -4,18 +4,18 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu(fileName = "C_WaitUnityAction", menuName = "Game/Conditions/WaitUnityAction")]
-public class C_WaitUnityAction : Condition
+[CreateAssetMenu(fileName = "C_WaitEventSo", menuName = "Game/Conditions/WaitEventSo")]
+public class C_WaitEventSo : Condition
 {
     [SerializeField]
-    UnityAction _action;
+    EventSO _event;
 
     bool _actionComplete;
 
     public override void Init()
     {
         _actionComplete = false;
-        _action += () =>
+        _event.Action += () =>
         {
             _actionComplete = true;
         };

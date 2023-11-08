@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dca0f80de5cf4f247b010aee1820c2ab, type: 3}
-  m_Name: Condition
+  m_Script: {fileID: 11500000, guid: 25ba5e065ca351d428b3c50e119c8506, type: 3}
+  m_Name: EventB
   m_EditorClassIdentifier: 

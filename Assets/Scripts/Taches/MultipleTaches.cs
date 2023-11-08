@@ -4,17 +4,39 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
+[System.Serializable]
 public class MultipleTaches
 {
-    public Condition[] Condition => _condition;
     [SerializeField]
+    ConditionOption _option;
+
+    public Condition[] Condition => _condition;
+    [SerializeField, Header("If :")]
     protected Condition[] _condition;
 
     public Tache[] Taches => _taches;
-    [SerializeField]
+    [SerializeField, Header("Do :")]
     Tache[] _taches;
 
     public Action<bool> CallBack;
+
+    public async Task DoWork()
+    {
+        switch (_option)
+        {
+            case ConditionOption.Any:
+                await DoWorkAny();
+                break;
+
+            case ConditionOption.All:
+                await DoWorkAll();
+                break;
+
+            default:
+                Debug.LogError("No Option Selected");
+                break;
+        }
+    }
 
     public async Task DoWorkAll()
     {
@@ -78,4 +100,10 @@ public class MultipleTaches
             else _taches[i].BadEnd();
         }
     }
+}
+
+public enum ConditionOption
+{
+    Any,
+    All
 }
