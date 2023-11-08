@@ -1,6 +1,7 @@
 using OSC;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -84,7 +85,32 @@ public class GameManager : MonoBehaviour
         {
             Application.Quit();
         }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            TaskQueue testQueue = ToolBox.CreateTaskQueue("Test");
+            Task endTask = new Task(() => PrintDebug("Task C : End"));
+
+            testQueue.AddTaskToQueue(new Task(() =>
+            {
+                for (int i = 0; i < 11; i++)
+                {
+                    Debug.Log("Task A : " + i + "0%");
+                }
+            }));
+
+            testQueue.AddTaskToQueue(new Task(() =>
+            {
+                for (int i = 0; i < 11; i++)
+                {
+                    Debug.Log("Task B : " + i + "0%");
+                }
+            }));
+
+            testQueue.AddTaskToQueue(endTask);
+        }
     }
 
+    public void PrintDebug(string message) => Debug.Log(message);
 
 }

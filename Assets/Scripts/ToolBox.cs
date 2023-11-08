@@ -7,6 +7,26 @@ using UnityEngine;
 
 public static class ToolBox
 {
+    public static Dictionary<string, TaskQueue> taskQueues = new Dictionary<string, TaskQueue>();
+
+    public static TaskQueue CreateTaskQueue(string name)
+    {
+        if (taskQueues.ContainsKey(name))
+            return taskQueues[name];
+
+        TaskQueue taskQueue = new TaskQueue();
+        taskQueues.Add(name, taskQueue);
+        return taskQueue;
+    }
+
+    public static TaskQueue GetTaskQueue(string name)
+    {
+        if(taskQueues.ContainsKey(name))
+            return taskQueues[name];
+        Debug.LogError("TaskQueue don't Exist");
+        return null;
+    }
+
     public static bool CheckPos(Vector2 hit, RectTransform rect)
     {
         if(hit.x < rect.transform.position.x - (rect.rect.width / 2))
@@ -89,4 +109,27 @@ public static class ToolBox
         return null;
     }
     
+}
+
+public class TaskQueue
+{
+    List<Task> tasks = new List<Task>();
+
+    public bool IsRunning => tasks.Count > 0;
+
+    public async void AddTaskToQueue(Task task, bool needToBeStarted = true)
+    {
+        tasks.Add(task);
+        if (tasks.Count > 1)
+        {
+            await tasks[^2].ContinueWith(t => task.Start());
+        }
+        else
+        {
+            if (needToBeStarted)
+                task.Start();
+            await task;
+        }
+        tasks.Remove(task);
+    }
 }
