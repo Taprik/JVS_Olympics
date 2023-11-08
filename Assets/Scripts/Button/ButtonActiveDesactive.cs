@@ -3,28 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ButtonActiveDesactive : MonoBehaviour, IReceivePoint
+public class ButtonActiveDesactive : ButtonParent
 {
     [SerializeField]
     GameObject[] activeObject;
     [SerializeField]
     GameObject[] desactiveObject;
 
-    public void ReceivePoint(float xPoint, float yPoint)
+    public override void DoWork()
     {
-        Vector2 hit = new Vector2(xPoint, yPoint);
-        //Debug.Log(this.gameObject.name + " : " + ToolBox.CheckPos(hit, this.transform));
-
-        if (ToolBox.CheckPos(hit, this.transform))
+        foreach (var obj in desactiveObject)
         {
-            foreach (var obj in desactiveObject)
-            {
-                obj.SetActive(false);
-            }
-            foreach (var obj in activeObject)
-            {
-                obj.SetActive(true);
-            }
+            obj.SetActive(false);
+        }
+        foreach (var obj in activeObject)
+        {
+            obj.SetActive(true);
         }
     }
 }

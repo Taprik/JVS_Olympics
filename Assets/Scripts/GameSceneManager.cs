@@ -112,5 +112,5 @@ public enum SceneName
 {
     MainScene,
     Game,
-    Quiz
+    Quiz,
 }

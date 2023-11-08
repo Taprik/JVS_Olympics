@@ -1,15 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class ButtonEvent : ButtonParent
+public class ButtonMultipleTache : ButtonParent
 {
     [SerializeField]
-    UnityEvent _event;
+    MultipleTaches _multipleTaches;
 
     public override void DoWork()
     {
-        _event?.Invoke();
+        _multipleTaches.DoWork();
     }
 }

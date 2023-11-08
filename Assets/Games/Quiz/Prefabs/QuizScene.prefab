@@ -240,7 +240,7 @@ RectTransform:
   - {fileID: 344587670097327539}
   - {fileID: 992041067332912432}
   m_Father: {fileID: 3111847905477589510}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -492,8 +492,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3111847905753303679}
-  - {fileID: 3111847904815043643}
   - {fileID: 7739636727876604315}
+  - {fileID: 3111847904815043643}
   - {fileID: 3111847906018680142}
   - {fileID: 3803931280166438802}
   - {fileID: 4907442369180763674}
@@ -786,7 +786,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3111847905477589510}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1369,6 +1369,54 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3111847905477589510}
     m_Modifications:
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AddScoreToTeam
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: DestroyTeamButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 917962117619592351, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
       propertyPath: m_Controller
       value: 
@@ -1393,6 +1441,54 @@ PrefabInstance:
       propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AddScoreToTeam
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: DestroyTeamButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 1872142625323641242, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
       propertyPath: m_Controller
       value: 
@@ -1408,6 +1504,54 @@ PrefabInstance:
     - target: {fileID: 1904635442968119545, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
       propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AddScoreToTeam
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: DestroyTeamButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 2975719333907717892, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
       propertyPath: m_Pivot.x
@@ -1528,6 +1672,54 @@ PrefabInstance:
     - target: {fileID: 4606008716283749243, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
       propertyPath: m_Name
       value: A TeamAnswersHandle
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AddScoreToTeam
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: DestroyTeamButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 6762444735500527762, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
       propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2565,6 +2757,54 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3111847905477589510}
     m_Modifications:
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AddScoreToTeam
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: DestroyTeamButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 164035951034091559, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 897003942345850354, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
       propertyPath: m_Color.g
       value: 1
@@ -2609,6 +2849,54 @@ PrefabInstance:
       propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AddScoreToTeam
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: DestroyTeamButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1657513464424598818, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 1816254909110384887, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
       propertyPath: m_Color.g
       value: 1
@@ -2640,6 +2928,54 @@ PrefabInstance:
     - target: {fileID: 1904635442968119545, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
       propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AddScoreToTeam
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: DestroyTeamButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 2865334978129148222, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 2975719333907717892, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
       propertyPath: m_Pivot.x
@@ -2792,6 +3128,54 @@ PrefabInstance:
     - target: {fileID: 5459862641912962457, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
       propertyPath: m_Color.r
       value: 0.97882116
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 3111847905146771858}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AddScoreToTeam
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: DestroyTeamButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: QuizSceneObject, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5816174372044893513, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
+      propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 6762444735500527762, guid: 132ac54a2cc02f142a2d2d501d1c6eef, type: 3}
       propertyPath: _event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
