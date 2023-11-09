@@ -1,12 +1,14 @@
 using OSC;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -44,6 +46,10 @@ public class GameManager : MonoBehaviour
     public GameSceneManager GameSceneManager => _gameSceneManager;
     [SerializeField]
     GameSceneManager _gameSceneManager;
+
+    public ExecutionQueueManager ExecutionQueueManager => _executionQueueManager;
+    [SerializeField]
+    ExecutionQueueManager _executionQueueManager;
 
     #endregion
 
@@ -86,31 +92,20 @@ public class GameManager : MonoBehaviour
             Application.Quit();
         }
 
-        if (Input.GetKeyDown(KeyCode.O))
+        if(Input.GetKeyDown(KeyCode.O))
         {
-            TaskQueue testQueue = ToolBox.CreateTaskQueue("Test");
-            Task endTask = new Task(() => PrintDebug("Task C : End"));
-
-            testQueue.AddTaskToQueue(new Task(() =>
-            {
-                for (int i = 0; i < 11; i++)
-                {
-                    Debug.Log("Task A : " + i + "0%");
-                }
-            }));
-
-            testQueue.AddTaskToQueue(new Task(() =>
-            {
-                for (int i = 0; i < 11; i++)
-                {
-                    Debug.Log("Task B : " + i + "0%");
-                }
-            }));
-
-            testQueue.AddTaskToQueue(endTask);
+            ExecutionQueue loadAllQueue = ExecutionQueueManager.CreateTaskQueue("LoadAll");
+            ToolBox.DoTaskInMainThread(ExecutionQueueManager.LoadScrenOnTask(AddressablesManager.LoadScreen, loadAllQueue.Run(() => WaitTask(1))));
+            ToolBox.DoTaskInMainThread(ExecutionQueueManager.LoadScrenOnTask(AddressablesManager.LoadScreen, loadAllQueue.Run(() => WaitTask(2))));
         }
     }
 
-    public void PrintDebug(string message) => Debug.Log(message);
-
+    async Task WaitTask(int id)
+    {
+        for (int i = 0; i <= 5; i++)
+        {
+            await Task.Delay(200);
+            Debug.Log(id + " : " + (i * 2) + "0%");
+        }
+    }
 }

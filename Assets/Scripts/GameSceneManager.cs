@@ -25,7 +25,7 @@ public class GameSceneManager : ScriptableObject
     }
 
 
-    public async void LoadScene(SceneName scene)
+    public async Task LoadScene(SceneName scene)
     {
         if(IsRunning) return;
 
@@ -38,6 +38,7 @@ public class GameSceneManager : ScriptableObject
             await LoadScene(scene, LoadSceneMode.Additive);
 
 
+        Debug.Log("Load : " + scene.ToString());
         _currentScene = scene;
         IsRunning = false;
     }

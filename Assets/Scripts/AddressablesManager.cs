@@ -1,11 +1,11 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 
 [CreateAssetMenu(fileName = "AddressablesManager", menuName = "Manager/AddressablesManager")]
@@ -84,11 +84,11 @@ public class AddressablesManager : ScriptableObject
 
     public async Task LoadScreen(Task task)
     {
+
         GameManager.Instance.LoadScreenText.text = "0%";
         GameManager.Instance.LoadScreenBar.value = 0;
         GameManager.Instance.LoadScreen.SetActive(true);
         await Task.Delay(50);
-
 
         while (!task.IsCompleted)
         {
@@ -99,7 +99,6 @@ public class AddressablesManager : ScriptableObject
         GameManager.Instance.LoadScreenBar.DOValue(1, 0.1f);
         await Task.Delay(500);
         GameManager.Instance.LoadScreen.SetActive(false);
-
     }
 
 
