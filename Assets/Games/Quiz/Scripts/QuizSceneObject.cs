@@ -9,6 +9,8 @@ using UnityEngine.UI;
 using System.IO;
 using Random = UnityEngine.Random;
 using System.Threading.Tasks;
+using System.Threading;
+using DG.Tweening;
 
 [DisallowMultipleComponent]
 public class QuizSceneObject : GameSceneObject
@@ -71,10 +73,14 @@ public class QuizSceneObject : GameSceneObject
     [SerializeField]
     Animator _fadeAnimator;
 
+    [SerializeField]
+    AnimationClip _etoileAnim;
+
     Quiz_Question _currentQuestion;
 
-    public bool ATeamScore { get; set; }
+    bool ATeamScore { get; set; }
 
+    const string AnimTaskListName = "QuizAnimTaskList";
 
     public Category debugCategory;
 
@@ -103,11 +109,15 @@ public class QuizSceneObject : GameSceneObject
         for (int i = 0; i < Teams.Length; i++)
         {
             Teams[i].TeamAnswersHolder.SetActive(false);
+            Teams[i].TeamName.text = Teams[i].Name;
+            Teams[i].TeamScore.text = Teams[i].Score.ToString() + " pts";
         }
 
         SetCategoryButton();
 
         await GameManager.Instance.AddressablesManager.LoadScreen(Read());
+
+        GameManager.Instance.TasksManager.CreateTaskList(AnimTaskListName);
     }
 
     public void Update()
@@ -152,17 +162,29 @@ public class QuizSceneObject : GameSceneObject
         waitTimerOrRightAnswer[1] = Task.Run(async () => 
         {
             while (!ATeamScore)
-                await Task.Delay(50);
+                await Task.Delay(10);
         });
 
         await Task.WhenAny(waitTimerOrRightAnswer);
-        ATeamScore = false;
+
+        await Task.Run(async () =>
+        {
+            while(!GameManager.Instance.TasksManager.AllTasksFinish(AnimTaskListName))
+                await Task.Delay(10);
+        });
 
         HideTeamsButton();
+        ATeamScore = false;
+
+        await Task.Run(async () =>
+        {
+            while (!GameManager.Instance.TasksManager.AllTasksFinish())
+                await Task.Delay(10);
+        });
+
         FadeAnimator.SetTrigger("FadeOut");
-
+        // Next Question sinon Go ScorePage
     }
-
 
     public float SetQuestion(Quiz_Question question)
     {
@@ -225,7 +247,7 @@ public class QuizSceneObject : GameSceneObject
 #if UNITY_EDITOR
         = "C:\\Users\\smartJeux\\Documents\\Capteur\\Personnalisation\\Quizz";
 #else
-         = "C:\\Users\\smartJeux\\Documents\\Capteur\\Personnalisation\\Quizz"";
+         = "C:\\Users\\smartJeux\\Documents\\Capteur\\Personnalisation\\Quizz";
 #endif 
 
 
@@ -354,15 +376,17 @@ public class QuizSceneObject : GameSceneObject
                 return Category.People;
 
             default:
-                Debug.Log(id);
+                Debug.LogError(id);
                 return Category.Sport;
         }
     }
 
     #endregion
 
-    public void AddScoreToTeam(int id)
+    public async void AddScoreToTeam(int id)
     {
+        if (ATeamScore) return;
+        
         int teamID = 0;
         if (id > 3)
         {
@@ -370,11 +394,16 @@ public class QuizSceneObject : GameSceneObject
             teamID = 1;
         }
 
-        if (id != _currentQuestion.correctAnswer)
-            return;
+        if (id == _currentQuestion.correctAnswer)
+            ATeamScore = true;
 
-        ATeamScore = true;
-        Teams[teamID].TeamScore += GetScore();
+        await GameManager.Instance.TasksManager.AddTaskToList(AnimTaskListName, DestroyTeamButton(id, teamID));
+
+        if (id == _currentQuestion.correctAnswer)
+        {
+            //Anim Win Team
+            await GameManager.Instance.TasksManager.AddTaskToList(Teams[teamID].ScoreAnim(GetScore(), 1.5f));
+        }
     }
 
     int GetScore()
@@ -410,17 +439,10 @@ public class QuizSceneObject : GameSceneObject
         }
     }
 
-    public void DestroyTeamButton(int id)
+    public async Task DestroyTeamButton(int id, int teamID)
     {
-        if (id > 3)
-        {
-            id -= 4;
-            Teams[1].TeamAnswers[id].GetComponent<Animator>().SetTrigger("IsDestroy");
-            return;
-        }
-
-        Teams[0].TeamAnswers[id].GetComponent<Animator>().SetTrigger("IsDestroy");
-
+        Teams[teamID].TeamAnswers[id].GetComponent<Animator>().SetTrigger("IsDestroy");
+        await Task.Delay(Mathf.RoundToInt(_etoileAnim.length * 1000) + 200);
     }
 }
 
@@ -428,9 +450,24 @@ public class QuizSceneObject : GameSceneObject
 public struct QuizTeam
 {
     public string Name;
-    public int TeamScore;
+    public int Score;
 
     public GameObject TeamAnswersHolder;
     public GameObject[] TeamAnswers;
 
+    [Space(5)]
+    public TextMeshProUGUI TeamName;
+    public TextMeshProUGUI TeamScore;
+
+    public async Task ScoreAnim(int score, float duration)
+    {
+        duration = duration / score;
+        for (int i = 0; i < score; i++)
+        {
+            TeamScore.text = (Score + i).ToString() + " pts";
+            await Task.Delay((int)(duration * 1000));
+        }
+        Score += score;
+        TeamScore.text = Score.ToString() + " pts";
+    }
 }

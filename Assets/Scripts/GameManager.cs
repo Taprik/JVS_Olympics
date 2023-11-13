@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System;
@@ -47,9 +48,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GameSceneManager _gameSceneManager;
 
-    public ExecutionQueueManager ExecutionQueueManager => _executionQueueManager;
+    public TasksManager TasksManager => _tasksManager;
     [SerializeField]
-    ExecutionQueueManager _executionQueueManager;
+    TasksManager _tasksManager;
 
     #endregion
 
@@ -92,20 +93,24 @@ public class GameManager : MonoBehaviour
             Application.Quit();
         }
 
-        if(Input.GetKeyDown(KeyCode.O))
+        if (Input.GetKeyDown(KeyCode.O))
         {
-            ExecutionQueue loadAllQueue = ExecutionQueueManager.CreateTaskQueue("LoadAll");
-            ToolBox.DoTaskInMainThread(ExecutionQueueManager.LoadScrenOnTask(AddressablesManager.LoadScreen, loadAllQueue.Run(() => WaitTask(1))));
-            ToolBox.DoTaskInMainThread(ExecutionQueueManager.LoadScrenOnTask(AddressablesManager.LoadScreen, loadAllQueue.Run(() => WaitTask(2))));
+            ExecutionQueue loadAllQueue = TasksManager.CreateComplexTaskQueue("LoadAll");
+            loadAllQueue.Run(() => WaitTask(0));
+            loadAllQueue.Run(() => WaitTask(1));
+            loadAllQueue.Complete();
+
+
         }
     }
 
     async Task WaitTask(int id)
     {
+        Debug.Log(id + " : Begin");
         for (int i = 0; i <= 5; i++)
         {
             await Task.Delay(200);
-            Debug.Log(id + " : " + (i * 2) + "0%");
         }
+        Debug.Log(id + " : End");
     }
 }

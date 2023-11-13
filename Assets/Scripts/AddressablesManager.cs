@@ -79,7 +79,6 @@ public class AddressablesManager : ScriptableObject
 
             await tween.AsyncWaitForCompletion();
         }
-
     }
 
     public async Task LoadScreen(Task task)
@@ -101,5 +100,19 @@ public class AddressablesManager : ScriptableObject
         GameManager.Instance.LoadScreen.SetActive(false);
     }
 
+    public async Task LoadScreen(Task[] tasks)
+    {
 
+        GameManager.Instance.LoadScreenText.text = "0%";
+        GameManager.Instance.LoadScreenBar.value = 0;
+        GameManager.Instance.LoadScreen.SetActive(true);
+        await Task.Delay(50);
+
+        await Task.WhenAll(tasks);
+
+        GameManager.Instance.LoadScreenText.text = "100%";
+        GameManager.Instance.LoadScreenBar.DOValue(1, 0.1f);
+        await Task.Delay(500);
+        GameManager.Instance.LoadScreen.SetActive(false);
+    }
 }

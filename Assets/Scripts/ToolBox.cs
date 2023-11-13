@@ -7,11 +7,6 @@ using UnityEngine;
 
 public static class ToolBox
 {
-    public static async void DoTaskInMainThread(Task task)
-    {
-        await task;
-    }
-
     public static bool CheckPos(Vector2 hit, RectTransform rect)
     {
         if(hit.x < rect.transform.position.x - (rect.rect.width / 2))
