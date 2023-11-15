@@ -63,6 +63,7 @@ public static class ToolBox
         Debug.LogError("Check Pos Failed");
         return false;
     }
+
     public static async Task<Sprite> CreateSpriteFromPath(string filePath, Vector2 pivot)
     {
         Texture2D tex2D;

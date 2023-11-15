@@ -93,6 +93,13 @@ public class QuizSceneObject : GameSceneObject
     [SerializeField, Header("ScorePage")]
     GameObject _scorePage;
 
+    public TextMeshProUGUI ScoreText => _scoreText;
+    [SerializeField]
+    TextMeshProUGUI _scoreText;
+
+    public TextMeshProUGUI ScoreTeam => _scoreTeam;
+    [SerializeField]
+    TextMeshProUGUI _scoreTeam;
 
     #endregion
 
@@ -111,7 +118,9 @@ public class QuizSceneObject : GameSceneObject
         {
             Teams[i].TeamAnswersHolder.SetActive(false);
             Teams[i].TeamName.text = Teams[i].Name;
+            Teams[i].TeamName.faceColor = Teams[i].Color;
             Teams[i].TeamScore.text = Teams[i].Score.ToString() + " pts";
+            Teams[i].TeamScore.faceColor = Teams[i].Color;
         }
 
         SetCategoryButton();
@@ -192,6 +201,11 @@ public class QuizSceneObject : GameSceneObject
     {
         GamePage.SetActive(false);
         ScorePage.SetActive(true);
+        int id = (Teams[0].Score > Teams[1].Score) ? 0 : 1;
+        ScoreTeam.text = Teams[id].Name.ToString() + " Gagne !";
+        ScoreText.text = Teams[id].Score.ToString() + " pts";
+        ScoreTeam.faceColor = Teams[id].Color;
+        ScoreText.faceColor = Teams[id].Color;
     }
 
     public float SetQuestion(Quiz_Question question)
@@ -479,6 +493,7 @@ public class QuizTeam
 {
     public string Name;
     public int Score;
+    public Color Color;
 
     public GameObject TeamAnswersHolder;
     public GameObject[] TeamAnswers;
