@@ -83,6 +83,8 @@ public class QuizSceneObject : GameSceneObject
 
     const string AnimTaskListName = "QuizAnimTaskList";
 
+    float _timer = 0;
+
     public Category debugCategory;
 
     #endregion
@@ -117,6 +119,7 @@ public class QuizSceneObject : GameSceneObject
         for (int i = 0; i < Teams.Length; i++)
         {
             Teams[i].TeamAnswersHolder.SetActive(false);
+            Teams[i].TeamScoreHolder.SetActive(false);
             Teams[i].TeamName.text = Teams[i].Name;
             Teams[i].TeamName.faceColor = Teams[i].Color;
             Teams[i].TeamScore.text = Teams[i].Score.ToString() + " pts";
@@ -155,12 +158,15 @@ public class QuizSceneObject : GameSceneObject
 
         await Task.Delay(Mathf.RoundToInt((reflectionTimer - 1f) * 1000));
         FadeAnimator.SetTrigger("FadeIn");
-        await Task.Delay(Mathf.RoundToInt(FadeAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.length * 1000));
+        await Task.Delay(50);
+        await Task.Delay(Mathf.RoundToInt(FadeAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.averageDuration * 1100));
 
 
         SetTeamsButton();
 
         await Task.Delay(50);
+
+        _timer = Time.time;
 
         Task[] waitTimerOrRightAnswer = new Task[2];
 
@@ -193,7 +199,10 @@ public class QuizSceneObject : GameSceneObject
         });
 
         FadeAnimator.SetTrigger("FadeOut");
-        await Task.Delay(Mathf.RoundToInt(FadeAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.length * 1000));
+        await Task.Delay(50);
+        await Task.Delay(Mathf.RoundToInt(FadeAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.averageDuration * 1100));
+        Teams[0].TeamScoreHolder.SetActive(false);
+        Teams[1].TeamScoreHolder.SetActive(false);
         PlayQuestion();
     }
 
@@ -201,11 +210,21 @@ public class QuizSceneObject : GameSceneObject
     {
         GamePage.SetActive(false);
         ScorePage.SetActive(true);
-        int id = (Teams[0].Score > Teams[1].Score) ? 0 : 1;
-        ScoreTeam.text = Teams[id].Name.ToString() + " Gagne !";
-        ScoreText.text = Teams[id].Score.ToString() + " pts";
-        ScoreTeam.faceColor = Teams[id].Color;
-        ScoreText.faceColor = Teams[id].Color;
+        if(Teams[0].Score == Teams[1].Score)
+        {
+            ScoreTeam.text = "Egalité !";
+            ScoreText.text = Teams[0].Score.ToString() + " pts";
+            ScoreTeam.faceColor = Color.green;
+            ScoreText.faceColor = Color.green;
+        }
+        else
+        {
+            int id = (Teams[0].Score > Teams[1].Score) ? 0 : 1;
+            ScoreTeam.text = Teams[id].Name.ToString() + " Gagne !";
+            ScoreText.text = Teams[id].Score.ToString() + " pts";
+            ScoreTeam.faceColor = Teams[id].Color;
+            ScoreText.faceColor = Teams[id].Color;
+        }
     }
 
     public float SetQuestion(Quiz_Question question)
@@ -223,6 +242,7 @@ public class QuizSceneObject : GameSceneObject
         for (int i = 0; i < Teams.Length; i++)
         {
             Teams[i].TeamAnswersHolder.SetActive(false);
+            Teams[i].TeamScoreHolder.SetActive(false);
         }
 
         selectedQuestionID = NextQuestionID(selectedQuestionID);
@@ -437,9 +457,10 @@ public class QuizSceneObject : GameSceneObject
     {
         int score = 1000;
 
-        if(score < 100) score = 100;
+        float time = 1 - ((Time.time - _timer) / _currentQuestion.answersTime);
+        score = Mathf.RoundToInt(score * time);
 
-        return score;
+        return score < 100 ? 100 : score;
     }
 
     public void SetTeamsButton()
@@ -447,6 +468,7 @@ public class QuizSceneObject : GameSceneObject
         foreach (var t in Teams)
         {
             t.TeamAnswersHolder.SetActive(true);
+            t.TeamScoreHolder.SetActive(true);
             for (int i = 0; i < t.TeamAnswers.Length; i++)
             {
                 t.TeamAnswers[i].SetActive(true);
@@ -471,7 +493,10 @@ public class QuizSceneObject : GameSceneObject
         foreach (var t in Teams)
         {
             if(!t.TeamAnswers.ToList().Exists(x => x == button))
+            {
                 t.TeamAnswersHolder.SetActive(false);
+                t.TeamScoreHolder.SetActive(false);
+            }
 
             for (int i = 0; i < t.TeamAnswers.Length; i++)
             {
@@ -499,6 +524,7 @@ public class QuizTeam
     public GameObject[] TeamAnswers;
 
     [Space(5)]
+    public GameObject TeamScoreHolder;
     public TextMeshProUGUI TeamName;
     public TextMeshProUGUI TeamScore;
 
