@@ -9,7 +9,6 @@ public class ButtonLoadScene : ButtonParent
 
     public override void DoWork()
     {
-        Debug.Log("Load");
         GameManager.Instance.AddressablesManager.LoadScreen(GameManager.Instance.GameSceneManager.LoadScene(scene));
     }
 }

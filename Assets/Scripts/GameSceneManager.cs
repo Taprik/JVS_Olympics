@@ -112,6 +112,6 @@ public class GameSceneManager : ScriptableObject
 public enum SceneName
 {
     MainScene,
-    Game,
+    Block,
     Quiz,
 }

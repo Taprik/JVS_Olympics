@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using DG.Tweening;
 using System.Linq;
+using Tool;
 
 [DisallowMultipleComponent]
 public class QuizSceneObject : GameSceneObject
@@ -65,6 +66,10 @@ public class QuizSceneObject : GameSceneObject
     public GameObject[] AnswersObject => _answersObject;
     [SerializeField]
     GameObject[] _answersObject;
+
+    public TextMeshProUGUI[] AnswersTexts => _answersTexts;
+    [SerializeField]
+    TextMeshProUGUI[] _answersTexts;
 
     public QuizTeam[] Teams => _teams;
     [SerializeField]
@@ -121,9 +126,8 @@ public class QuizSceneObject : GameSceneObject
             Teams[i].TeamAnswersHolder.SetActive(false);
             Teams[i].TeamScoreHolder.SetActive(false);
             Teams[i].TeamName.text = Teams[i].Name;
-            Teams[i].TeamName.faceColor = Teams[i].Color;
             Teams[i].TeamScore.text = Teams[i].Score.ToString() + " pts";
-            Teams[i].TeamScore.faceColor = Teams[i].Color;
+            Teams[i].SetColor();
         }
 
         SetCategoryButton();
@@ -237,7 +241,7 @@ public class QuizSceneObject : GameSceneObject
         QuestionImage.sprite = question.image;
         for (int i = 0; i < question.answers.Length; i++)
         {
-            AnswersObject[i].GetComponentInChildren<TextMeshProUGUI>().text = question.answers[i];
+            AnswersTexts[i].text = question.answers[i];
         }
         for (int i = 0; i < Teams.Length; i++)
         {
@@ -522,6 +526,7 @@ public class QuizTeam
 
     public GameObject TeamAnswersHolder;
     public GameObject[] TeamAnswers;
+    public GameObject[] TeamColorObjects;
 
     [Space(5)]
     public GameObject TeamScoreHolder;
@@ -538,5 +543,27 @@ public class QuizTeam
         }
         this.Score += score;
         TeamScore.text = Score.ToString() + " pts";
+    }
+
+    public void SetColor()
+    {
+        foreach (var o in TeamColorObjects)
+            SetColor(o, Color);
+    }
+
+    public void SetColor(GameObject go, Color color)
+    {
+
+        TextMeshProUGUI text = go.GetComponent<TextMeshProUGUI>();
+        if (text != null)
+            text.faceColor = color;
+
+        Image image = go.GetComponent<Image>();
+        if (image != null)
+            image.color = color;
+
+        SpriteRenderer spriteRenderer = go.GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+            spriteRenderer.color = color;
     }
 }

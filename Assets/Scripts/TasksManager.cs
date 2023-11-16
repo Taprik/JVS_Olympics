@@ -74,7 +74,6 @@ public class TasksManager : MonoBehaviour
     public bool AllTasksFinish() => tasksQueue["default"].Count <= 0;
 
     #endregion
-
     #region ComplexQueue
 
     public List<QueueDictionary> complexTasksQueue = new();
