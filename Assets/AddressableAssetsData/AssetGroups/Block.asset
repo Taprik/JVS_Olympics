@@ -10,15 +10,40 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Game
+  m_Name: Block
   m_EditorClassIdentifier: 
-  m_GroupName: Game
+  m_GroupName: Block
   m_Data:
     m_SerializedData: []
   m_GUID: 3b307d28841d47d4c8d31952a6df7aa5
   m_SerializeEntries:
   - m_GUID: b66ef36bc5f8d054e84650868edb22ca
-    m_Address: Game
+    m_Address: Block
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 62d48253e3dbc964c95d0c1e2582aa39
+    m_Address: Assets/Games/Block/Anim
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 6504fbf881373634ba27e872368e4e67
+    m_Address: Assets/Games/Block/Fonts
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: dcc41aa1f1ce6ad4eb6b4e7059cda454
+    m_Address: Assets/Games/Block/Prefabs
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 805302256f709a645a011781aa332bd0
+    m_Address: Assets/Games/Block/ScriptablesObjects
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: c30c88e3b852a2d4c977e6496db23d7f
+    m_Address: Assets/Games/Block/Sprites
     m_ReadOnly: 0
     m_SerializedLabels:
     - LoadAtStart
