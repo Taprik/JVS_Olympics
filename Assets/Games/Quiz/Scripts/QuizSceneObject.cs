@@ -82,9 +82,27 @@ public class QuizSceneObject : GameSceneObject
     [SerializeField]
     AnimationClip _etoileAnim;
 
+    [SerializeField]
+    GameObject _questionObject;
+
+    [SerializeField]
+    GameObject _resultObject;
+
+    [SerializeField]
+    TextMeshProUGUI _rightAnswerText;
+
+    [SerializeField]
+    TextMeshProUGUI _scoreGainText;
+
+    [SerializeField]
+    SpritesOverTime _timerAnim;
+
     Quiz_Question _currentQuestion;
 
     bool ATeamScore { get; set; }
+
+    int WinningTeam { get; set; }
+    int WinningScore { get; set; }
 
     const string AnimTaskListName = "QuizAnimTaskList";
 
@@ -158,17 +176,20 @@ public class QuizSceneObject : GameSceneObject
             return;
         }
 
+        _resultObject.SetActive(false);
+        _questionObject.SetActive(true);
         float reflectionTimer = SetQuestion(selectedQuestion[selectedQuestionID]);
 
+        StartCoroutine(_timerAnim.Anim(reflectionTimer - 1f));
         await Task.Delay(Mathf.RoundToInt((reflectionTimer - 1f) * 1000));
         FadeAnimator.SetTrigger("FadeIn");
         await Task.Delay(50);
         await Task.Delay(Mathf.RoundToInt(FadeAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.averageDuration * 1100));
 
-
         SetTeamsButton();
 
         await Task.Delay(50);
+        StartCoroutine(_timerAnim.Anim(_currentQuestion.answersTime));
 
         _timer = Time.time;
 
@@ -194,6 +215,9 @@ public class QuizSceneObject : GameSceneObject
         });
 
         HideTeamsButton();
+
+        _resultObject.SetActive(true);
+        SetTeamsScoreHolder(WinningTeam);
         ATeamScore = false;
 
         await Task.Run(async () =>
@@ -205,8 +229,6 @@ public class QuizSceneObject : GameSceneObject
         FadeAnimator.SetTrigger("FadeOut");
         await Task.Delay(50);
         await Task.Delay(Mathf.RoundToInt(FadeAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.averageDuration * 1100));
-        Teams[0].TeamScoreHolder.SetActive(false);
-        Teams[1].TeamScoreHolder.SetActive(false);
         PlayQuestion();
     }
 
@@ -214,12 +236,12 @@ public class QuizSceneObject : GameSceneObject
     {
         GamePage.SetActive(false);
         ScorePage.SetActive(true);
-        if(Teams[0].Score == Teams[1].Score)
+        if (Teams[0].Score == Teams[1].Score)
         {
             ScoreTeam.text = "Egalité !";
             ScoreText.text = Teams[0].Score.ToString() + " pts";
-            ScoreTeam.faceColor = Color.green;
-            ScoreText.faceColor = Color.green;
+            ScoreTeam.faceColor = Color.red;
+            ScoreText.faceColor = Color.red;
         }
         else
         {
@@ -389,6 +411,23 @@ public class QuizSceneObject : GameSceneObject
         return 8000;
     }
 
+    private string StringFromValue(int value)
+    {
+        switch (value)
+        {
+            case 0:
+                return "A";
+            case 1:
+                return "B";
+            case 2:
+                return "C";
+            case 3:
+                return "D";
+            default:
+                return string.Empty;
+        }
+    }
+
     Category CategoryFromString(string text)
     {
         text = text.Replace("\r", String.Empty);
@@ -446,6 +485,7 @@ public class QuizSceneObject : GameSceneObject
         {
             HideOtherTeamsButton(Teams[teamID].TeamAnswers[id]);
             ATeamScore = true;
+            WinningTeam = teamID;
         }
 
         await GameManager.Instance.TasksManager.AddTaskToList(AnimTaskListName, DestroyTeamButton(id, teamID));
@@ -454,6 +494,7 @@ public class QuizSceneObject : GameSceneObject
         {
             //Anim Win Team
             await GameManager.Instance.TasksManager.AddTaskToList(Teams[teamID].ScoreAnim(GetScore(), 1.5f));
+            await GameManager.Instance.TasksManager.AddTaskToList(Task.Delay(1000));
         }
     }
 
@@ -464,7 +505,8 @@ public class QuizSceneObject : GameSceneObject
         float time = 1 - ((Time.time - _timer) / _currentQuestion.answersTime);
         score = Mathf.RoundToInt(score * time);
 
-        return score < 100 ? 100 : score;
+        WinningScore = score < 100 ? 100 : score;
+        return WinningScore;
     }
 
     public void SetTeamsButton()
@@ -472,12 +514,24 @@ public class QuizSceneObject : GameSceneObject
         foreach (var t in Teams)
         {
             t.TeamAnswersHolder.SetActive(true);
-            t.TeamScoreHolder.SetActive(true);
             for (int i = 0; i < t.TeamAnswers.Length; i++)
             {
                 t.TeamAnswers[i].SetActive(true);
             }
         }
+    }
+
+    public void SetTeamsScoreHolder(int teamID)
+    {
+        foreach (var t in Teams)
+        {
+            t.TeamScoreHolder.SetActive(true);
+        }
+
+        _rightAnswerText.text = StringFromValue(_currentQuestion.correctAnswer) + ". " + _currentQuestion.answers[_currentQuestion.correctAnswer];
+        QuizTeam team = Teams[teamID];
+        _scoreGainText.text = team.Name + " +" + WinningScore.ToString() + "pts";
+        _scoreGainText.faceColor = team.Color;
     }
 
     public void HideTeamsButton()
@@ -489,6 +543,14 @@ public class QuizSceneObject : GameSceneObject
             {
                 t.TeamAnswers[i].SetActive(false);
             }
+        }
+    }
+
+    public void HideTeamsScoreHolder()
+    {
+        foreach (var t in Teams)
+        {
+            t.TeamScoreHolder.SetActive(false);
         }
     }
 

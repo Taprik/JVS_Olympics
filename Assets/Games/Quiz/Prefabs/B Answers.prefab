@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2693920875616964766
 RectTransform:
   m_ObjectHideFlags: 0
@@ -204,15 +204,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Yes
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ae595a377575f9e4a8d93ca9aa3d4c09, type: 2}
-  m_sharedMaterial: {fileID: 2462828301814592821, guid: ae595a377575f9e4a8d93ca9aa3d4c09, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 55f70bbec99ce31488fd213092e2cb03, type: 2}
+  m_sharedMaterial: {fileID: -8559282102351663102, guid: 55f70bbec99ce31488fd213092e2cb03, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4279111182
-  m_fontColor: {r: 0.05660379, g: 0.05660379, b: 0.05660379, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -394,7 +394,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6663678182391599557}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -485,8 +485,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6e648cb34e281d74d8379a5945c0d32c, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 0859904874b658a4c93c47b624ec80d2, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

@@ -90,13 +90,15 @@ public class BlockSceneObject : GameSceneObject
                 Sprite newSprite = Sprite.Create(texture, new Rect(i * w, j * h, w, h), new Vector2(0.5f, 0.5f));
                 GameObject n = Instantiate(_partPrefab, parent.transform);
                 Image sr = n.GetComponent<Image>();
+                RectTransform rt = n.GetComponent<RectTransform>();
+                rt.sizeDelta = new Vector2((parent.transform as RectTransform).rect.width / nbDivision, (parent.transform as RectTransform).rect.height / nbDivision);
                 sr.sprite = newSprite;
                 sr.transform.localScale = _scaleImage;
                 float imageWidth = sr.rectTransform.sizeDelta.x;
                 float imageHeight = sr.rectTransform.sizeDelta.y;
                 (n.transform as RectTransform).localPosition = new Vector3(
-                    i * imageWidth * _scaleImage.x + imageWidth * _scaleImage.x / 2, 
-                    j * imageHeight * _scaleImage.y + imageHeight * _scaleImage.y / 2,
+                    i * imageWidth * _scaleImage.x + imageWidth * _scaleImage.x / 2 - (parent.transform as RectTransform).rect.width / 2, 
+                    j * imageHeight * _scaleImage.y + imageHeight * _scaleImage.y / 2 - (parent.transform as RectTransform).rect.height / 2,
                     0);
             }
         }
