@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     GameSO[] _gameScriptableObjects;
 
     public GameSO CurrentGame { get; set; }
+    public GameSceneObject CurrentGameSceneObject { get; set; }
 
     #region Manager
 

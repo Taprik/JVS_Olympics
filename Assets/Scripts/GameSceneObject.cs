@@ -6,6 +6,7 @@ public class GameSceneObject : MonoBehaviour
 {
     public virtual void Awake()
     {
+        GameManager.Instance.CurrentGameSceneObject = this;
         GameManager.Instance.GameSceneManager.CurrentSceneObject = this.gameObject;
     }
 }

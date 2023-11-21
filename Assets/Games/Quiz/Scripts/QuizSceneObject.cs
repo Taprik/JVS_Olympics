@@ -577,55 +577,58 @@ public class QuizSceneObject : GameSceneObject
         Teams[teamID].TeamAnswers[id].GetComponent<Animator>().SetTrigger("IsDestroy");
         await Task.Delay(Mathf.RoundToInt(_etoileAnim.length * 1000) + 200);
     }
-}
 
-[System.Serializable]
-public class QuizTeam
-{
-    public string Name;
-    public int Score;
-    public Color Color;
 
-    public GameObject TeamAnswersHolder;
-    public GameObject[] TeamAnswers;
-    public GameObject[] TeamColorObjects;
-
-    [Space(5)]
-    public GameObject TeamScoreHolder;
-    public TextMeshProUGUI TeamName;
-    public TextMeshProUGUI TeamScore;
-
-    public async Task ScoreAnim(int score, float duration)
+    [System.Serializable]
+    public class QuizTeam
     {
-        duration /= score;
-        for (int i = 0; i < score; i++)
+        public string Name;
+        public int Score;
+        public Color Color;
+
+        public GameObject TeamAnswersHolder;
+        public GameObject[] TeamAnswers;
+        public GameObject[] TeamColorObjects;
+
+        [Space(5)]
+        public GameObject TeamScoreHolder;
+        public TextMeshProUGUI TeamName;
+        public TextMeshProUGUI TeamScore;
+
+        public async Task ScoreAnim(int score, float duration)
         {
-            TeamScore.text = (Score + i).ToString() + " pts";
-            await Task.Delay((int)(duration * 1000));
+            duration /= score;
+            for (int i = 0; i < score; i++)
+            {
+                TeamScore.text = (Score + i).ToString() + " pts";
+                await Task.Delay((int)(duration * 1000));
+            }
+            this.Score += score;
+            TeamScore.text = Score.ToString() + " pts";
         }
-        this.Score += score;
-        TeamScore.text = Score.ToString() + " pts";
-    }
 
-    public void SetColor()
-    {
-        foreach (var o in TeamColorObjects)
-            SetColor(o, Color);
-    }
+        public void SetColor()
+        {
+            foreach (var o in TeamColorObjects)
+                SetColor(o, Color);
+        }
 
-    public void SetColor(GameObject go, Color color)
-    {
+        public void SetColor(GameObject go, Color color)
+        {
 
-        TextMeshProUGUI text = go.GetComponent<TextMeshProUGUI>();
-        if (text != null)
-            text.faceColor = color;
+            TextMeshProUGUI text = go.GetComponent<TextMeshProUGUI>();
+            if (text != null)
+                text.faceColor = color;
 
-        Image image = go.GetComponent<Image>();
-        if (image != null)
-            image.color = color;
+            Image image = go.GetComponent<Image>();
+            if (image != null)
+                image.color = color;
 
-        SpriteRenderer spriteRenderer = go.GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null)
-            spriteRenderer.color = color;
+            SpriteRenderer spriteRenderer = go.GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+                spriteRenderer.color = color;
+        }
     }
 }
+
+
