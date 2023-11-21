@@ -11,9 +11,9 @@ using System.Threading;
 
 public class BlockSceneObject : GameSceneObject
 {
-    public GameBlock GameBlock => _gameBlock;
+    public GameBlock GameBlockSo => _gameBlockSo;
     [SerializeField]
-    GameBlock _gameBlock;
+    GameBlock _gameBlockSo;
 
     #region HomePage
 
@@ -47,14 +47,17 @@ public class BlockSceneObject : GameSceneObject
     [SerializeField]
     float _initialTimer;
     float _currentTimer;
+    
     [SerializeField]
-    TextMeshProUGUI _timerText;
+    TextMeshProUGUI _timerTextFront;
+    [SerializeField]
+    TextMeshProUGUI _timerTextBack;
+
     Action<int> TimerEnd;
     CancellationTokenSource _timerTokenSource;
 
     public List<BlockTeam> Teams;
 
-    const string ImagePath = "C:\\Users\\smartJeux\\Documents\\Capteur\\Personnalisation\\Blocks\\choisi";
 
     async Task GameAwake()
     {
@@ -83,17 +86,17 @@ public class BlockSceneObject : GameSceneObject
     public async void PlayGame()
     {
         Task[] splitImages = new Task[2];
-        splitImages[0] = SplitImage(ToolBox.GetFiles(ImagePath)[0], _nbDivision, 0);
-        splitImages[1] = SplitImage(ToolBox.GetFiles(ImagePath)[0], _nbDivision, 1);
+        splitImages[0] = SplitImage(ToolBox.GetFiles(GameBlockSo.ImagePath)[0], GameBlockSo.NbDivision, 0);
+        splitImages[1] = SplitImage(ToolBox.GetFiles(GameBlockSo.ImagePath)[0], GameBlockSo.NbDivision, 1);
         await Task.WhenAll(splitImages);
 
         await Task.Delay(2000);
 
         foreach (var t in Teams)
         {
-            t.ShufflePart();
             t.ActiveAllButton();
         }
+        ShuffleParts();
 
         TimerEnd += FinishPlayGame;
         _timerTokenSource = new CancellationTokenSource();
@@ -109,7 +112,9 @@ public class BlockSceneObject : GameSceneObject
 
         if (teamID < 0)
         {
+            //Oups Egalité
 
+            Debug.Log("Egalité !");
             return;
         }
 
@@ -165,9 +170,41 @@ public class BlockSceneObject : GameSceneObject
     void SetTimerText()
     {
         int minute = Mathf.FloorToInt(_currentTimer / 60);
+        minute = minute < 0 ? 0 : minute;
         int second = Mathf.FloorToInt(_currentTimer % 60);
-        if (second < 10) _timerText.text = $"{minute}:0{second}";
-        else _timerText.text = $"{minute}:{second}";
+        second = second < 0 ? 0 : second;
+        if (second < 10) _timerTextFront.text = $"{minute}:0{second}";
+        else _timerTextFront.text = $"{minute}:{second}";
+        if (second < 10) _timerTextBack.text = $"{minute}:0{second}";
+        else _timerTextBack.text = $"{minute}:{second}";
+    }
+
+    void ShuffleParts()
+    {
+        for (int i = 0; i < Teams[0].Parts.Count; i++)
+        {
+            int rot = GetRandomRotation();
+            Teams[0].Parts[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, rot));
+            Teams[1].Parts[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, rot));
+        }
+    }
+
+    int GetRandomRotation()
+    {
+        int rot = Random.Range(0, 4);
+        switch (rot)
+        {
+            case 0:
+                return 90;
+            case 1:
+                return 180;
+            case 2:
+                return 270;
+            case 3:
+                return 0;
+            default:
+                return -1;
+        }
     }
 
     #region SplitImage
@@ -175,13 +212,10 @@ public class BlockSceneObject : GameSceneObject
     [SerializeField]
     GameObject _partPrefab;
 
-    [SerializeField, Tooltip("That is the RootSquare of the numbre enter :")]
-    int _nbDivision;
-
     [SerializeField]
     Vector3 _scaleImage;
 
-    public async Task SplitImage(string path,int nbDivision, int teamID)
+    public async Task SplitImage(string path, int nbDivision, int teamID)
     {
         GameObject parent = Teams[teamID].ImageHolder;
         Texture2D texture = await ToolBox.CreateTextureFromPath(path);
@@ -273,15 +307,19 @@ public class BlockSceneObject : GameSceneObject
 
         public GameObject ImageHolder;
         public List<ButtonPartRotation> Parts;
-        public TextMeshProUGUI NameText;
-        public TextMeshProUGUI ScoreText;
+        public TextMeshProUGUI NameTextFront;
+        public TextMeshProUGUI NameTextBack;
+        public TextMeshProUGUI ScoreTextFront;
+        public TextMeshProUGUI ScoreTextBack;
 
         public Action<int> Win;
 
         public void SetAllText()
         {
-            NameText.text = Name;
-            ScoreText.text = Score.ToString() +" pts";
+            NameTextFront.text = Name;
+            NameTextBack.text = Name;
+            ScoreTextFront.text = Score.ToString() +" pts";
+            ScoreTextBack.text = Score.ToString() +" pts";
         }
 
         public void AddPart(GameObject part)
@@ -317,13 +355,13 @@ public class BlockSceneObject : GameSceneObject
             }
         }
 
-        public void ShufflePart()
-        {
-            for (int i = 0; i < Parts.Count; i++)
-            {
-                Parts[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, GetRandomRotation()));
-            }
-        }
+        //public void ShufflePart()
+        //{
+        //    for (int i = 0; i < Parts.Count; i++)
+        //    {
+        //        Parts[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, GetRandomRotation()));
+        //    }
+        //}
 
         public bool CheckAllPartsRotation()
         {
@@ -333,24 +371,6 @@ public class BlockSceneObject : GameSceneObject
                     return false;
             }
             return true;
-        }
-
-        int GetRandomRotation()
-        {
-            int rot = Random.Range(0, 4);
-            switch (rot)
-            {
-                case 0:
-                    return 90;
-                case 1:
-                    return 180;
-                case 2:
-                    return 270;
-                case 3:
-                    return 0;
-                default:
-                    return -1;
-            }
         }
 
         void DestroyAllParts()
@@ -364,7 +384,8 @@ public class BlockSceneObject : GameSceneObject
         {
             for (int i = 0; i < gain; i++)
             {
-                ScoreText.text = (Score + i).ToString() + " pts";
+                ScoreTextBack.text = (Score + i).ToString() + " pts";
+                ScoreTextFront.text = (Score + i).ToString() + " pts";
                 await Task.Delay(Mathf.RoundToInt(time/gain * 1000));
             }
             Score += gain;

@@ -5,5 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Game_Block", menuName = "Game/Block/Game_Block")]
 public class GameBlock : GameSO
 {
-    public List<Texture2D> _texture2D = new();
+    public string ImagePath = "C:\\Users\\smartJeux\\Documents\\Capteur\\Personnalisation\\Blocks\\choisi";
+
+    public int NbDivision;
 }
