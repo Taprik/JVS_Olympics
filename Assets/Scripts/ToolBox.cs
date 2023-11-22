@@ -25,6 +25,16 @@ namespace Tool
             }
         }
 
+        public static int Total(this IList<int> list)
+        {
+            int total = 0;
+            foreach (int nb in list)
+            {
+                total += nb;
+            }
+            return total;
+        }
+
         public static bool CheckPos(Vector2 hit, RectTransform rect)
         {
             if (hit.x < rect.transform.position.x - (rect.rect.width / 2))
@@ -67,26 +77,8 @@ namespace Tool
             return false;
         }
 
-        public static async Task<Sprite> CreateSpriteFromPath(string filePath, Vector2 pivot)
-        {
-            Texture2D tex2D;
-            Sprite outSprite;
+        public static async Task<Sprite> CreateSpriteFromTexture(Texture2D tex2D) => Sprite.Create(tex2D, new Rect(0, 0, tex2D.width, tex2D.height), new Vector2(0.5f, 0.5f));
 
-            if (File.Exists(filePath))
-            {
-                var fileData = await File.ReadAllBytesAsync(filePath);
-                tex2D = new Texture2D(2, 2);
-
-                if (tex2D.LoadImage(fileData))
-                {
-                    Texture2D spriteTexture = tex2D;
-                    outSprite = Sprite.Create(spriteTexture, new Rect(0, 0, spriteTexture.width, spriteTexture.height), pivot);
-
-                    return outSprite;
-                }
-            }
-            return null;
-        }
         public static async Task<Sprite> CreateSpriteFromPath(string filePath)
         {
             Texture2D tex2D;

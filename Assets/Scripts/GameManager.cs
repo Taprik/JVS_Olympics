@@ -96,13 +96,18 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.O))
         {
-            ExecutionQueue loadAllQueue = TasksManager.CreateComplexTaskQueue("LoadAll");
-            loadAllQueue.Run(() => WaitTask(0));
-            loadAllQueue.Run(() => WaitTask(1));
-            loadAllQueue.Complete();
-
-
+            WaitAllTask();
         }
+    }
+
+    async void WaitAllTask()
+    {
+        ExecutionQueue loadAllQueue = TasksManager.CreateComplexTaskQueue("LoadAll");
+        loadAllQueue.Run(() => WaitTask(0));
+        loadAllQueue.Run(() => WaitTask(1));
+        loadAllQueue.Complete();
+        await loadAllQueue.Completion;
+        Debug.Log("Finish Queue");
     }
 
     async Task WaitTask(int id)

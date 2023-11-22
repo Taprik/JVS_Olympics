@@ -158,7 +158,7 @@ public sealed class ExecutionQueue
         return tcs.Task;
     }
 
-    public Task Run(IEnumerator enumerator)
+    public Task Run(Action action)
     {
         var tcs = new TaskCompletionSource<object>();
         _queue.Add(async () =>
@@ -166,7 +166,7 @@ public sealed class ExecutionQueue
             // Execute the lambda and propagate the results to the Task returned from Run
             try
             {
-                await Task.Run(() => enumerator);
+                await Task.Run(action);
                 tcs.TrySetResult(null);
             }
             catch (OperationCanceledException ex)
@@ -180,5 +180,51 @@ public sealed class ExecutionQueue
         });
         return tcs.Task;
     }
+
+    //public Task RunSync(Func<Task> lambda)
+    //{
+    //    var tcs = new TaskCompletionSource<object>();
+    //    _queue.Add(async () =>
+    //    {
+    //        // Execute the lambda and propagate the results to the Task returned from Run
+    //        try
+    //        {
+    //            await UnityMainThreadDispatcher.Instance().EnqueueAsync(() => lambda());
+    //            tcs.TrySetResult(null);
+    //        }
+    //        catch (OperationCanceledException ex)
+    //        {
+    //            tcs.TrySetCanceled(ex.CancellationToken);
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            tcs.TrySetException(ex);
+    //        }
+    //    });
+    //    return tcs.Task;
+    //}
+
+    //public Task RunSync(Action action)
+    //{
+    //    var tcs = new TaskCompletionSource<object>();
+    //    _queue.Add(async () =>
+    //    {
+    //        // Execute the lambda and propagate the results to the Task returned from Run
+    //        try
+    //        {
+    //            await UnityMainThreadDispatcher.Instance().EnqueueAsync(() => Task.Run(action));
+    //            tcs.TrySetResult(null);
+    //        }
+    //        catch (OperationCanceledException ex)
+    //        {
+    //            tcs.TrySetCanceled(ex.CancellationToken);
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            tcs.TrySetException(ex);
+    //        }
+    //    });
+    //    return tcs.Task;
+    //}
 }
 #endregion
