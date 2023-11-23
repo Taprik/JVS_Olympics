@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using System;
 using TMPro;
 using System.Threading;
+using DG.Tweening;
 
 public class BlockSceneObject : GameSceneObject
 {
@@ -126,7 +127,10 @@ public class BlockSceneObject : GameSceneObject
 
         await GameManager.Instance.AddressablesManager.LoadScreen(task);
 
-        await Task.Delay(2000);
+        Task[] CountDowns = new Task[2];
+        CountDowns[0] = Teams[0].CountDown();
+        CountDowns[1] = Teams[1].CountDown();
+        await Task.WhenAll(CountDowns);
 
         foreach (var t in Teams)
         {
@@ -148,12 +152,12 @@ public class BlockSceneObject : GameSceneObject
     async Task PlayOneImage(Texture2D texture, int teamID, int id, bool notFirst = true)
     {
         UnityMainThreadDispatcher.Instance().Enqueue(() => Teams[teamID].DestroyAllParts());
-        await UnityMainThreadDispatcher.Instance().EnqueueAsync(() => SplitImage(texture, id + 2, teamID));
+        await UnityMainThreadDispatcher.Instance().EnqueueAsync(() => SplitImage(texture, GameBlockSo.NbDivision[id], teamID));
 
 
         if (notFirst)
         {
-            await Task.Delay(2000);
+            await Teams[teamID].CountDown();
             UnityMainThreadDispatcher.Instance().Enqueue(() => Teams[teamID].ActiveAllButton());
             UnityMainThreadDispatcher.Instance().Enqueue(() => Teams[teamID].ShufflePart(id * 0.25f + 0.25f));
             if (id == 2)
@@ -250,31 +254,31 @@ public class BlockSceneObject : GameSceneObject
         else _timerTextBack.text = $"{minute}:{second}";
     }
 
-    void ShuffleParts()
-    {
-        for (int i = 0; i < Teams[0].Parts.Count; i++)
-        {
-            int rot = GetRandomRotation();
-            Teams[0].Parts[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, rot));
-            Teams[1].Parts[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, rot));
-        }
-    }
+    //void ShuffleParts()
+    //{
+    //    for (int i = 0; i < Teams[0].Parts.Count; i++)
+    //    {
+    //        int rot = GetRandomRotation();
+    //        Teams[0].Parts[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, rot));
+    //        Teams[1].Parts[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, rot));
+    //    }
+    //}
 
-    int GetRandomRotation()
-    {
-        int rot = Random.Range(0, 3);
-        switch (rot)
-        {
-            case 0:
-                return 90;
-            case 1:
-                return 180;
-            case 2:
-                return 270;
-            default:
-                return -1;
-        }
-    }
+    //int GetRandomRotation()
+    //{
+    //    int rot = Random.Range(0, 3);
+    //    switch (rot)
+    //    {
+    //        case 0:
+    //            return 90;
+    //        case 1:
+    //            return 180;
+    //        case 2:
+    //            return 270;
+    //        default:
+    //            return -1;
+    //    }
+    //}
 
     #region SplitImage
 
@@ -419,20 +423,57 @@ public class BlockSceneObject : GameSceneObject
         public bool IsShuffle => !CheckAllPartsRotation();
         public Image[] ImageCheckMarks;
         public GameObject[] CheckMarks;
-        //public TextMeshProUGUI NameTextFront;
-        //public TextMeshProUGUI NameTextBack;
-        //public TextMeshProUGUI ScoreTextFront;
-        //public TextMeshProUGUI ScoreTextBack;
+        public Image FadeCountDown;
+        public TextMeshProUGUI CountDownTextFront;
+        public TextMeshProUGUI CountDownTextBack;
 
         public Action<int> Win;
 
-        //public void SetAllText()
-        //{
-        //    NameTextFront.text = Name;
-        //    NameTextBack.text = Name;
-        //    ScoreTextFront.text = Score.ToString() +" pts";
-        //    ScoreTextBack.text = Score.ToString() +" pts";
-        //}
+        public async Task CountDown()
+        {
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                FadeCountDown.color = new Color(0, 0, 0, 0);
+                CountDownTextFront.text = string.Empty;
+                CountDownTextBack.text = string.Empty;
+                FadeCountDown.DOFade(0.5f, 0.5f);
+            });
+            await Task.Delay(500);
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                FadeCountDown.DOFade(0.45f, 1f);
+                CountDownTextFront.text = "3";
+                CountDownTextBack.text = "3";
+            });
+            await Task.Delay(1000);
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                FadeCountDown.DOFade(0.4f, 1f);
+                CountDownTextFront.text = "2";
+                CountDownTextBack.text = "2";
+            });
+            await Task.Delay(1000);
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                FadeCountDown.DOFade(0.35f, 1f);
+                CountDownTextFront.text = "1";
+                CountDownTextBack.text = "1";
+            });
+            await Task.Delay(1000);
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                FadeCountDown.DOFade(0f, 0.5f);
+                CountDownTextFront.text = "GO";
+                CountDownTextBack.text = "GO";
+            });
+            await Task.Delay(500);
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                CountDownTextFront.text = string.Empty;
+                CountDownTextBack.text = string.Empty;
+                FadeCountDown.color = new Color(0, 0, 0, 0);
+            });
+        }
 
         public void AddPart(GameObject part)
         {
@@ -477,7 +518,7 @@ public class BlockSceneObject : GameSceneObject
             {
                 rots = new();
                 total = 0;
-                for (int i = 0; i < Mathf.RoundToInt(Parts.Count * pourcent); i++)
+                for (int i = 0; i < Mathf.CeilToInt(Parts.Count * pourcent); i++)
                 {
                     int rot = GetRandomRotation();
                     rots.Add(rot);
@@ -493,20 +534,7 @@ public class BlockSceneObject : GameSceneObject
 
         }
 
-        int GetLimitThrow(float pourcent)
-        {
-            switch (pourcent)
-            {
-                case 0.25f:
-                    return 2;
-                case 0.5f:
-                    return 10;
-                case 0.75f:
-                    return 24;
-                default:
-                    return -1;
-            }
-        }
+        int GetLimitThrow(float pourcent) =>  Mathf.RoundToInt(2 * Mathf.CeilToInt(Parts.Count * pourcent));
 
         int GetRandomRotation()
         {

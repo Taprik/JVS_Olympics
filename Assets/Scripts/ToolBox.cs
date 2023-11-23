@@ -29,9 +29,15 @@ namespace Tool
         {
             int total = 0;
             foreach (int nb in list)
-            {
                 total += nb;
-            }
+            return total;
+        }
+
+        public static float Total(this IList<float> list)
+        {
+            float total = 0;
+            foreach (float nb in list)
+                total += nb;
             return total;
         }
 
