@@ -12,6 +12,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2f9a614884d15a43b6053aca64e659d, type: 3}
   m_Name: Game_Quiz
   m_EditorClassIdentifier: 
+  VideoAnimOrange:
+  - {fileID: 32900000, guid: 01b0d8f8fb614074794ae4b0a90723d6, type: 3}
+  - {fileID: 32900000, guid: 5ac7d3b1597617f4284f2e3a6df0f693, type: 3}
+  - {fileID: 32900000, guid: d6d3890c3917edd4990d6645cf9d26d6, type: 3}
+  - {fileID: 32900000, guid: b3a99d9ce4b3f3d468da0c854b7c22e5, type: 3}
+  - {fileID: 32900000, guid: a1b55553fe3276644bba9cf24769b974, type: 3}
+  - {fileID: 32900000, guid: 722cfdfe43dcdeb45bebbea79e0db6bf, type: 3}
+  - {fileID: 32900000, guid: b69970c13a3a8d3478ef887992c961e9, type: 3}
+  - {fileID: 32900000, guid: d03ab1d160e69394f992ac846fdc569f, type: 3}
+  - {fileID: 32900000, guid: 4e4126cd0816d4c42b17c3b13337c688, type: 3}
+  - {fileID: 32900000, guid: a6881dec97d270a4e9f8b0606c973cb9, type: 3}
+  - {fileID: 32900000, guid: 888404777eddbb1448007db71e5d47ac, type: 3}
+  - {fileID: 32900000, guid: 2183d9a94533dc3428ed89318eed4a7b, type: 3}
+  VideoAnimBlue:
+  - {fileID: 32900000, guid: 48c77269447d63e4f8d6c40ebe3374f5, type: 3}
+  - {fileID: 32900000, guid: 7a997ab3269302a4a9676149b1b33e25, type: 3}
+  - {fileID: 32900000, guid: 283f0600959df87478465241464fe20a, type: 3}
+  - {fileID: 32900000, guid: 69dcc081c87078e46a3df68fd753e94c, type: 3}
+  - {fileID: 32900000, guid: be5d3fc252070484bbb97efae1144586, type: 3}
+  - {fileID: 32900000, guid: 27a688891886dd84a9f7438496a46041, type: 3}
+  VideoAnimRed:
+  - {fileID: 32900000, guid: fc91bd93ed6f42942a0d252db6602a11, type: 3}
+  AnswerLetterSprites:
+  - {fileID: 21300000, guid: 25d73106ece226444addd8c3b1a46476, type: 3}
+  - {fileID: 21300000, guid: 0859904874b658a4c93c47b624ec80d2, type: 3}
+  - {fileID: 21300000, guid: e32dacf67a8533f4bafe67f4962eaee6, type: 3}
+  - {fileID: 21300000, guid: 6d6d5b7d679173e45bd039318b28056b, type: 3}
   questions:
   - sentence: Qui est arrive le premier ?
     image: {fileID: 0}
@@ -27,8 +54,8 @@ MonoBehaviour:
   - sentence: Ou se trouve charlie ?
     image: {fileID: 0}
     category: 0
-    reflectionTime: 2
-    answersTime: 5
+    reflectionTime: 5
+    answersTime: 10
     answers:
     - Ici
     - La
@@ -38,22 +65,22 @@ MonoBehaviour:
   - sentence: 1 + 1 ?
     image: {fileID: 0}
     category: 0
-    reflectionTime: 3
-    answersTime: 5
+    reflectionTime: 5
+    answersTime: 10
     answers:
     - 2
     - 1
     - 11
     - 1000
-    correctAnswer: 3
+    correctAnswer: 0
   - sentence: Qui va gagner la coupe du monde de rugby ?
     image: {fileID: 0}
     category: 1
-    reflectionTime: 4
-    answersTime: 7
+    reflectionTime: 5
+    answersTime: 10
     answers:
     - La France
-    - L'Afrique du Sub
+    - L'Afrique du Sud
     - L'Irlande
     - La Nouvelle Zelande
     correctAnswer: 0

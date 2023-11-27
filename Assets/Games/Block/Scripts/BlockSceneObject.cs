@@ -59,12 +59,19 @@ public class BlockSceneObject : GameSceneObject
 
     public List<BlockTeam> Teams;
 
-    Texture2D[] Tex = new Texture2D[3]; 
+    Texture2D[] Tex = new Texture2D[3];
+
+    List<int[,]> RotationsSave;
 
 
     async Task GameAwake()
     {
-
+        RotationsSave = new()
+        {
+            null,
+            null,
+            null
+        };
     }
 
     async Task GameStart()
@@ -100,6 +107,7 @@ public class BlockSceneObject : GameSceneObject
             for (int i = 0; i < 3; i++)
             {
                 Tex[i] = await ToolBox.CreateTextureFromPath(imagePath[i]);
+                Debug.Log((Tex[i] == null) + " | " + imagePath[i]);
             }
 
 
@@ -108,7 +116,7 @@ public class BlockSceneObject : GameSceneObject
                 for (int i = 0; i < Tex.Length; i++)
                 {
                     t.DeActiveAllMark();
-                    t.ImageCheckMarks[i].sprite = await ToolBox.CreateSpriteFromTexture(Tex[i]);
+                    t.ImageCheckMarks[i].sprite = ToolBox.CreateSpriteFromTexture(Tex[i]);
                 }
             }
 
@@ -135,7 +143,8 @@ public class BlockSceneObject : GameSceneObject
         foreach (var t in Teams)
         {
             t.ActiveAllButton();
-            t.ShufflePart(0.25f);
+            await Task.Delay(1);
+            t.ShufflePart(ref RotationsSave, 0.25f);
         }
 
         tasks[0] = teamAQueue.Completion;
@@ -159,7 +168,7 @@ public class BlockSceneObject : GameSceneObject
         {
             await Teams[teamID].CountDown();
             UnityMainThreadDispatcher.Instance().Enqueue(() => Teams[teamID].ActiveAllButton());
-            UnityMainThreadDispatcher.Instance().Enqueue(() => Teams[teamID].ShufflePart(id * 0.25f + 0.25f));
+            UnityMainThreadDispatcher.Instance().Enqueue(() => Teams[teamID].ShufflePart(ref RotationsSave, (id * 0.25f + 0.25f)));
             if (id == 2)
                 Teams[teamID].Win += TeamWin;
         }
@@ -377,6 +386,8 @@ public class BlockSceneObject : GameSceneObject
 
     public override async void Awake()
     {
+
+        GameManager.Instance.CurrentGame = GameBlockSo;
         base.Awake();
         await HomeAwake();
         await GameAwake();
@@ -509,12 +520,35 @@ public class BlockSceneObject : GameSceneObject
             }
         }
 
-        public void ShufflePart(float pourcent = 1f)
+        public void ShufflePart(ref List<int[,]> rotationsSave, float pourcent = 1f)
+        {
+            int id = GetIDWithPourcent(pourcent);
+            if (rotationsSave[id] != null)
+            {
+                int l = (GameManager.Instance.CurrentGame as GameBlock).NbDivision[id];
+                int count = 0;
+                for (int x = 0; x < l; x++)
+                {
+                    for (int y = 0; y < l; y++)
+                    {
+                        Parts[count].transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotationsSave[id][x, y]));
+                        Debug.Log(x + ";" + y + " | " + count);
+                        count++;
+                    }
+                }
+            }
+            else
+            {
+                rotationsSave[id] = SufflePartRandomly(id, pourcent);
+            }
+        }
+
+        int[,] SufflePartRandomly(int id, float pourcent = 1f)
         {
             int total = 0;
             List<int> rots = new();
 
-            while(total != GetLimitThrow(pourcent))
+            while (total != GetLimitThrow(pourcent))
             {
                 rots = new();
                 total = 0;
@@ -526,12 +560,13 @@ public class BlockSceneObject : GameSceneObject
                 }
             }
 
-            Parts.Shuffle();
+            List<ButtonPartRotation> parts = Parts;
+            parts.Shuffle();
             for (int i = 0; i < rots.Count; i++)
             {
-                Parts[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, rots[i]));
+                parts[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, rots[i]));
             }
-
+            return ConvertPartToTable(Parts, (GameManager.Instance.CurrentGame as GameBlock).NbDivision[id]);
         }
 
         int GetLimitThrow(float pourcent) =>  Mathf.RoundToInt(2 * Mathf.CeilToInt(Parts.Count * pourcent));
@@ -564,6 +599,36 @@ public class BlockSceneObject : GameSceneObject
                     return 3;
             }
             return -1;
+        }
+
+        int GetIDWithPourcent(float rot)
+        {
+            switch (rot)
+            {
+                case 0.25f:
+                    return 0;
+                case 0.5f:
+                    return 1;
+                case 0.75f:
+                    return 2;
+            }
+            return -1;
+        }
+
+        int[,] ConvertPartToTable(List<ButtonPartRotation> parts, int l)
+        {
+            int[,] table = new int[l, l];
+            int count = 0;
+            for (int x = 0; x < l; x++)
+            {
+                for (int y = 0; y < l; y++)
+                {
+                    table[x, y] = Mathf.RoundToInt(parts[count].gameObject.transform.rotation.eulerAngles.z);
+                    Debug.Log(x + ";" + y + " | " + count);
+                    count++;
+                }
+            }
+            return table;
         }
 
         public bool CheckAllPartsRotation()

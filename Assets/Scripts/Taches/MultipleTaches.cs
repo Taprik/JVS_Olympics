@@ -12,7 +12,7 @@ public class MultipleTaches
 
     public Condition[] Condition => _condition;
     [SerializeField, Header("If :")]
-    protected Condition[] _condition;
+    Condition[] _condition;
 
     public Tache[] Taches => _taches;
     [SerializeField, Header("Do :")]

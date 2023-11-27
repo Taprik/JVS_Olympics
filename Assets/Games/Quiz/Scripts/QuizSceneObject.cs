@@ -13,6 +13,7 @@ using System.Threading;
 using DG.Tweening;
 using System.Linq;
 using Tool;
+using UnityEngine.Video;
 
 [DisallowMultipleComponent]
 public class QuizSceneObject : GameSceneObject
@@ -89,6 +90,9 @@ public class QuizSceneObject : GameSceneObject
     GameObject _resultObject;
 
     [SerializeField]
+    Image _rightAnswerImage;
+
+    [SerializeField]
     TextMeshProUGUI _rightAnswerText;
 
     [SerializeField]
@@ -96,6 +100,21 @@ public class QuizSceneObject : GameSceneObject
 
     [SerializeField]
     SpritesOverTime _timerAnim;
+
+    [SerializeField]
+    RawImage _videoAnimImage;
+
+    [SerializeField]
+    VideoPlayer _videoAnimPlayer;
+
+    [SerializeField]
+    GameObject _answerResultObject;
+
+    [SerializeField]
+    Image _letterResultImage;
+
+    [SerializeField]
+    TextMeshProUGUI _answerResultText;
 
     Quiz_Question _currentQuestion;
 
@@ -179,8 +198,9 @@ public class QuizSceneObject : GameSceneObject
         _resultObject.SetActive(false);
         _questionObject.SetActive(true);
         float reflectionTimer = SetQuestion(selectedQuestion[selectedQuestionID]);
+        CancellationTokenSource tokenSource = new CancellationTokenSource();
 
-        StartCoroutine(_timerAnim.Anim(reflectionTimer - 1f));
+        UnityMainThreadDispatcher.Instance().Enqueue(async () => await _timerAnim.Anim(reflectionTimer - 1f, tokenSource.Token));
         await Task.Delay(Mathf.RoundToInt((reflectionTimer - 1f) * 1000));
         FadeAnimator.SetTrigger("FadeIn");
         await Task.Delay(50);
@@ -189,7 +209,7 @@ public class QuizSceneObject : GameSceneObject
         SetTeamsButton();
 
         await Task.Delay(50);
-        StartCoroutine(_timerAnim.Anim(_currentQuestion.answersTime));
+        UnityMainThreadDispatcher.Instance().Enqueue(async () => await _timerAnim.Anim(_currentQuestion.answersTime, tokenSource.Token));
 
         _timer = Time.time;
 
@@ -198,26 +218,27 @@ public class QuizSceneObject : GameSceneObject
         waitTimerOrRightAnswer[0] = Task.Run(async () =>
         {
             await Task.Delay(Mathf.RoundToInt(_currentQuestion.answersTime * 1000));
+            tokenSource.Cancel();
         });
 
         waitTimerOrRightAnswer[1] = Task.Run(async () => 
         {
             while (!ATeamScore)
                 await Task.Delay(10);
+            tokenSource.Cancel();
         });
 
         await Task.WhenAny(waitTimerOrRightAnswer);
+        tokenSource.Dispose();
 
         await Task.Run(async () =>
         {
             while(!GameManager.Instance.TasksManager.AllTasksFinish(AnimTaskListName))
-                await Task.Delay(10);
+                await Task.Delay(100);
         });
 
-        HideTeamsButton();
-
-        _resultObject.SetActive(true);
         SetTeamsScoreHolder(WinningTeam);
+        HideTeamsButton();
         ATeamScore = false;
 
         await Task.Run(async () =>
@@ -350,7 +371,6 @@ public class QuizSceneObject : GameSceneObject
         _ready = false;
         GameQuiz.questions.Clear();
         string appPath = Application.dataPath;
-
         string newPath = Path.GetFullPath(Path.Combine(appPath, @"..\..\..\..\"));
         newPath = Path.GetFullPath(Path.Combine(newPath, _fileLocation));
 
@@ -359,7 +379,6 @@ public class QuizSceneObject : GameSceneObject
         int collum = csv.Split(new string[] { "\n" }, StringSplitOptions.None).Length;
         int line = csv.Split(new string[] { "," }, StringSplitOptions.None).Length;
         int lineLength = (line + collum) / collum;
-        Debug.Log(lineLength);
         string[] data = csv.Split(new string[] { ",", "\n" }, StringSplitOptions.None);
         int tableSize = (data.Length / lineLength) - 1;
 
@@ -474,6 +493,7 @@ public class QuizSceneObject : GameSceneObject
     {
         if (ATeamScore) return;
         
+        int score = 0;
         int teamID = 0;
         if (id > 3)
         {
@@ -486,16 +506,40 @@ public class QuizSceneObject : GameSceneObject
             HideOtherTeamsButton(Teams[teamID].TeamAnswers[id]);
             ATeamScore = true;
             WinningTeam = teamID;
+            score = GetScore();
         }
 
         await GameManager.Instance.TasksManager.AddTaskToList(AnimTaskListName, DestroyTeamButton(id, teamID));
 
         if (id == _currentQuestion.correctAnswer)
         {
-            //Anim Win Team
-            await GameManager.Instance.TasksManager.AddTaskToList(Teams[teamID].ScoreAnim(GetScore(), 1.5f));
+            await GameManager.Instance.TasksManager.AddTaskToList(PlayVideoAnim(teamID));
+            await GameManager.Instance.TasksManager.AddTaskToList(Teams[teamID].ScoreAnim(score, 1.5f));
             await GameManager.Instance.TasksManager.AddTaskToList(Task.Delay(1000));
         }
+    }
+
+    async Task PlayVideoAnim(int teamID)
+    {
+        VideoClip[] videoClips = GameQuiz.GetVideoClipOfTeam(teamID);
+        if(videoClips == null)
+        {
+            Debug.LogError("VideoClip[] is null");
+            return;
+        }
+
+        _videoAnimPlayer.clip = videoClips[Random.Range(0, videoClips.Length)];
+        _answerResultText.text = _currentQuestion.answers[_currentQuestion.correctAnswer];
+        _letterResultImage.sprite = GameQuiz.GetAnswerLetterSprite(_currentQuestion.correctAnswer);
+        _videoAnimPlayer.gameObject.SetActive(true);
+        _answerResultObject.SetActive(true);
+        await Task.Delay(50);
+        _videoAnimImage.gameObject.SetActive(true);
+        await Task.Delay(Mathf.RoundToInt((float)_videoAnimPlayer.clip.length * 1000));
+        _resultObject.SetActive(true);
+        _videoAnimPlayer.gameObject.SetActive(false);
+        _videoAnimImage.gameObject.SetActive(false);
+        _answerResultObject.SetActive(false);
     }
 
     int GetScore()
@@ -528,7 +572,8 @@ public class QuizSceneObject : GameSceneObject
             t.TeamScoreHolder.SetActive(true);
         }
 
-        _rightAnswerText.text = StringFromValue(_currentQuestion.correctAnswer) + ". " + _currentQuestion.answers[_currentQuestion.correctAnswer];
+        _rightAnswerImage.sprite = GameQuiz.GetAnswerLetterSprite(_currentQuestion.correctAnswer);
+        _rightAnswerText.text = _currentQuestion.answers[_currentQuestion.correctAnswer];
         QuizTeam team = Teams[teamID];
         _scoreGainText.text = team.Name + " +" + WinningScore.ToString() + "pts";
         _scoreGainText.faceColor = team.Color;

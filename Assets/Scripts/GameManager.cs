@@ -28,10 +28,6 @@ public class GameManager : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public GameSO[] GameScriptableObjects => _gameScriptableObjects;
-    [SerializeField]
-    GameSO[] _gameScriptableObjects;
-
     public GameSO CurrentGame { get; set; }
     public GameSceneObject CurrentGameSceneObject { get; set; }
 

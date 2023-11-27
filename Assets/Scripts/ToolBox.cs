@@ -83,7 +83,7 @@ namespace Tool
             return false;
         }
 
-        public static async Task<Sprite> CreateSpriteFromTexture(Texture2D tex2D) => Sprite.Create(tex2D, new Rect(0, 0, tex2D.width, tex2D.height), new Vector2(0.5f, 0.5f));
+        public static Sprite CreateSpriteFromTexture(Texture2D tex2D) => Sprite.Create(tex2D, new Rect(0, 0, tex2D.width, tex2D.height), new Vector2(0.5f, 0.5f));
 
         public static async Task<Sprite> CreateSpriteFromPath(string filePath)
         {
