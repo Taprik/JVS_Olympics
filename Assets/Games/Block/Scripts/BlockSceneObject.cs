@@ -9,6 +9,7 @@ using System;
 using TMPro;
 using System.Threading;
 using DG.Tweening;
+using System.Linq;
 
 public class BlockSceneObject : GameSceneObject
 {
@@ -101,7 +102,7 @@ public class BlockSceneObject : GameSceneObject
 
         UnityMainThreadDispatcher.Instance().EnqueueAsync(async () =>
         {
-            List<string> imagePath = ToolBox.GetFiles(GameBlockSo.ImagePath);
+            List<string> imagePath = ToolBox.GetFiles(GameBlockSo.ImagePath, "*.jpg");
             imagePath.Shuffle();
 
             for (int i = 0; i < 3; i++)
@@ -301,6 +302,7 @@ public class BlockSceneObject : GameSceneObject
     {
         GameObject parent = Teams[teamID].ImageHolder;
         Texture2D texture = await ToolBox.CreateTextureFromPath(path);
+        Teams[teamID].Parts = new ButtonPartRotation[nbDivision, nbDivision];
 
         for (int i = 0; i < nbDivision; i++)
         {
@@ -321,7 +323,7 @@ public class BlockSceneObject : GameSceneObject
                     j * imageHeight/* * _scaleImage.y */+ imageHeight/* * _scaleImage.y *// 2 - (parent.transform as RectTransform).rect.height / 2,
                     0);
                 sr.transform.localScale = _scaleImage;
-                Teams[teamID].AddPart(n);
+                Teams[teamID].AddPart(n, i, j);
             }
         }
     }
@@ -329,6 +331,7 @@ public class BlockSceneObject : GameSceneObject
     public void SplitImage(Texture2D texture, int nbDivision, int teamID)
     {
         GameObject parent = Teams[teamID].ImageHolder;
+        Teams[teamID].Parts = new ButtonPartRotation[nbDivision, nbDivision];
 
         for (int i = 0; i < nbDivision; i++)
         {
@@ -349,7 +352,8 @@ public class BlockSceneObject : GameSceneObject
                     j * imageHeight/* * _scaleImage.y */+ imageHeight/* * _scaleImage.y *// 2 - (parent.transform as RectTransform).rect.height / 2,
                     0);
                 sr.transform.localScale = _scaleImage;
-                Teams[teamID].AddPart(n);
+                //childRt.transform.localScale = _scaleImage;
+                Teams[teamID].AddPart(n, i, j);
             }
         }
         Teams[teamID].ImageLoaded = true;
@@ -419,12 +423,27 @@ public class BlockSceneObject : GameSceneObject
         public Color Color;
 
         public GameObject ImageHolder;
-        public List<ButtonPartRotation> Parts;
+        public ButtonPartRotation[,] Parts;
+        public List<ButtonPartRotation> PartsList { get
+            {
+                if(Parts == null)
+                    return new List<ButtonPartRotation>();
+                List<ButtonPartRotation> list = new List<ButtonPartRotation>();
+                for (int x = 0; x < Parts.GetLength(0); x++)
+                {
+                    for (int y = 0; y < Parts.GetLength(1); y++)
+                    {
+                        list.Add(Parts[x, y]);
+                    }
+                }
+                return list;
+            }
+        }
 
         private bool _imageLoaded;
         public bool ImageLoaded { get
             {
-                return _imageLoaded && Parts.Count > 0;
+                return _imageLoaded && Parts.Length > 0;
             }
             set 
             {
@@ -486,14 +505,17 @@ public class BlockSceneObject : GameSceneObject
             });
         }
 
-        public void AddPart(GameObject part)
+        public void AddPart(GameObject part, int x, int y)
         {
             part.TryGetComponent(out ButtonPartRotation buttonPart);
-            if (buttonPart != null)
+            UIOutline outline = part.GetComponentInChildren<UIOutline>();
+            if (buttonPart != null && outline != null)
             {
                 buttonPart.Rotate += PartRotate;
+                buttonPart.OnActiveChange += (isActive) => outline.color = isActive ? Color.red : Color.green;
+                buttonPart.OnActiveChange += (isActive) => outline._outlineWidth = isActive ? 60 : 20;
                 buttonPart.IsActive = false;
-                Parts.Add(buttonPart);
+                Parts[x, y] = buttonPart;
             }
             else
                 Debug.LogError("L'image n'a pas de ButtonPartRotation.");
@@ -526,14 +548,12 @@ public class BlockSceneObject : GameSceneObject
             if (rotationsSave[id] != null)
             {
                 int l = (GameManager.Instance.CurrentGame as GameBlock).NbDivision[id];
-                int count = 0;
                 for (int x = 0; x < l; x++)
                 {
                     for (int y = 0; y < l; y++)
                     {
-                        Parts[count].transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotationsSave[id][x, y]));
-                        Debug.Log(x + ";" + y + " | " + count);
-                        count++;
+                        Parts[x, y].transform.rotation = Quaternion.Euler(new Vector3(0, 0, rotationsSave[id][x, y]));
+                        //Debug.Log(x + ";" + y);
                     }
                 }
             }
@@ -541,6 +561,10 @@ public class BlockSceneObject : GameSceneObject
             {
                 rotationsSave[id] = SufflePartRandomly(id, pourcent);
             }
+
+            foreach (var part in PartsList)
+                if(part.transform.rotation == Quaternion.Euler(0, 0, 0))
+                    part.IsActive = false;
         }
 
         int[,] SufflePartRandomly(int id, float pourcent = 1f)
@@ -552,7 +576,7 @@ public class BlockSceneObject : GameSceneObject
             {
                 rots = new();
                 total = 0;
-                for (int i = 0; i < Mathf.CeilToInt(Parts.Count * pourcent); i++)
+                for (int i = 0; i < Mathf.CeilToInt(Parts.Length * pourcent); i++)
                 {
                     int rot = GetRandomRotation();
                     rots.Add(rot);
@@ -560,7 +584,7 @@ public class BlockSceneObject : GameSceneObject
                 }
             }
 
-            List<ButtonPartRotation> parts = Parts;
+            List<ButtonPartRotation> parts = PartsList;
             parts.Shuffle();
             for (int i = 0; i < rots.Count; i++)
             {
@@ -569,7 +593,7 @@ public class BlockSceneObject : GameSceneObject
             return ConvertPartToTable(Parts, (GameManager.Instance.CurrentGame as GameBlock).NbDivision[id]);
         }
 
-        int GetLimitThrow(float pourcent) =>  Mathf.RoundToInt(2 * Mathf.CeilToInt(Parts.Count * pourcent));
+        int GetLimitThrow(float pourcent) =>  Mathf.RoundToInt(2 * Mathf.CeilToInt(Parts.Length * pourcent));
 
         int GetRandomRotation()
         {
@@ -615,17 +639,15 @@ public class BlockSceneObject : GameSceneObject
             return -1;
         }
 
-        int[,] ConvertPartToTable(List<ButtonPartRotation> parts, int l)
+        int[,] ConvertPartToTable(ButtonPartRotation[,] parts, int l)
         {
             int[,] table = new int[l, l];
-            int count = 0;
             for (int x = 0; x < l; x++)
             {
                 for (int y = 0; y < l; y++)
                 {
-                    table[x, y] = Mathf.RoundToInt(parts[count].gameObject.transform.rotation.eulerAngles.z);
-                    Debug.Log(x + ";" + y + " | " + count);
-                    count++;
+                    table[x, y] = Mathf.RoundToInt(parts[x, y].gameObject.transform.rotation.eulerAngles.z);
+                    //Debug.Log(x + ";" + y);
                 }
             }
             return table;
@@ -635,7 +657,7 @@ public class BlockSceneObject : GameSceneObject
         {
             foreach (var part in Parts)
             {
-                if(part.transform.rotation != Quaternion.Euler(0, 0, 0))
+                if(part.transform.rotation.eulerAngles != new Vector3(0, 0, 0))
                     return false;
             }
             return true;
@@ -643,10 +665,10 @@ public class BlockSceneObject : GameSceneObject
 
         public void DestroyAllParts()
         {
-            foreach (var part in Parts)
+            foreach (var part in PartsList)
                 if(part != null)
                     Destroy(part.gameObject);
-            Parts.Clear();
+            Parts = new ButtonPartRotation[0,0];
             ImageLoaded = false;
         }
 

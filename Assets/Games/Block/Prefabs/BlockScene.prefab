@@ -610,7 +610,6 @@ MonoBehaviour:
     Score: 0
     Color: {r: 0, g: 0.7607843, b: 1, a: 1}
     ImageHolder: {fileID: 2872061880483913712}
-    Parts: []
     ImageCheckMarks:
     - {fileID: 1722537177170672519}
     - {fileID: 4555213064823492285}
@@ -627,7 +626,6 @@ MonoBehaviour:
     Score: 0
     Color: {r: 1, g: 0.4117647, b: 0, a: 1}
     ImageHolder: {fileID: 6342795511903371131}
-    Parts: []
     ImageCheckMarks:
     - {fileID: 7510334664728861452}
     - {fileID: 4677799500064747062}
