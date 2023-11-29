@@ -176,12 +176,6 @@ public class QuizSceneObject : GameSceneObject
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.B))
-            SetSelectedQuestion(debugCategory);
-
-        if(Input.GetKeyDown(KeyCode.N))
-            SetQuestion(selectedQuestion[selectedQuestionID]);
-
         if (Input.GetKeyDown(KeyCode.P))
             PlayQuestion();
     }
@@ -219,6 +213,14 @@ public class QuizSceneObject : GameSceneObject
         {
             await Task.Delay(Mathf.RoundToInt(_currentQuestion.answersTime * 1000));
             tokenSource.Cancel();
+        }).ContinueWith(async (task) =>
+        {
+            WinningTeam = -1;
+            await UnityMainThreadDispatcher.Instance().EnqueueAsync(async () =>
+            {
+                await GameManager.Instance.TasksManager.AddTaskToList(PlayVideoAnim());
+                await GameManager.Instance.TasksManager.AddTaskToList(Task.Delay(6000));
+            });
         });
 
         waitTimerOrRightAnswer[1] = Task.Run(async () => 
@@ -336,9 +338,9 @@ public class QuizSceneObject : GameSceneObject
     private bool _ready = false;
     private string _fileLocation
 #if UNITY_EDITOR
-        = "C:\\Users\\smartJeux\\Documents\\Capteur\\Personnalisation\\Quizz";
+        = "Personnalisation\\Quizz";
 #else
-         = "C:\\Users\\smartJeux\\Documents\\Capteur\\Personnalisation\\Quizz";
+         = "Personnalisation\\Quizz";
 #endif 
 
 
@@ -371,10 +373,10 @@ public class QuizSceneObject : GameSceneObject
         _ready = false;
         GameQuiz.questions.Clear();
         string appPath = Application.dataPath;
-        string newPath = Path.GetFullPath(Path.Combine(appPath, @"..\..\..\..\"));
+        string newPath = Path.GetFullPath(Path.Combine(appPath, @"..\..\"));
         newPath = Path.GetFullPath(Path.Combine(newPath, _fileLocation));
 
-        string csv = File.ReadAllText(_fileLocation + "\\Questions.csv", Encoding.GetEncoding("ISO-8859-1"));
+        string csv = File.ReadAllText(newPath + "\\Questions.csv", Encoding.GetEncoding("ISO-8859-1"));
         csv = csv.Replace("\u0092", "'");
         int collum = csv.Split(new string[] { "\n" }, StringSplitOptions.None).Length;
         int line = csv.Split(new string[] { "," }, StringSplitOptions.None).Length;
@@ -515,7 +517,7 @@ public class QuizSceneObject : GameSceneObject
         {
             await GameManager.Instance.TasksManager.AddTaskToList(PlayVideoAnim(teamID));
             await GameManager.Instance.TasksManager.AddTaskToList(Teams[teamID].ScoreAnim(score, 1.5f));
-            await GameManager.Instance.TasksManager.AddTaskToList(Task.Delay(1000));
+            await GameManager.Instance.TasksManager.AddTaskToList(Task.Delay(4500));
         }
     }
 
@@ -523,6 +525,29 @@ public class QuizSceneObject : GameSceneObject
     {
         VideoClip[] videoClips = GameQuiz.GetVideoClipOfTeam(teamID);
         if(videoClips == null)
+        {
+            Debug.LogError("VideoClip[] is null");
+            return;
+        }
+
+        _videoAnimPlayer.clip = videoClips[Random.Range(0, videoClips.Length)];
+        _answerResultText.text = _currentQuestion.answers[_currentQuestion.correctAnswer];
+        _letterResultImage.sprite = GameQuiz.GetAnswerLetterSprite(_currentQuestion.correctAnswer);
+        _videoAnimPlayer.gameObject.SetActive(true);
+        _answerResultObject.SetActive(true);
+        await Task.Delay(50);
+        _videoAnimImage.gameObject.SetActive(true);
+        await Task.Delay(Mathf.RoundToInt((float)_videoAnimPlayer.clip.length * 1000));
+        _resultObject.SetActive(true);
+        _videoAnimPlayer.gameObject.SetActive(false);
+        _videoAnimImage.gameObject.SetActive(false);
+        _answerResultObject.SetActive(false);
+    }
+
+    async Task PlayVideoAnim()
+    {
+        VideoClip[] videoClips = GameQuiz.VideoAnimRed;
+        if (videoClips == null)
         {
             Debug.LogError("VideoClip[] is null");
             return;
@@ -574,9 +599,17 @@ public class QuizSceneObject : GameSceneObject
 
         _rightAnswerImage.sprite = GameQuiz.GetAnswerLetterSprite(_currentQuestion.correctAnswer);
         _rightAnswerText.text = _currentQuestion.answers[_currentQuestion.correctAnswer];
-        QuizTeam team = Teams[teamID];
-        _scoreGainText.text = team.Name + " +" + WinningScore.ToString() + "pts";
-        _scoreGainText.faceColor = team.Color;
+        if(teamID < 0)
+        {
+            _scoreGainText.text = "Oups !!! Aucune équipe n'a répondu à temps.";
+            _scoreGainText.faceColor = Color.red;
+        }
+        else
+        {
+            QuizTeam team = Teams[teamID];
+            _scoreGainText.text = team.Name + " +" + WinningScore.ToString() + "pts";
+            _scoreGainText.faceColor = team.Color;
+        }
     }
 
     public void HideTeamsButton()
