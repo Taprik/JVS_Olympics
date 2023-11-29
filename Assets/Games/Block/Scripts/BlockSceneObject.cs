@@ -10,6 +10,7 @@ using TMPro;
 using System.Threading;
 using DG.Tweening;
 using System.Linq;
+using System.IO;
 
 public class BlockSceneObject : GameSceneObject
 {
@@ -49,6 +50,7 @@ public class BlockSceneObject : GameSceneObject
     [SerializeField]
     float _initialTimer;
     float _currentTimer;
+    DateTime _startTimer;
     
     [SerializeField]
     TextMeshProUGUI _timerTextFront;
@@ -100,22 +102,27 @@ public class BlockSceneObject : GameSceneObject
         ExecutionQueue teamAQueue = GameManager.Instance.TasksManager.CreateComplexTaskQueue("TeamA");
         ExecutionQueue teamBQueue = GameManager.Instance.TasksManager.CreateComplexTaskQueue("TeamB");
 
-        UnityMainThreadDispatcher.Instance().EnqueueAsync(async () =>
+        UnityMainThreadDispatcher.Instance().Enqueue(async () =>
         {
-            List<string> imagePath = ToolBox.GetFiles(GameBlockSo.ImagePath, "*.jpg");
+            string path = Path.GetFullPath(Path.Combine(Application.dataPath, @"..\..\"));
+            path = Path.GetFullPath(Path.Combine(path, GameBlockSo.ImagePath));
+            List<string> imagePath = ToolBox.GetFiles(path, "*.jpg");
             imagePath.Shuffle();
 
             for (int i = 0; i < 3; i++)
             {
                 Tex[i] = await ToolBox.CreateTextureFromPath(imagePath[i]);
-                Debug.Log((Tex[i] == null) + " | " + imagePath[i]);
             }
 
 
             foreach (var t in Teams)
             {
+                t.ImageSplitList?.Clear();
+                t.ImageSplitList = new();
+
                 for (int i = 0; i < Tex.Length; i++)
                 {
+                    t.ImageSplitList.Add(SplitImage(Tex[i], GameBlockSo.NbDivision[i], t.ID));
                     t.DeActiveAllMark();
                     t.ImageCheckMarks[i].sprite = ToolBox.CreateSpriteFromTexture(Tex[i]);
                 }
@@ -162,7 +169,7 @@ public class BlockSceneObject : GameSceneObject
     async Task PlayOneImage(Texture2D texture, int teamID, int id, bool notFirst = true)
     {
         UnityMainThreadDispatcher.Instance().Enqueue(() => Teams[teamID].DestroyAllParts());
-        await UnityMainThreadDispatcher.Instance().EnqueueAsync(() => SplitImage(texture, GameBlockSo.NbDivision[id], teamID));
+        await UnityMainThreadDispatcher.Instance().EnqueueAsync(() => LoadImage(texture, Teams[teamID].ImageSplitList[id], GameBlockSo.NbDivision[id], teamID));
 
 
         if (notFirst)
@@ -208,7 +215,7 @@ public class BlockSceneObject : GameSceneObject
             return;
         }
 
-        await DecreaseTimer();
+        //await DecreaseTimer();
 
         await Task.Delay(2000);
 
@@ -229,6 +236,7 @@ public class BlockSceneObject : GameSceneObject
 
     async Task Timer(CancellationToken token)
     {
+        _startTimer = DateTime.Now;
         while (_currentTimer > 0)
         {
             if (token.IsCancellationRequested)
@@ -254,14 +262,16 @@ public class BlockSceneObject : GameSceneObject
 
     void SetTimerText()
     {
-        int minute = Mathf.FloorToInt(_currentTimer / 60);
-        minute = minute < 0 ? 0 : minute;
-        int second = Mathf.FloorToInt(_currentTimer % 60);
+        TimeSpan timer = (DateTime.Now - _startTimer);
+
+        int second = Mathf.FloorToInt((float)timer.TotalSeconds);
         second = second < 0 ? 0 : second;
-        if (second < 10) _timerTextFront.text = $"{minute}:0{second}";
-        else _timerTextFront.text = $"{minute}:{second}";
-        if (second < 10) _timerTextBack.text = $"{minute}:0{second}";
-        else _timerTextBack.text = $"{minute}:{second}";
+
+        int millisecond = Mathf.FloorToInt(timer.Milliseconds);
+        millisecond = millisecond < 0 ? 0 : millisecond;
+
+        _timerTextFront.text = $"{second}:{millisecond}";
+        _timerTextBack.text = $"{second}:{millisecond}";
     }
 
     //void ShuffleParts()
@@ -298,7 +308,7 @@ public class BlockSceneObject : GameSceneObject
     [SerializeField]
     Vector3 _scaleImage;
 
-    public async Task SplitImage(string path, int nbDivision, int teamID)
+    public async Task LoadImage(string path, int nbDivision, int teamID)
     {
         GameObject parent = Teams[teamID].ImageHolder;
         Texture2D texture = await ToolBox.CreateTextureFromPath(path);
@@ -328,7 +338,7 @@ public class BlockSceneObject : GameSceneObject
         }
     }
 
-    public void SplitImage(Texture2D texture, int nbDivision, int teamID)
+    public void LoadImage(Texture2D texture, Sprite[,] sprites, int nbDivision, int teamID)
     {
         GameObject parent = Teams[teamID].ImageHolder;
         Teams[teamID].Parts = new ButtonPartRotation[nbDivision, nbDivision];
@@ -339,7 +349,7 @@ public class BlockSceneObject : GameSceneObject
             {
                 float h = texture.height / nbDivision;
                 float w = texture.width / nbDivision;
-                Sprite newSprite = Sprite.Create(texture, new Rect(i * w, j * h, w, h), new Vector2(0.5f, 0.5f));
+                Sprite newSprite = sprites[i, j];
                 GameObject n = Instantiate(_partPrefab, parent.transform);
                 Image sr = n.GetComponent<Image>();
                 RectTransform rt = n.GetComponent<RectTransform>();
@@ -357,6 +367,24 @@ public class BlockSceneObject : GameSceneObject
             }
         }
         Teams[teamID].ImageLoaded = true;
+    }
+
+    public Sprite[,] SplitImage(Texture2D texture, int nbDivision, int teamID)
+    {
+        GameObject parent = Teams[teamID].ImageHolder;
+        Sprite[,] sprites = new Sprite[nbDivision, nbDivision];
+
+        for (int i = 0; i < nbDivision; i++)
+        {
+            for (int j = 0; j < nbDivision; j++)
+            {
+                float h = texture.height / nbDivision;
+                float w = texture.width / nbDivision;
+                sprites[i, j] = Sprite.Create(texture, new Rect(i * w, j * h, w, h), new Vector2(0.5f, 0.5f));
+            }
+        }
+        Teams[teamID].ImageLoaded = true;
+        return sprites;
     }
 
     #endregion
@@ -423,6 +451,7 @@ public class BlockSceneObject : GameSceneObject
         public Color Color;
 
         public GameObject ImageHolder;
+        public List<Sprite[,]> ImageSplitList;
         public ButtonPartRotation[,] Parts;
         public List<ButtonPartRotation> PartsList { get
             {
@@ -512,8 +541,7 @@ public class BlockSceneObject : GameSceneObject
             if (buttonPart != null && outline != null)
             {
                 buttonPart.Rotate += PartRotate;
-                buttonPart.OnActiveChange += (isActive) => outline.color = isActive ? Color.red : Color.green;
-                buttonPart.OnActiveChange += (isActive) => outline._outlineWidth = isActive ? 60 : 20;
+                buttonPart.OnActiveChange += (isActive) => outline.gameObject.SetActive(isActive);
                 buttonPart.IsActive = false;
                 Parts[x, y] = buttonPart;
             }

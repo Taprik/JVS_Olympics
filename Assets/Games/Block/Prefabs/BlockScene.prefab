@@ -350,7 +350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
@@ -638,7 +638,7 @@ MonoBehaviour:
     CountDownTextFront: {fileID: 2195225157897986332}
     CountDownTextBack: {fileID: 7756435555426958739}
   _partPrefab: {fileID: 6213119591651545671, guid: cce08d8e7466aff4f9426441e630f8d6, type: 3}
-  _scaleImage: {x: 0.975, y: 0.975, z: 0.975}
+  _scaleImage: {x: 1, y: 1, z: 1}
   _scorePage: {fileID: 7904615227973349471}
 --- !u!1 &7904615227973349471
 GameObject:

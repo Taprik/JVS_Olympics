@@ -21,6 +21,7 @@ public class ButtonPartRotation : ButtonParent
             OnActiveChange?.Invoke(isActive);
         } 
     }
+
     public override void DoWork()
     {
         if (!isActive) return;

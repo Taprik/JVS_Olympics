@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameBlock : GameSO
 {
     public string ImagePath => _imagePath;
-    const string _imagePath = "C:\\Users\\smartJeux\\Documents\\Capteur\\Personnalisation\\Blocks";
+    const string _imagePath = @"Personnalisation\\Blocks";
 
     public int[] NbDivision;
 }
