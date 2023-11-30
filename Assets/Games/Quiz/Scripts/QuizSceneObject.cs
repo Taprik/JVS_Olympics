@@ -116,6 +116,20 @@ public class QuizSceneObject : GameSceneObject
     [SerializeField]
     TextMeshProUGUI _answerResultText;
 
+    [SerializeField]
+    GameObject _quizStartObject;
+
+    [SerializeField]
+    SpritesOverTime _quizStartAnim;
+
+    [SerializeField]
+    GameObject _progressBarObject;
+
+    [SerializeField]
+    GameObject _progressBarPartPrefab;
+
+    List<Image> _progressBarParts = new List<Image>();
+
     Quiz_Question _currentQuestion;
 
     bool ATeamScore { get; set; }
@@ -193,6 +207,24 @@ public class QuizSceneObject : GameSceneObject
         _questionObject.SetActive(true);
         float reflectionTimer = SetQuestion(selectedQuestion[selectedQuestionID]);
         CancellationTokenSource tokenSource = new CancellationTokenSource();
+        CancellationTokenSource tokenSourceAnimOups = new CancellationTokenSource();
+
+        _quizStartObject.SetActive(true);
+        await _quizStartAnim.Anim(2f);
+        _quizStartObject.SetActive(false);
+
+        bool isFadeInComplete = false;
+
+        Transitioner.Instance.TransitionInWithoutChangingScene();
+        Transitioner.Instance.OnTransitionComplete += () => isFadeInComplete = true;
+
+        await Task.Run(async () =>
+        {
+            while (!isFadeInComplete)
+            {
+                await Task.Delay(50);
+            }
+        });
 
         UnityMainThreadDispatcher.Instance().Enqueue(async () => await _timerAnim.Anim(reflectionTimer - 1f, tokenSource.Token));
         await Task.Delay(Mathf.RoundToInt((reflectionTimer - 1f) * 1000));
@@ -221,17 +253,19 @@ public class QuizSceneObject : GameSceneObject
                 await GameManager.Instance.TasksManager.AddTaskToList(PlayVideoAnim());
                 await GameManager.Instance.TasksManager.AddTaskToList(Task.Delay(6000));
             });
-        });
+        }, tokenSourceAnimOups.Token);
 
         waitTimerOrRightAnswer[1] = Task.Run(async () => 
         {
             while (!ATeamScore)
                 await Task.Delay(10);
+            tokenSourceAnimOups.Cancel();
             tokenSource.Cancel();
         });
 
         await Task.WhenAny(waitTimerOrRightAnswer);
         tokenSource.Dispose();
+        tokenSourceAnimOups.Dispose();
 
         await Task.Run(async () =>
         {
@@ -316,12 +350,27 @@ public class QuizSceneObject : GameSceneObject
         selectedQuestionID = 0;
     }
 
-    public void SetSelectedQuestion(string categoryText)
+    public async void SetSelectedQuestion(string categoryText)
     {
         Category cat = CategoryFromString(categoryText);
         selectedQuestion = GameQuiz.questions.FindAll(x => x.category == cat);
         selectedQuestion.Shuffle();
         selectedQuestionID = 0;
+
+        if(_progressBarParts.Count > 0)
+        {
+            foreach (var part in _progressBarParts)
+            {
+                Destroy(part.gameObject);
+            }
+            _progressBarParts.Clear();
+        }
+
+        for (int i = 0; i < selectedQuestion.Count; i++)
+        {
+            _progressBarParts.Add(Instantiate(_progressBarPartPrefab, _progressBarObject.transform).GetComponent<Image>());
+        }
+
         PlayQuestion();
     }
 
@@ -338,31 +387,14 @@ public class QuizSceneObject : GameSceneObject
     private bool _ready = false;
     private string _fileLocation
 #if UNITY_EDITOR
-        = "Personnalisation\\Quizz";
+        = "Documents\\Capteur\\Personnalisation\\Quizz";
 #else
-         = "Personnalisation\\Quizz";
+        = "Personnalisation\\Quizz";
 #endif 
 
 
     public bool IsReady() => _ready;
-    //public Question GetRandomQuestion()
-    //{
-    //    Question res;
-    //    if (_currentQuestions.Count == 0)
-    //    {
 
-    //        _currentQuestions = new List<Question>(_questions);
-    //    }
-    //    int index = Random.Range(0, _currentQuestions.Count);
-    //    Question question = _currentQuestions[index];
-    //    _currentQuestions.RemoveAt(index);
-    //    return question;
-    //}
-    //public Question GetRandomQuestionDifferent(Question current)
-    //{
-
-    //    return GetRandomQuestion();
-    //}
     private async Task Read()
     {
         if (IsReady())
@@ -373,7 +405,7 @@ public class QuizSceneObject : GameSceneObject
         _ready = false;
         GameQuiz.questions.Clear();
         string appPath = Application.dataPath;
-        string newPath = Path.GetFullPath(Path.Combine(appPath, @"..\..\"));
+        string newPath = Path.GetFullPath(Path.Combine(appPath, @"..\..\..\..\"));
         newPath = Path.GetFullPath(Path.Combine(newPath, _fileLocation));
 
         string csv = File.ReadAllText(newPath + "\\Questions.csv", Encoding.GetEncoding("ISO-8859-1"));
@@ -383,9 +415,6 @@ public class QuizSceneObject : GameSceneObject
         int lineLength = (line + collum) / collum;
         string[] data = csv.Split(new string[] { ",", "\n" }, StringSplitOptions.None);
         int tableSize = (data.Length / lineLength) - 1;
-
-
-
 
         for (int i = 1; i <= tableSize; i++)
         {
@@ -412,7 +441,6 @@ public class QuizSceneObject : GameSceneObject
             GameQuiz.questions.Add(currentQuestion);
         }
         _ready = true;
-        //_currentQuestions = new List<Question>(_questions);
         Debug.Log("Finish Reading");
     }
 
@@ -565,6 +593,17 @@ public class QuizSceneObject : GameSceneObject
         _videoAnimPlayer.gameObject.SetActive(false);
         _videoAnimImage.gameObject.SetActive(false);
         _answerResultObject.SetActive(false);
+    }
+
+    async Task PlayVideoAnim(VideoClip clip)
+    {
+        _videoAnimPlayer.clip = clip;
+        _videoAnimPlayer.gameObject.SetActive(true);
+        await Task.Delay(50);
+        _videoAnimImage.gameObject.SetActive(true);
+        await Task.Delay(Mathf.RoundToInt((float)_videoAnimPlayer.clip.length * 1000));
+        _videoAnimPlayer.gameObject.SetActive(false);
+        _videoAnimImage.gameObject.SetActive(false);
     }
 
     int GetScore()
