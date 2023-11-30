@@ -85,12 +85,12 @@ public class BlockSceneObject : GameSceneObject
         //    t.Win += TeamWin;
         //}
         _currentTimer = _initialTimer;
-        SetTimerText();
+        SetTimerText(true);
     }
 
     void GameUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             PlayGame();
         }
@@ -104,7 +104,7 @@ public class BlockSceneObject : GameSceneObject
 
         UnityMainThreadDispatcher.Instance().Enqueue(async () =>
         {
-            string path = Path.GetFullPath(Path.Combine(Application.dataPath, @"..\..\"));
+            string path = Path.GetFullPath(Path.Combine(Application.dataPath, @"..\..\..\..\"));
             path = Path.GetFullPath(Path.Combine(path, GameBlockSo.ImagePath));
             List<string> imagePath = ToolBox.GetFiles(path, "*.jpg");
             imagePath.Shuffle();
@@ -260,8 +260,15 @@ public class BlockSceneObject : GameSceneObject
         }
     }
 
-    void SetTimerText()
+    void SetTimerText(bool zero = false)
     {
+        if (zero)
+        {
+            _timerTextFront.text = "0:000";
+            _timerTextBack.text = "0:000";
+            return;
+        }
+
         TimeSpan timer = (DateTime.Now - _startTimer);
 
         int second = Mathf.FloorToInt((float)timer.TotalSeconds);
