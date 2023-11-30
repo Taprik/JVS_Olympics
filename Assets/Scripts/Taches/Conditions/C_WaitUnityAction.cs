@@ -8,23 +8,25 @@ using UnityEngine.Events;
 public class C_WaitUnityAction : Condition
 {
     [SerializeField]
-    UnityAction _action;
+    E_UnityEvent _event;
 
     bool _actionComplete;
 
     public override void Init()
     {
         _actionComplete = false;
-        _action += () =>
-        {
-            _actionComplete = true;
-        };
+        _event.Action.AddListener(() => _actionComplete = true);
     }
 
-    public override Task CheckCondition(out bool isOk)
+    public async override Task<bool> CheckCondition()
     {
-        Task.Run(() => _actionComplete).Wait();
-        isOk = true;
-        return Task.CompletedTask;
+        await Task.Run(async () =>
+        {
+            while (!_actionComplete)
+            {
+                await Task.Delay(1);
+            }
+        });
+        return true;
     }
 }

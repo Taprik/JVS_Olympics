@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 [System.Serializable]
 public class MultipleTaches
@@ -14,9 +15,16 @@ public class MultipleTaches
     [SerializeField, Header("If :")]
     Condition[] _condition;
 
-    public Tache[] Taches => _taches;
+    public TacheType[] Taches => _taches;
     [SerializeField, Header("Do :")]
-    Tache[] _taches;
+    TacheType[] _taches;
+
+    [Serializable]
+    public struct TacheType
+    {
+        public Tache tache;
+        public UnityEvent unityEvent;
+    }
 
     public Action<bool> CallBack;
 
@@ -44,28 +52,45 @@ public class MultipleTaches
 
         if (_condition != null)
         {
-            Task[] tasks = new Task[_condition.Length];
+            Task<bool>[] tasks = new Task<bool>[_condition.Length];
 
             for (int i = 0; i < tasks.Length; i++)
             {
-                tasks[i] = _condition[i].CheckCondition(out bool temp);
-                conditionOk = !temp ? temp : conditionOk;
+                tasks[i] = _condition[i].CheckCondition();
             }
 
             await Task.WhenAll(tasks);
+
+            for (int i = 0; i < tasks.Length; i++)
+            {
+                bool temp = tasks[i].Result;
+                conditionOk = !temp ? temp : conditionOk;
+            }
         }
 
         for (int i = 0; i < _taches.Length; i++)
         {
-            if (conditionOk)
+            if (_taches[i].tache != null)
             {
-                _taches[i].CallBack += (callBack) =>
+                Tache currentTache = _taches[i].tache;
+                if (conditionOk)
                 {
-                    CallBack?.Invoke(callBack);
-                };
-                await _taches[i].DoWork();
+                    currentTache.CallBack += (callBack) =>
+                    {
+                        CallBack?.Invoke(callBack);
+                    };
+                    await currentTache.DoWork();
+                }
+                else currentTache.BadEnd();
             }
-            else _taches[i].BadEnd();
+            
+            if (_taches[i].unityEvent != null)
+            {
+                if (conditionOk)
+                {
+                    UnityMainThreadDispatcher.Instance().Enqueue(() => _taches[i].unityEvent.Invoke());
+                }
+            }
         }
         
     }
@@ -76,28 +101,49 @@ public class MultipleTaches
 
         if (_condition != null)
         {
-            Task[] tasks = new Task[_condition.Length];
+            Task<bool>[] tasks = new Task<bool>[_condition.Length];
 
             for (int i = 0; i < tasks.Length; i++)
             {
-                tasks[i] = _condition[i].CheckCondition(out bool temp);
-                conditionOk = temp ? temp : conditionOk;
+                tasks[i] = _condition[i].CheckCondition();
             }
 
             await Task.WhenAny(tasks);
+
+            for (int i = 0; i < tasks.Length; i++)
+            {
+                if (!tasks[i].IsCompleted) continue;
+
+                bool temp = tasks[i].Result;
+                conditionOk = !temp ? temp : conditionOk;
+            }
+
+            Debug.Log(conditionOk);
         }
 
         for (int i = 0; i < _taches.Length; i++)
         {
-            if (conditionOk)
+            if (_taches[i].tache != null)
             {
-                _taches[i].CallBack += (callBack) =>
+                Tache currentTache = _taches[i].tache;
+                if (conditionOk)
                 {
-                    CallBack?.Invoke(callBack);
-                };
-                await _taches[i].DoWork();
+                    currentTache.CallBack += (callBack) =>
+                    {
+                        CallBack?.Invoke(callBack);
+                    };
+                    await currentTache.DoWork();
+                }
+                else currentTache.BadEnd();
             }
-            else _taches[i].BadEnd();
+
+            if (_taches[i].unityEvent != null)
+            {
+                if (conditionOk)
+                {
+                    UnityMainThreadDispatcher.Instance().Enqueue(() => _taches[i].unityEvent?.Invoke());
+                }
+            }
         }
     }
 }

@@ -8,9 +8,8 @@ public class Condition : ScriptableObject
 {
     public virtual void Init() { }
 
-    public virtual Task CheckCondition(out bool isOk)
+    public async virtual Task<bool> CheckCondition()
     {
-        isOk = true;
-        return Task.CompletedTask;
+        return true;
     }
 }

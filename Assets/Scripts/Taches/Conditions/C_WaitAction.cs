@@ -1,26 +1,24 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Events;
 
-[CreateAssetMenu(fileName = "C_WaitEventSo", menuName = "Game/Conditions/WaitEventSo")]
-public class C_WaitEventSo : Condition
+[CreateAssetMenu(fileName = "C_WaitAction", menuName = "Game/Conditions/WaitAction")]
+public class C_WaitAction : Condition
 {
     [SerializeField]
-    EventSO _event;
+    Action _action;
 
     bool _actionComplete;
 
     public override void Init()
     {
         _actionComplete = false;
-        _event.RegisterListener(() =>
+        _action += () =>
         {
-            Debug.Log("Success");
             _actionComplete = true;
-            return null;
-        });
+        };
     }
 
     public async override Task<bool> CheckCondition()
