@@ -62,16 +62,19 @@ namespace Tool
 
         public static bool CheckPos(Vector2 hit, RectTransform rect)
         {
-            if (hit.x < rect.transform.position.x - (rect.rect.width / 2))
+            float ConvertX(float pos) => (pos + 102.64f) * (1920 / 205.28f);
+            float ConvertY(float pos) => (pos + 57.74f) * (1080 / 115.48f);
+
+            Vector2 pos = new Vector2(ConvertX(rect.transform.position.x), ConvertY(rect.transform.position.y));
+            if (hit.x < pos.x - (rect.rect.width / 2))
                 return false;
-            if (hit.y < rect.transform.position.y - (rect.rect.height / 2))
+            if (hit.y < pos.y - (rect.rect.height / 2))
                 return false;
 
-            if (hit.x > rect.transform.position.x + (rect.rect.width / 2))
+            if (hit.x > pos.x + (rect.rect.width / 2))
                 return false;
-            if (hit.y > rect.transform.position.y + (rect.rect.height / 2))
+            if (hit.y > pos.y + (rect.rect.height / 2))
                 return false;
-
 
             return true;
         }

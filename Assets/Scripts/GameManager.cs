@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        if(Input.GetKeyDown(KeyCode.I))
+        if(Input.GetKeyDown(KeyCode.L))
         {
             AddressablesManager.Init();
         }
@@ -92,27 +92,12 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.O))
         {
-            WaitAllTask();
+            Transitioner.Instance.TransitionOutWithoutChangingScene();
         }
-    }
 
-    async void WaitAllTask()
-    {
-        ExecutionQueue loadAllQueue = TasksManager.CreateComplexTaskQueue("LoadAll");
-        loadAllQueue.Run(() => WaitTask(0));
-        loadAllQueue.Run(() => WaitTask(1));
-        loadAllQueue.Complete();
-        await loadAllQueue.Completion;
-        Debug.Log("Finish Queue");
-    }
-
-    async Task WaitTask(int id)
-    {
-        Debug.Log(id + " : Begin");
-        for (int i = 0; i <= 5; i++)
+        if (Input.GetKeyDown(KeyCode.I))
         {
-            await Task.Delay(200);
+            Transitioner.Instance.TransitionInWithoutChangingScene();
         }
-        Debug.Log(id + " : End");
     }
 }

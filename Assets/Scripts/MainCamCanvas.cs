@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Canvas))]
 public class MainCamCanvas : MonoBehaviour
 {
-    private void Awake()
+    private void Start()
     {
         Canvas canvas = this.GetComponent<Canvas>();
         canvas.worldCamera = Camera.main;

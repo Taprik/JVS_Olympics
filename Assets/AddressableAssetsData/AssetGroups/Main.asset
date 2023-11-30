@@ -21,6 +21,11 @@ MonoBehaviour:
     m_Address: Assets/Prefabs/TestFolder
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 052a45a13d5e39441ad94fd237eef302
+    m_Address: Assets/Imports
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 023023c01781d1b4093446c137e3b907, type: 2}
   m_SchemaSet:
