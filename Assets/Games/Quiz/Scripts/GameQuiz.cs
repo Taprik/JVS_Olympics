@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -14,7 +15,18 @@ public class GameQuiz : GameSO
     public Sprite[] AnswerLetterSprites;
     public Sprite GetAnswerLetterSprite(int id) => AnswerLetterSprites.Length >= id + 1 ? AnswerLetterSprites[id] : null;
 
-    public List<Quiz_Question> questions;
+    public List<Quiz_Question> Questions;
+
+    public List<TMP_FontAsset> TeamsFonts;
+    public TMP_FontAsset GetFontAsset(TeamFontColor color) => TeamsFonts[(int)color];
+
+    public enum TeamFontColor
+    {
+        None = 3,
+        Orange = 1,
+        Blue = 0,
+        Red = 2
+    }
 }
 
 [System.Serializable]

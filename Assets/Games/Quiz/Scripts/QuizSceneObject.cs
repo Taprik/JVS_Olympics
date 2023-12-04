@@ -178,13 +178,16 @@ public class QuizSceneObject : GameSceneObject
 
         GameManager.Instance.CurrentGame = GameQuizSo;
 
+        _playButtonHolder.SetActive(true);
+        _selectCategoryHolder.SetActive(false);
+
         for (int i = 0; i < Teams.Length; i++)
         {
             Teams[i].TeamAnswersHolder.SetActive(false);
             Teams[i].TeamScoreHolder.SetActive(false);
             Teams[i].TeamName.text = Teams[i].Name;
             Teams[i].TeamScore.text = Teams[i].Score.ToString() + " pts";
-            Teams[i].SetColor();
+            Teams[i].SetColor(GameQuizSo);
         }
 
         //SetCategoryButton();
@@ -305,21 +308,24 @@ public class QuizSceneObject : GameSceneObject
         ScorePage.SetActive(true);
         if (Teams[0].Score == Teams[1].Score)
         {
+            ScoreTeam.font = GameQuizSo.GetFontAsset(GameQuiz.TeamFontColor.Red);
             ScoreTeam.text = "Egalité !\n";
-            ScoreText.text = Teams[0].Score.ToString() + " pts";
-            ScoreTeam.faceColor = Color.red;
             ScoreTeam.color = Color.red;
-            ScoreText.faceColor = Color.red;
+            
+            ScoreText.font = GameQuizSo.GetFontAsset(GameQuiz.TeamFontColor.Red);
+            ScoreText.text = Teams[0].Score.ToString() + " pts";
             ScoreText.color = Color.red;
         }
         else
         {
             int id = (Teams[0].Score > Teams[1].Score) ? 0 : 1;
+            
+            ScoreTeam.font = GameQuizSo.GetFontAsset(id == 0 ? GameQuiz.TeamFontColor.Blue : GameQuiz.TeamFontColor.Orange);
             ScoreTeam.text = "Bravo équipe \n" + Teams[id].Name.ToString();
-            ScoreText.text = Teams[id].Score.ToString() + " pts";
-            ScoreTeam.faceColor = Teams[id].Color;
             ScoreTeam.color = Teams[id].Color;
-            ScoreText.faceColor = Teams[id].Color;
+            
+            ScoreText.font = GameQuizSo.GetFontAsset(id == 0 ? GameQuiz.TeamFontColor.Blue : GameQuiz.TeamFontColor.Orange);
+            ScoreText.text = Teams[id].Score.ToString() + " pts";
             ScoreText.color = Teams[id].Color;
         }
     }
@@ -359,7 +365,7 @@ public class QuizSceneObject : GameSceneObject
 
     public void SetSelectedQuestion(Category category)
     {
-        selectedQuestion = GameQuizSo.questions.FindAll(x => x.category == category);
+        selectedQuestion = GameQuizSo.Questions.FindAll(x => x.category == category);
         selectedQuestion.Shuffle();
         selectedQuestionID = 0;
     }
@@ -367,7 +373,7 @@ public class QuizSceneObject : GameSceneObject
     public async void SetSelectedQuestion(string categoryText)
     {
         Category cat = CategoryFromString(categoryText);
-        selectedQuestion = GameQuizSo.questions.FindAll(x => x.category == cat);
+        selectedQuestion = GameQuizSo.Questions.FindAll(x => x.category == cat);
         selectedQuestion.Shuffle();
         selectedQuestionID = 0;
 
@@ -417,7 +423,7 @@ public class QuizSceneObject : GameSceneObject
 
         Debug.Log("Read !");
         _ready = false;
-        GameQuizSo.questions.Clear();
+        GameQuizSo.Questions.Clear();
         string appPath = Application.dataPath;
         string newPath = Path.GetFullPath(Path.Combine(appPath, @"..\..\..\..\"));
         newPath = Path.GetFullPath(Path.Combine(newPath, _fileLocation));
@@ -452,7 +458,7 @@ public class QuizSceneObject : GameSceneObject
             currentQuestion.reflectionTime = reflectionTimer;
             Int32.TryParse(data[lineLength * i + 9], out int answersTimer);
             currentQuestion.answersTime = answersTimer;
-            GameQuizSo.questions.Add(currentQuestion);
+            GameQuizSo.Questions.Add(currentQuestion);
         }
         _ready = true;
         Debug.Log("Finish Reading");
@@ -700,15 +706,15 @@ public class QuizSceneObject : GameSceneObject
         _rightAnswerText.text = _currentQuestion.answers[_currentQuestion.correctAnswer];
         if(teamID < 0)
         {
+            _scoreGainText.font = GameQuizSo.GetFontAsset(GameQuiz.TeamFontColor.Red);
             _scoreGainText.text = "Oups !!! \n Aucune équipe n'a répondu à temps.";
-            _scoreGainText.faceColor = Color.red;
             _scoreGainText.color = Color.red;
         }
         else
         {
             QuizTeam team = Teams[teamID];
+            _scoreGainText.font = GameQuizSo.GetFontAsset(teamID == 0 ? GameQuiz.TeamFontColor.Blue : GameQuiz.TeamFontColor.Orange);
             _scoreGainText.text = "Réponse : " + StringFromValue(_currentQuestion.correctAnswer) + "\n Bravo équipe " + team.Name + "\n +" + WinningScore.ToString() + "pts";
-            _scoreGainText.faceColor = team.Color;
             _scoreGainText.color = team.Color;
         }
     }
@@ -755,6 +761,7 @@ public class QuizSceneObject : GameSceneObject
     public class QuizTeam
     {
         public string Name;
+        public int ID;
         public int Score;
         public Color Color;
 
@@ -779,20 +786,20 @@ public class QuizSceneObject : GameSceneObject
             TeamScore.text = Score.ToString() + " pts";
         }
 
-        public void SetColor()
+        public void SetColor(GameQuiz gameQuiz)
         {
             foreach (var o in TeamColorObjects)
-                SetColor(o, Color);
+                SetColor(o, Color, gameQuiz);
         }
 
-        public void SetColor(GameObject go, Color color)
+        public void SetColor(GameObject go, Color color, GameQuiz gameQuiz)
         {
 
             TextMeshProUGUI text = go.GetComponent<TextMeshProUGUI>();
             if (text != null)
             {
-                text.faceColor = color;
                 text.color = color;
+                text.font = gameQuiz.GetFontAsset(ID == 0 ? GameQuiz.TeamFontColor.Blue : GameQuiz.TeamFontColor.Orange);
             }
 
             Image image = go.GetComponent<Image>();

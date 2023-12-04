@@ -17,10 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: d375d3dbd9f0d0d4496ca71d06ae4b9a
   m_SerializeEntries:
-  - m_GUID: 380f6f1b428d41a4ba00134f19a7d26f
-    m_Address: Assets/Prefabs/TestFolder
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 052a45a13d5e39441ad94fd237eef302
     m_Address: Assets/Imports
     m_ReadOnly: 0

@@ -9,7 +9,9 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: NightLightOutline Atlas Material
   m_Shader: {fileID: 4800000, guid: 68e6db2ebdc24f95958faec2be5558d6, type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - GLOW_ON
+  - UNDERLAY_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -57,9 +59,9 @@ Material:
     - _FaceUVSpeedX: 0
     - _FaceUVSpeedY: 0
     - _GlowInner: 1
-    - _GlowOffset: -1
-    - _GlowOuter: 0.25
-    - _GlowPower: 1
+    - _GlowOffset: 0
+    - _GlowOuter: 1
+    - _GlowPower: 0.206
     - _GradientScale: 10
     - _LightAngle: 3.1416
     - _MaskSoftnessX: 0
@@ -85,10 +87,10 @@ Material:
     - _StencilWriteMask: 255
     - _TextureHeight: 1024
     - _TextureWidth: 1024
-    - _UnderlayDilate: -1
-    - _UnderlayOffsetX: -1
-    - _UnderlayOffsetY: -1
-    - _UnderlaySoftness: 0
+    - _UnderlayDilate: -0.09
+    - _UnderlayOffsetX: 0
+    - _UnderlayOffsetY: 0
+    - _UnderlaySoftness: 1
     - _VertexOffsetX: 0
     - _VertexOffsetY: 0
     - _WeightBold: 0.75
@@ -96,14 +98,14 @@ Material:
     m_Colors:
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
     - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
-    - _FaceColor: {r: 2, g: 2, b: 2, a: 1}
-    - _GlowColor: {r: 0.1254902, g: 0.1254902, b: 0.1254902, a: 1}
+    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GlowColor: {r: 0, g: 0.34509805, b: 0.57254905, a: 1}
     - _MaskCoord: {r: 0, g: 0, b: 32767, a: 32767}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _ReflectFaceColor: {r: 0, g: 0, b: 0, a: 1}
     - _ReflectOutlineColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecularColor: {r: 16, g: 16, b: 16, a: 1}
-    - _UnderlayColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
+    - _UnderlayColor: {r: 0, g: 0.18277597, b: 0.49803922, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &11400000
 MonoBehaviour:
@@ -115,11 +117,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
-  m_Name: NightLightOutline SDF
+  m_Name: NightLightOutline SDF Blue
   m_EditorClassIdentifier: 
-  hashCode: -530697837
+  hashCode: 1823205773
   material: {fileID: -8086076158809500276}
-  materialHashCode: 1152406355
+  materialHashCode: -25191667
   m_Version: 1.1.0
   m_SourceFontFileGUID: cfe9559d8fff4b049aca6542ba0cc6ec
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: cfe9559d8fff4b049aca6542ba0cc6ec, type: 3}
@@ -5258,7 +5260,7 @@ MonoBehaviour:
     atlasHeight: 1024
     characterSetSelectionMode: 1
     characterSequence: 32 - 126, 160 - 255, 8192 - 8303, 8364, 8482, 9633
-    referencedFontAssetGUID: 1c6c2206797ba23418f4aec3c2512bc7
+    referencedFontAssetGUID: e1c665ea6d9ce504b80d31af7e415589
     referencedTextAssetGUID: 
     fontStyle: 0
     fontStyleModifier: 0
@@ -5298,7 +5300,7 @@ Texture2D:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NightLightOutline SDF Atlas
+  m_Name: NightLightOutline SDF - Copie Atlas
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
