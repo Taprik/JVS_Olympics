@@ -62,6 +62,8 @@ namespace OSC
         public bool inOpened;
         public bool outOpened;
 
+        public GameObject ImpactPref;
+
         void Start()
         {
             // Ensure that we have a OscIn component and start receiving on port 7000.
@@ -164,6 +166,8 @@ namespace OSC
             float impactY;
             message.TryGet(1, out impactY);
             impactY *= Screen.height;
+
+            Instantiate(ImpactPref, new Vector3(impactX, impactY, 0), Quaternion.identity);
 
             var receiveParents = FindObjectsOfType<MonoBehaviour>().OfType<IReceivePoint>();
             foreach (IReceivePoint rp in receiveParents)
