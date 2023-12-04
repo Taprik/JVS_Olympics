@@ -18,7 +18,7 @@ using UnityEngine.Video;
 [DisallowMultipleComponent]
 public class QuizSceneObject : GameSceneObject
 {
-    public GameQuiz GameQuiz => _gameQuiz;
+    public GameQuiz GameQuizSo => _gameQuiz;
     [SerializeField]
     GameQuiz _gameQuiz;
 
@@ -128,7 +128,13 @@ public class QuizSceneObject : GameSceneObject
     [SerializeField]
     GameObject _progressBarPartPrefab;
 
+    [SerializeField] private float _minDistanceFromEverything;
+    [SerializeField] private float _offsetY;
+    [SerializeField] private float _offsetX;
+
     List<Image> _progressBarParts = new List<Image>();
+
+    List<Vector3> _placed = new List<Vector3>();
 
     Quiz_Question _currentQuestion;
 
@@ -170,7 +176,7 @@ public class QuizSceneObject : GameSceneObject
         GamePage.SetActive(false);
         ScorePage.SetActive(false);
 
-        GameManager.Instance.CurrentGame = GameQuiz;
+        GameManager.Instance.CurrentGame = GameQuizSo;
 
         for (int i = 0; i < Teams.Length; i++)
         {
@@ -181,7 +187,7 @@ public class QuizSceneObject : GameSceneObject
             Teams[i].SetColor();
         }
 
-        SetCategoryButton();
+        //SetCategoryButton();
 
         await GameManager.Instance.AddressablesManager.LoadScreen(Read());
 
@@ -273,8 +279,8 @@ public class QuizSceneObject : GameSceneObject
                 await Task.Delay(100);
         });
 
-        SetTeamsScoreHolder(WinningTeam);
         HideTeamsButton();
+        SetTeamsScoreHolder(WinningTeam);
         ATeamScore = false;
 
         await Task.Run(async () =>
@@ -286,6 +292,10 @@ public class QuizSceneObject : GameSceneObject
         FadeAnimator.SetTrigger("FadeOut");
         await Task.Delay(50);
         await Task.Delay(Mathf.RoundToInt(FadeAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.averageDuration * 1100));
+
+        if (!(selectedQuestionID < 0))
+            _progressBarParts[selectedQuestionID].color = Color.black;
+
         PlayQuestion();
     }
 
@@ -295,18 +305,22 @@ public class QuizSceneObject : GameSceneObject
         ScorePage.SetActive(true);
         if (Teams[0].Score == Teams[1].Score)
         {
-            ScoreTeam.text = "Egalité !";
+            ScoreTeam.text = "Egalité !\n";
             ScoreText.text = Teams[0].Score.ToString() + " pts";
             ScoreTeam.faceColor = Color.red;
+            ScoreTeam.color = Color.red;
             ScoreText.faceColor = Color.red;
+            ScoreText.color = Color.red;
         }
         else
         {
             int id = (Teams[0].Score > Teams[1].Score) ? 0 : 1;
-            ScoreTeam.text = Teams[id].Name.ToString() + " Gagne !";
+            ScoreTeam.text = "Bravo équipe \n" + Teams[id].Name.ToString();
             ScoreText.text = Teams[id].Score.ToString() + " pts";
             ScoreTeam.faceColor = Teams[id].Color;
+            ScoreTeam.color = Teams[id].Color;
             ScoreText.faceColor = Teams[id].Color;
+            ScoreText.color = Teams[id].Color;
         }
     }
 
@@ -345,7 +359,7 @@ public class QuizSceneObject : GameSceneObject
 
     public void SetSelectedQuestion(Category category)
     {
-        selectedQuestion = GameQuiz.questions.FindAll(x => x.category == category);
+        selectedQuestion = GameQuizSo.questions.FindAll(x => x.category == category);
         selectedQuestion.Shuffle();
         selectedQuestionID = 0;
     }
@@ -353,7 +367,7 @@ public class QuizSceneObject : GameSceneObject
     public async void SetSelectedQuestion(string categoryText)
     {
         Category cat = CategoryFromString(categoryText);
-        selectedQuestion = GameQuiz.questions.FindAll(x => x.category == cat);
+        selectedQuestion = GameQuizSo.questions.FindAll(x => x.category == cat);
         selectedQuestion.Shuffle();
         selectedQuestionID = 0;
 
@@ -403,7 +417,7 @@ public class QuizSceneObject : GameSceneObject
 
         Debug.Log("Read !");
         _ready = false;
-        GameQuiz.questions.Clear();
+        GameQuizSo.questions.Clear();
         string appPath = Application.dataPath;
         string newPath = Path.GetFullPath(Path.Combine(appPath, @"..\..\..\..\"));
         newPath = Path.GetFullPath(Path.Combine(newPath, _fileLocation));
@@ -438,7 +452,7 @@ public class QuizSceneObject : GameSceneObject
             currentQuestion.reflectionTime = reflectionTimer;
             Int32.TryParse(data[lineLength * i + 9], out int answersTimer);
             currentQuestion.answersTime = answersTimer;
-            GameQuiz.questions.Add(currentQuestion);
+            GameQuizSo.questions.Add(currentQuestion);
         }
         _ready = true;
         Debug.Log("Finish Reading");
@@ -551,7 +565,7 @@ public class QuizSceneObject : GameSceneObject
 
     async Task PlayVideoAnim(int teamID)
     {
-        VideoClip[] videoClips = GameQuiz.GetVideoClipOfTeam(teamID);
+        VideoClip[] videoClips = GameQuizSo.GetVideoClipOfTeam(teamID);
         if(videoClips == null)
         {
             Debug.LogError("VideoClip[] is null");
@@ -560,7 +574,7 @@ public class QuizSceneObject : GameSceneObject
 
         _videoAnimPlayer.clip = videoClips[Random.Range(0, videoClips.Length)];
         _answerResultText.text = _currentQuestion.answers[_currentQuestion.correctAnswer];
-        _letterResultImage.sprite = GameQuiz.GetAnswerLetterSprite(_currentQuestion.correctAnswer);
+        _letterResultImage.sprite = GameQuizSo.GetAnswerLetterSprite(_currentQuestion.correctAnswer);
         _videoAnimPlayer.gameObject.SetActive(true);
         _answerResultObject.SetActive(true);
         await Task.Delay(50);
@@ -574,7 +588,7 @@ public class QuizSceneObject : GameSceneObject
 
     async Task PlayVideoAnim()
     {
-        VideoClip[] videoClips = GameQuiz.VideoAnimRed;
+        VideoClip[] videoClips = GameQuizSo.VideoAnimRed;
         if (videoClips == null)
         {
             Debug.LogError("VideoClip[] is null");
@@ -583,7 +597,7 @@ public class QuizSceneObject : GameSceneObject
 
         _videoAnimPlayer.clip = videoClips[Random.Range(0, videoClips.Length)];
         _answerResultText.text = _currentQuestion.answers[_currentQuestion.correctAnswer];
-        _letterResultImage.sprite = GameQuiz.GetAnswerLetterSprite(_currentQuestion.correctAnswer);
+        _letterResultImage.sprite = GameQuizSo.GetAnswerLetterSprite(_currentQuestion.correctAnswer);
         _videoAnimPlayer.gameObject.SetActive(true);
         _answerResultObject.SetActive(true);
         await Task.Delay(50);
@@ -619,14 +633,60 @@ public class QuizSceneObject : GameSceneObject
 
     public void SetTeamsButton()
     {
+        _placed.Clear();
         foreach (var t in Teams)
         {
             t.TeamAnswersHolder.SetActive(true);
             for (int i = 0; i < t.TeamAnswers.Length; i++)
             {
+                RandomPosTeamsButton(t.TeamAnswers[i].transform as RectTransform);
                 t.TeamAnswers[i].SetActive(true);
+                t.TeamAnswers[i].GetComponent<Animator>().SetTrigger("Reset");
             }
         }
+    }
+
+    void RandomPosTeamsButton(RectTransform rect)
+    {
+        Vector3 pos = Vector3.zero;
+        do
+        {
+            pos = new Vector3(RandomXButtonCordinates(), RandomYButtonCordinates(), 0);
+
+        } while (IsOverlappingWithAlreadySet(pos));
+
+        rect.anchoredPosition = pos;
+        _placed.Add(pos);
+    }
+
+    float RandomXButtonCordinates()
+    {
+        return Random.Range(-Screen.width / 2 + _minDistanceFromEverything * 0.5f + _offsetX, Screen.width / 2 - _minDistanceFromEverything - _offsetX);
+    }
+    float RandomYButtonCordinates()
+    {
+        return Random.Range(-Screen.height / 2 + _minDistanceFromEverything + _offsetY, Screen.height / 2 - _minDistanceFromEverything - _offsetY);
+    }
+
+    bool IsOverlappingWithAlreadySet(Vector3 pos)
+    {
+        foreach (Vector3 current in _placed)
+        {
+
+            if (Vector3.Distance(current, pos) < _minDistanceFromEverything * 2)
+            {
+                return true;
+            }
+        }
+        //foreach (RectTransform current in _othersToCheck)
+        //{
+
+        //    if (Vector3.Distance(current.anchoredPosition, pos) < _minDistanceFromEverything * 2)
+        //    {
+        //        return true;
+        //    }
+        //}
+        return false;
     }
 
     public void SetTeamsScoreHolder(int teamID)
@@ -636,23 +696,26 @@ public class QuizSceneObject : GameSceneObject
             t.TeamScoreHolder.SetActive(true);
         }
 
-        _rightAnswerImage.sprite = GameQuiz.GetAnswerLetterSprite(_currentQuestion.correctAnswer);
+        _rightAnswerImage.sprite = GameQuizSo.GetAnswerLetterSprite(_currentQuestion.correctAnswer);
         _rightAnswerText.text = _currentQuestion.answers[_currentQuestion.correctAnswer];
         if(teamID < 0)
         {
-            _scoreGainText.text = "Oups !!! Aucune équipe n'a répondu à temps.";
+            _scoreGainText.text = "Oups !!! \n Aucune équipe n'a répondu à temps.";
             _scoreGainText.faceColor = Color.red;
+            _scoreGainText.color = Color.red;
         }
         else
         {
             QuizTeam team = Teams[teamID];
-            _scoreGainText.text = team.Name + " +" + WinningScore.ToString() + "pts";
+            _scoreGainText.text = "Réponse : " + StringFromValue(_currentQuestion.correctAnswer) + "\n Bravo équipe " + team.Name + "\n +" + WinningScore.ToString() + "pts";
             _scoreGainText.faceColor = team.Color;
+            _scoreGainText.color = team.Color;
         }
     }
 
-    public void HideTeamsButton()
+    public async void HideTeamsButton()
     {
+        await Task.Delay(1000);
         foreach (var t in Teams)
         {
             t.TeamAnswersHolder.SetActive(false);
@@ -663,22 +726,14 @@ public class QuizSceneObject : GameSceneObject
         }
     }
 
-    public void HideTeamsScoreHolder()
+    public async void HideOtherTeamsButton(GameObject button)
     {
-        foreach (var t in Teams)
-        {
-            t.TeamScoreHolder.SetActive(false);
-        }
-    }
-
-    public void HideOtherTeamsButton(GameObject button)
-    {
+        await Task.Delay(1000);
         foreach (var t in Teams)
         {
             if(!t.TeamAnswers.ToList().Exists(x => x == button))
             {
                 t.TeamAnswersHolder.SetActive(false);
-                t.TeamScoreHolder.SetActive(false);
             }
 
             for (int i = 0; i < t.TeamAnswers.Length; i++)
@@ -692,7 +747,7 @@ public class QuizSceneObject : GameSceneObject
     public async Task DestroyTeamButton(int id, int teamID)
     {
         Teams[teamID].TeamAnswers[id].GetComponent<Animator>().SetTrigger("IsDestroy");
-        await Task.Delay(Mathf.RoundToInt(_etoileAnim.length * 1000) + 200);
+        //await Task.Delay(Mathf.RoundToInt(_etoileAnim.length * 1000) + 200);
     }
 
 
@@ -735,7 +790,10 @@ public class QuizSceneObject : GameSceneObject
 
             TextMeshProUGUI text = go.GetComponent<TextMeshProUGUI>();
             if (text != null)
+            {
                 text.faceColor = color;
+                text.color = color;
+            }
 
             Image image = go.GetComponent<Image>();
             if (image != null)
