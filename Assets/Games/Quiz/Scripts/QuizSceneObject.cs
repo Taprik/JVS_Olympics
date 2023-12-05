@@ -132,6 +132,12 @@ public class QuizSceneObject : GameSceneObject
     [SerializeField] private float _offsetY;
     [SerializeField] private float _offsetX;
 
+    [SerializeField]
+    StarAnimation _starAnimationObject;
+
+    [SerializeField]
+    int _nbStar;
+
     List<Image> _progressBarParts = new List<Image>();
 
     List<Vector3> _placed = new List<Vector3>();
@@ -370,7 +376,7 @@ public class QuizSceneObject : GameSceneObject
         selectedQuestionID = 0;
     }
 
-    public async void SetSelectedQuestion(string categoryText)
+    public void SetSelectedQuestion(string categoryText)
     {
         Category cat = CategoryFromString(categoryText);
         selectedQuestion = GameQuizSo.Questions.FindAll(x => x.category == cat);
@@ -564,6 +570,7 @@ public class QuizSceneObject : GameSceneObject
         if (id == _currentQuestion.correctAnswer)
         {
             await GameManager.Instance.TasksManager.AddTaskToList(PlayVideoAnim(teamID));
+            GameManager.Instance.TasksManager.AddTaskToList(Teams[teamID].StarAnimation(_starAnimationObject, _nbStar));
             await GameManager.Instance.TasksManager.AddTaskToList(Teams[teamID].ScoreAnim(score, 1.5f));
             await GameManager.Instance.TasksManager.AddTaskToList(Task.Delay(4500));
         }
@@ -777,13 +784,21 @@ public class QuizSceneObject : GameSceneObject
         public async Task ScoreAnim(int score, float duration)
         {
             duration /= score;
-            for (int i = 0; i < score; i++)
+            for (int i = 0; i < Mathf.RoundToInt(score / 10); i++)
             {
-                TeamScore.text = (Score + i).ToString() + " pts";
-                await Task.Delay((int)(duration * 1000));
+                TeamScore.text = (Score + (i * 10)).ToString() + " pts";
+                await Task.Delay(Mathf.RoundToInt(duration * 10000));
             }
             this.Score += score;
             TeamScore.text = Score.ToString() + " pts";
+        }
+
+        public async Task StarAnimation(StarAnimation pref, int nbPref)
+        {
+            for (int i = 0; i < nbPref; i++)
+            {
+                Instantiate(pref, TeamScore.transform.position, Quaternion.identity, TeamScoreHolder.transform).SetColor(Color);
+            }
         }
 
         public void SetColor(GameQuiz gameQuiz)

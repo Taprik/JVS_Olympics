@@ -1587,6 +1587,8 @@ MonoBehaviour:
   _minDistanceFromEverything: 150
   _offsetY: 150
   _offsetX: 50
+  _starAnimationObject: {fileID: 1998822434224959481, guid: 5732cea58a02f784b9eea76ffc5484bb, type: 3}
+  _nbStar: 20
   debugCategory: 0
   _scorePage: {fileID: 3111847904449736842}
   _scoreText: {fileID: 9013030546747084485}
