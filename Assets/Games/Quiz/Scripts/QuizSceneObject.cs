@@ -295,15 +295,14 @@ public class QuizSceneObject : GameSceneObject
         tokenSource.Dispose();
         tokenSourceAnimOups.Dispose();
 
-        await Task.Run(async () =>
-        {
-            while(!GameManager.Instance.TasksManager.AllTasksFinish(AnimTaskListName))
-                await Task.Delay(100);
-        });
+        //await Task.Run(async () =>
+        //{
+        //    while(!GameManager.Instance.TasksManager.AllTasksFinish(AnimTaskListName))
+        //        await Task.Delay(100);
+        //});
 
         HideTeamsButton();
         SetTeamsScoreHolder(WinningTeam);
-        ATeamScore = false;
 
         await Task.Run(async () =>
         {
@@ -565,6 +564,7 @@ public class QuizSceneObject : GameSceneObject
     public async void AddScoreToTeam(int id)
     {
         if (ATeamScore) return;
+        Debug.Log(ATeamScore);
         
         int score = 0;
         int teamID = 0;
@@ -588,6 +588,7 @@ public class QuizSceneObject : GameSceneObject
         }
 
         await GameManager.Instance.TasksManager.AddTaskToList(AnimTaskListName, DestroyTeamButton(id, teamID));
+        Debug.Log(ATeamScore);
 
         if (id == _currentQuestion.correctAnswer)
         {
@@ -676,6 +677,7 @@ public class QuizSceneObject : GameSceneObject
             for (int i = 0; i < t.TeamAnswers.Length; i++)
             {
                 RandomPosTeamsButton(t.TeamAnswers[i].transform as RectTransform);
+                t.TeamAnswers[i].GetComponent<ButtonParent>().IsActive = true;
                 t.TeamAnswers[i].SetActive(true);
                 t.TeamAnswers[i].GetComponent<Animator>().SetTrigger("Reset");
             }
@@ -757,6 +759,7 @@ public class QuizSceneObject : GameSceneObject
             t.TeamAnswersHolder.SetActive(false);
             for (int i = 0; i < t.TeamAnswers.Length; i++)
             {
+                t.TeamAnswers[i].GetComponent<ButtonParent>().IsActive = false;
                 t.TeamAnswers[i].SetActive(false);
             }
         }
@@ -775,7 +778,10 @@ public class QuizSceneObject : GameSceneObject
             for (int i = 0; i < t.TeamAnswers.Length; i++)
             {
                 if (t.TeamAnswers[i] != button)
+                {
+                    t.TeamAnswers[i].GetComponent<ButtonParent>().IsActive = false;
                     t.TeamAnswers[i].SetActive(false);
+                }
             }
         }
     }
