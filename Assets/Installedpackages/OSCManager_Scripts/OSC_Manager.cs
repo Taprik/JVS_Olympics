@@ -167,13 +167,13 @@ namespace OSC
             message.TryGet(1, out impactY);
             impactY *= Screen.height;
 
-            Instantiate(ImpactPref, new Vector3((impactX - 960) * (18f / 1920), (impactY - 540) * (10f / 1080), 90), Quaternion.identity);
-
             var receiveParents = FindObjectsOfType<MonoBehaviour>().OfType<IReceivePoint>();
             foreach (IReceivePoint rp in receiveParents)
             {
                 rp.ReceivePoint(impactX, impactY);
             }
+
+            Instantiate(ImpactPref, new Vector3((impactX - 960) * (205.28f / 1920), (impactY - 540) * (115.48f / 1080), 90), Quaternion.identity);
 
             // Always recycle incoming messages when used.
             OscPool.Recycle(message);
