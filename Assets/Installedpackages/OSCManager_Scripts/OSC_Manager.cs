@@ -167,7 +167,7 @@ namespace OSC
             message.TryGet(1, out impactY);
             impactY *= Screen.height;
 
-            Instantiate(ImpactPref, new Vector3(impactX, impactY, 0), Quaternion.identity);
+            Instantiate(ImpactPref, new Vector3((impactX - 960) * (18f / 1920), (impactY - 540) * (10f / 1080), 90), Quaternion.identity);
 
             var receiveParents = FindObjectsOfType<MonoBehaviour>().OfType<IReceivePoint>();
             foreach (IReceivePoint rp in receiveParents)
