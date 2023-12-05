@@ -461,9 +461,13 @@ public class QuizSceneObject : GameSceneObject
 
             currentQuestion.answers = new string[4];
             currentQuestion.sentence = data[lineLength * i];
+            currentQuestion.sentence = currentQuestion.sentence.Replace("Ã¨", "è");
+            currentQuestion.sentence = currentQuestion.sentence.Replace("Ã©", "é");
             for (int j = 0; j < 4; j++)
             {
                 currentQuestion.answers[j] = data[lineLength * i + 2 + j];
+                currentQuestion.answers[j] = currentQuestion.answers[j].Replace("Ã¨", "è");
+                currentQuestion.answers[j] = currentQuestion.answers[j].Replace("Ã©", "é");
             }
             data[lineLength * i + 1] = data[lineLength * i + 1].Replace("\"", String.Empty);
             currentQuestion.correctAnswer = ValueFromString(data[lineLength * i + 6]);
