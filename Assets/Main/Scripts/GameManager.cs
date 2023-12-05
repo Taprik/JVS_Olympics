@@ -1,15 +1,10 @@
 using OSC;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -72,6 +67,19 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    #region Shortcut Key
+
+    [SerializeField, Header("Shortcut Key")]
+    KeyCode _backMainMenu;
+
+    [SerializeField]
+    KeyCode _loadAllAsset;
+
+    [SerializeField]
+    KeyCode _quitApp;
+
+    #endregion
+
 
     private void Start()
     {
@@ -80,14 +88,19 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        if(Input.GetKeyDown(KeyCode.L))
+        if(Input.GetKeyDown(_loadAllAsset))
         {
             AddressablesManager.Init();
         }
 
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if(Input.GetKeyDown(_quitApp))
         {
             Application.Quit();
+        }
+
+        if(Input.GetKeyDown(_backMainMenu))
+        {
+            GameSceneManager.LoadScene(SceneName.MainScene);
         }
     }
 }

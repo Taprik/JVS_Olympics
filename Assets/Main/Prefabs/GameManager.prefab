@@ -211,6 +211,9 @@ MonoBehaviour:
   _loadScreenBar: {fileID: 8851982206767907621}
   _loadScreenText: {fileID: 8771612394511853198}
   _mainSceneObject: {fileID: 0}
+  _backMainMenu: 109
+  _loadAllAsset: 108
+  _quitApp: 27
 --- !u!114 &3590506782614604747
 MonoBehaviour:
   m_ObjectHideFlags: 0
