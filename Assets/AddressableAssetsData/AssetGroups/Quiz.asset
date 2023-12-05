@@ -52,6 +52,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - LoadAtStart
+  - m_GUID: f38a0405570b1574aaae60d506107a59
+    m_Address: Assets/Games/Quiz/Sound
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 023023c01781d1b4093446c137e3b907, type: 2}
   m_SchemaSet:

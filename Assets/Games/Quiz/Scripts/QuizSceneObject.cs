@@ -138,6 +138,9 @@ public class QuizSceneObject : GameSceneObject
     [SerializeField]
     int _nbStar;
 
+    [SerializeField]
+    AudioSource _audioSource;
+
     List<Image> _progressBarParts = new List<Image>();
 
     List<Vector3> _placed = new List<Vector3>();
@@ -224,6 +227,7 @@ public class QuizSceneObject : GameSceneObject
         CancellationTokenSource tokenSource = new CancellationTokenSource();
         CancellationTokenSource tokenSourceAnimOups = new CancellationTokenSource();
 
+        AudioSource.PlayClipAtPoint(GameQuizSo.StartSound, Vector3.zero);
         _quizStartObject.SetActive(true);
         await _quizStartAnim.Anim(2f);
         _quizStartObject.SetActive(false);
@@ -250,6 +254,7 @@ public class QuizSceneObject : GameSceneObject
         SetTeamsButton();
 
         await Task.Delay(50);
+        _audioSource.Play();
         UnityMainThreadDispatcher.Instance().Enqueue(async () => await _timerAnim.Anim(_currentQuestion.answersTime, tokenSource.Token));
 
         _timer = Time.time;
@@ -265,6 +270,7 @@ public class QuizSceneObject : GameSceneObject
             WinningTeam = -1;
             await UnityMainThreadDispatcher.Instance().EnqueueAsync(async () =>
             {
+                AudioSource.PlayClipAtPoint(GameQuizSo.EndTimerSound, Vector3.zero);
                 await GameManager.Instance.TasksManager.AddTaskToList(PlayVideoAnim());
                 await GameManager.Instance.TasksManager.AddTaskToList(Task.Delay(6000));
             });
@@ -279,6 +285,7 @@ public class QuizSceneObject : GameSceneObject
         });
 
         await Task.WhenAny(waitTimerOrRightAnswer);
+        _audioSource.Stop();
         tokenSource.Dispose();
         tokenSourceAnimOups.Dispose();
 
@@ -559,10 +566,15 @@ public class QuizSceneObject : GameSceneObject
 
         if (id == _currentQuestion.correctAnswer)
         {
+            AudioSource.PlayClipAtPoint(GameQuizSo.GetRandomRightAnswerSound(), Vector3.zero);
             HideOtherTeamsButton(Teams[teamID].TeamAnswers[id]);
             ATeamScore = true;
             WinningTeam = teamID;
             score = GetScore();
+        }
+        else
+        {
+            AudioSource.PlayClipAtPoint(GameQuizSo.GetRandomWrongAnswerSound(), Vector3.zero);
         }
 
         await GameManager.Instance.TasksManager.AddTaskToList(AnimTaskListName, DestroyTeamButton(id, teamID));
@@ -571,6 +583,7 @@ public class QuizSceneObject : GameSceneObject
         {
             await GameManager.Instance.TasksManager.AddTaskToList(PlayVideoAnim(teamID));
             GameManager.Instance.TasksManager.AddTaskToList(Teams[teamID].StarAnimation(_starAnimationObject, _nbStar));
+            AudioSource.PlayClipAtPoint(GameQuizSo.GainPtsSound, Vector3.zero);
             await GameManager.Instance.TasksManager.AddTaskToList(Teams[teamID].ScoreAnim(score, 1.5f));
             await GameManager.Instance.TasksManager.AddTaskToList(Task.Delay(4500));
         }

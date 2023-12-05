@@ -7,17 +7,21 @@ using UnityEngine.Video;
 [CreateAssetMenu(fileName = "Game_Quiz", menuName = "Game/Quiz/Game_Quiz")]
 public class GameQuiz : GameSO
 {
-    public VideoClip[] VideoAnimOrange;
-    public VideoClip[] VideoAnimBlue;
+    [Header("Video")]
+    [SerializeField] VideoClip[] VideoAnimOrange;
+    [SerializeField] VideoClip[] VideoAnimBlue;
     public VideoClip[] VideoAnimRed;
     public VideoClip[] GetVideoClipOfTeam(int teamID) => teamID == 0 ? VideoAnimBlue : teamID == 1 ? VideoAnimOrange : null;
 
-    public Sprite[] AnswerLetterSprites;
+    [Header("Sprite")]
+    [SerializeField] Sprite[] AnswerLetterSprites;
     public Sprite GetAnswerLetterSprite(int id) => AnswerLetterSprites.Length >= id + 1 ? AnswerLetterSprites[id] : null;
 
+    [Header("Question")]
     public List<Quiz_Question> Questions;
 
-    public List<TMP_FontAsset> TeamsFonts;
+    [Header("Font")]
+    [SerializeField] List<TMP_FontAsset> TeamsFonts;
     public TMP_FontAsset GetFontAsset(TeamFontColor color) => TeamsFonts[(int)color];
 
     public enum TeamFontColor
@@ -27,6 +31,17 @@ public class GameQuiz : GameSO
         Blue = 0,
         Red = 2
     }
+
+    [Header("Sound")]
+    [SerializeField] AudioClip[] RightAnswerSound;
+    public AudioClip GetRandomRightAnswerSound() => RightAnswerSound[Random.Range(0, RightAnswerSound.Length)];
+
+    [SerializeField] AudioClip[] WrongAnswerSound;
+    public AudioClip GetRandomWrongAnswerSound() => WrongAnswerSound[Random.Range(0, WrongAnswerSound.Length)];
+
+    public AudioClip StartSound;
+    public AudioClip GainPtsSound;
+    public AudioClip EndTimerSound;
 }
 
 [System.Serializable]
