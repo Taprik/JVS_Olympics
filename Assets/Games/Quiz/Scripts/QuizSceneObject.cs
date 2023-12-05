@@ -316,7 +316,7 @@ public class QuizSceneObject : GameSceneObject
         await Task.Delay(Mathf.RoundToInt(FadeAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.averageDuration * 1100));
 
         if (!(selectedQuestionID < 0))
-            _progressBarParts[selectedQuestionID].color = Color.black;
+            _progressBarParts[selectedQuestionID - 1].color = Color.black;
 
         PlayQuestion();
     }
