@@ -53,11 +53,9 @@ public class GameSceneManager : ScriptableObject
         AsyncOperationHandle<SceneInstance> handle = Addressables.LoadSceneAsync(scene.ToString(), mode);
         handle.Completed += async (handle) =>
         {
-            GameManager.Instance.LoadScreenText.text = "100%";
-            GameManager.Instance.LoadScreenBar.DOValue(1, 0.1f);
+            GameManager.Instance.LoadScreenText.text = "50%";
+            GameManager.Instance.LoadScreenBar.DOValue(0.5f, 0.1f);
             await Task.Delay(500);
-            GameManager.Instance.LoadScreen.SetActive(false);
-            GameManager.Instance.MainSceneObject.SetActive(false);
         };
 
         while (!handle.IsDone)
@@ -69,6 +67,15 @@ public class GameSceneManager : ScriptableObject
             await tween.AsyncWaitForCompletion();
         }
 
+        if(GameManager.Instance.CurrentGameSceneObject != null)
+        {
+            await GameManager.Instance.CurrentGameSceneObject.InitScene(); 
+            GameManager.Instance.LoadScreenText.text = "100%";
+            GameManager.Instance.LoadScreenBar.DOValue(1f, 0.1f);
+            await Task.Delay(500);
+            GameManager.Instance.LoadScreen.SetActive(false);
+            GameManager.Instance.MainSceneObject.SetActive(false);
+        }
     }
 
     public async Task UnloadScene(SceneName scene, bool isGoingToLoad = false)

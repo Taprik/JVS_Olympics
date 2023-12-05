@@ -201,9 +201,15 @@ public class QuizSceneObject : GameSceneObject
 
         //SetCategoryButton();
 
-        await GameManager.Instance.AddressablesManager.LoadScreen(Read());
+        //await GameManager.Instance.AddressablesManager.LoadScreen(Read());
 
         GameManager.Instance.TasksManager.CreateTaskList(AnimTaskListName);
+    }
+
+    public async override Task InitScene()
+    {
+        await Read();
+        await base.InitScene();
     }
 
     public void Update()

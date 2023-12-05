@@ -77,6 +77,37 @@ public class BlockSceneObject : GameSceneObject
         };
     }
 
+    async Task GameInit()
+    {
+        string path = Path.GetFullPath(Path.Combine(Application.dataPath, @"..\..\..\..\"));
+        path = Path.GetFullPath(Path.Combine(path, GameBlockSo.ImagePath));
+        List<string> imagePath = ToolBox.GetFiles(path, "*.jpg");
+        imagePath.Shuffle();
+
+        for (int i = 0; i < 3; i++)
+        {
+            Tex[i] = await ToolBox.CreateTextureFromPath(imagePath[i]);
+        }
+
+        await UnityMainThreadDispatcher.Instance().EnqueueAsync(() =>
+        {
+            foreach (var t in Teams)
+            {
+                t.ImageSplitList?.Clear();
+                t.ImageSplitList = new();
+
+                for (int i = 0; i < Tex.Length; i++)
+                {
+                    t.ImageSplitList.Add(SplitImage(Tex[i], GameBlockSo.NbDivision[i], t.ID));
+                    t.DeActiveAllMark();
+                    t.ImageCheckMarks[i].sprite = ToolBox.CreateSpriteFromTexture(Tex[i]);
+
+                }
+            }
+            Debug.Log("Finish Load Image");
+        });
+    }
+
     async Task GameStart()
     {
         //foreach (var t in Teams)
@@ -102,32 +133,8 @@ public class BlockSceneObject : GameSceneObject
         ExecutionQueue teamAQueue = GameManager.Instance.TasksManager.CreateComplexTaskQueue("TeamA");
         ExecutionQueue teamBQueue = GameManager.Instance.TasksManager.CreateComplexTaskQueue("TeamB");
 
-        UnityMainThreadDispatcher.Instance().Enqueue(async () =>
+        UnityMainThreadDispatcher.Instance().Enqueue(() =>
         {
-            string path = Path.GetFullPath(Path.Combine(Application.dataPath, @"..\..\..\..\"));
-            path = Path.GetFullPath(Path.Combine(path, GameBlockSo.ImagePath));
-            List<string> imagePath = ToolBox.GetFiles(path, "*.jpg");
-            imagePath.Shuffle();
-
-            for (int i = 0; i < 3; i++)
-            {
-                Tex[i] = await ToolBox.CreateTextureFromPath(imagePath[i]);
-            }
-
-
-            foreach (var t in Teams)
-            {
-                t.ImageSplitList?.Clear();
-                t.ImageSplitList = new();
-
-                for (int i = 0; i < Tex.Length; i++)
-                {
-                    t.ImageSplitList.Add(SplitImage(Tex[i], GameBlockSo.NbDivision[i], t.ID));
-                    t.DeActiveAllMark();
-                    t.ImageCheckMarks[i].sprite = ToolBox.CreateSpriteFromTexture(Tex[i]);
-                }
-            }
-
             teamAQueue.Run(() => PlayOneImage(Tex[0], 0, 0, false));
             teamAQueue.Run(() => PlayOneImage(Tex[1], 0, 1));
             teamAQueue.Run(() => PlayOneImage(Tex[2], 0, 2));
@@ -425,12 +432,17 @@ public class BlockSceneObject : GameSceneObject
 
     public override async void Awake()
     {
-
         GameManager.Instance.CurrentGame = GameBlockSo;
         base.Awake();
         await HomeAwake();
         await GameAwake();
         await ScoreAwake();
+    }
+
+    public async override Task InitScene()
+    {
+        await GameInit();
+        await base.InitScene();
     }
 
     private async void Start()

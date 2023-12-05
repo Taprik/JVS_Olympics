@@ -85,7 +85,6 @@ public class AddressablesManager : ScriptableObject
 
     public async Task LoadScreen(Task task)
     {
-
         GameManager.Instance.LoadScreenText.text = "0%";
         GameManager.Instance.LoadScreenBar.value = 0;
         GameManager.Instance.LoadScreen.SetActive(true);
@@ -104,7 +103,6 @@ public class AddressablesManager : ScriptableObject
 
     public async Task LoadScreen(Task[] tasks)
     {
-
         GameManager.Instance.LoadScreenText.text = "0%";
         GameManager.Instance.LoadScreenBar.value = 0;
         GameManager.Instance.LoadScreen.SetActive(true);
