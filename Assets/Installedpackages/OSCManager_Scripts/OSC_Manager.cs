@@ -62,7 +62,8 @@ namespace OSC
         public bool inOpened;
         public bool outOpened;
 
-        public GameObject ImpactPref;
+        [SerializeField] GameObject ImpactPref;
+        [SerializeField] RectTransform Canvas;
 
         void Start()
         {
@@ -79,15 +80,15 @@ namespace OSC
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                messageOutQuit();
-            }
-            if(Input.GetKeyDown(KeyCode.W)) 
-            {
-                SendGamerName("Jean-Christophé     &é\"'(-è_çà@)]}~#{[|\\`^@    Jean&Christôphà                                         Jean Christophe  Jean Christophe");
-                //SendGamerName("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm                                        Jean Christophe  Jean Christophe");
-            }
+            //if (Input.GetKeyDown(KeyCode.Escape))
+            //{
+            //    messageOutQuit();
+            //}
+            //if(Input.GetKeyDown(KeyCode.W)) 
+            //{
+            //    SendGamerName("Jean-Christophé     &é\"'(-è_çà@)]}~#{[|\\`^@    Jean&Christôphà                                         Jean Christophe  Jean Christophe");
+            //    //SendGamerName("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm                                        Jean Christophe  Jean Christophe");
+            //}
         }
 
         void OnEnable()
@@ -145,7 +146,7 @@ namespace OSC
             _message = new OscMessage(remoteAccueilTous);
             _message.Set(0, 1);
             _oscOut.Send(_message);
-            SceneManager.LoadScene(0);
+            GameManager.Instance.GameSceneManager.LoadScene(SceneName.MainScene);
         }
 
         public void onOSCQuit(int value)
@@ -173,7 +174,8 @@ namespace OSC
                 rp.ReceivePoint(impactX, impactY);
             }
 
-            Instantiate(ImpactPref, new Vector3((impactX - 960) * (205.28f / 1920), (impactY - 540) * (115.48f / 1080), 90), Quaternion.identity);
+            //Instantiate(ImpactPref, new Vector3((impactX - 960) * (205.28f / 1920), (impactY - 540) * (115.48f / 1080), 90), Quaternion.identity);
+            Instantiate(ImpactPref, new Vector3(impactX, impactY, 0), Quaternion.identity, Canvas);
 
             // Always recycle incoming messages when used.
             OscPool.Recycle(message);
@@ -185,7 +187,22 @@ namespace OSC
             string nomJeu = "";
             message.TryGet(0, ref nomJeu);
 
-            SceneManager.LoadScene("Accueil_" + nomJeu);
+            //SceneManager.LoadScene("Accueil_" + nomJeu);
+            int sceneID = 0;
+
+            switch (nomJeu)
+            {
+                case "Blocks":
+                    sceneID = 1;
+                    break;
+                case "Quiz":
+                    sceneID = 2;
+                    break;
+                default:
+                    break;
+            }
+
+            GameManager.Instance.GameSceneManager.LoadScene((SceneName)sceneID);
 
             // Always recycle incoming messages when used.
             OscPool.Recycle(message);
@@ -197,9 +214,9 @@ namespace OSC
             string nomJeu = "";
             message.TryGet(0, ref nomJeu);
 
-            if (nomJeu != "Mo_Mat" && nomJeu != "Clean_Collect" && nomJeu != "Zombies" && nomJeu != "Mosquitoes")
+            if(GameManager.Instance.CurrentGameSceneObject != null)
             {
-                SceneManager.LoadScene("GameScene_" + nomJeu);
+                GameManager.Instance.CurrentGameSceneObject.Play();
             }
 
             // Always recycle incoming messages when used.
