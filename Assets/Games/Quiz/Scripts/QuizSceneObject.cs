@@ -238,18 +238,18 @@ public class QuizSceneObject : GameSceneObject
         await _quizStartAnim.Anim(2f);
         _quizStartObject.SetActive(false);
 
-        bool isFadeInComplete = false;
+        //bool isFadeInComplete = false;
 
-        Transitioner.Instance.TransitionInWithoutChangingScene();
-        Transitioner.Instance.OnTransitionComplete += () => isFadeInComplete = true;
+        //Transitioner.Instance.TransitionInWithoutChangingScene();
+        //Transitioner.Instance.OnTransitionComplete += () => isFadeInComplete = true;
 
-        await Task.Run(async () =>
-        {
-            while (!isFadeInComplete)
-            {
-                await Task.Delay(50);
-            }
-        });
+        //await Task.Run(async () =>
+        //{
+        //    while (!isFadeInComplete)
+        //    {
+        //        await Task.Delay(50);
+        //    }
+        //});
 
         UnityMainThreadDispatcher.Instance().Enqueue(async () => await _timerAnim.Anim(reflectionTimer - 1f, tokenSource.Token));
         await Task.Delay(Mathf.RoundToInt((reflectionTimer - 1f) * 1000));
@@ -575,8 +575,9 @@ public class QuizSceneObject : GameSceneObject
 
         if (id == _currentQuestion.correctAnswer)
         {
+            HideTeamsButton();
             AudioSource.PlayClipAtPoint(GameQuizSo.GetRandomRightAnswerSound(), Vector3.zero);
-            HideOtherTeamsButton(Teams[teamID].TeamAnswers[id]);
+            //HideOtherTeamsButton(Teams[teamID].TeamAnswers[id]);
             ATeamScore = true;
             WinningTeam = teamID;
             score = GetScore();
@@ -677,6 +678,7 @@ public class QuizSceneObject : GameSceneObject
                 RandomPosTeamsButton(t.TeamAnswers[i].transform as RectTransform);
                 t.TeamAnswers[i].GetComponent<ButtonParent>().IsActive = true;
                 t.TeamAnswers[i].SetActive(true);
+                t.SetColor(GameQuizSo);
                 t.TeamAnswers[i].GetComponent<Animator>().SetTrigger("Reset");
             }
         }
@@ -749,9 +751,8 @@ public class QuizSceneObject : GameSceneObject
         }
     }
 
-    public async void HideTeamsButton()
+    public void HideTeamsButton()
     {
-        await Task.Delay(1000);
         foreach (var t in Teams)
         {
             t.TeamAnswersHolder.SetActive(false);
@@ -763,9 +764,8 @@ public class QuizSceneObject : GameSceneObject
         }
     }
 
-    public async void HideOtherTeamsButton(GameObject button)
+    public void HideOtherTeamsButton(GameObject button)
     {
-        await Task.Delay(1000);
         foreach (var t in Teams)
         {
             if(!t.TeamAnswers.ToList().Exists(x => x == button))
