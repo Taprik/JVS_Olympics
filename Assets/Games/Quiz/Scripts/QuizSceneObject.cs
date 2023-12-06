@@ -212,10 +212,10 @@ public class QuizSceneObject : GameSceneObject
         await base.InitScene();
     }
 
-    public void Update()
+    public override void Play()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-            PlayQuestion();
+        PlayButtonHolder.SetActive(false);
+        SelectCategoryHolder.SetActive(true);
     }
 
     public async void PlayQuestion()
@@ -564,7 +564,6 @@ public class QuizSceneObject : GameSceneObject
     public async void AddScoreToTeam(int id)
     {
         if (ATeamScore) return;
-        Debug.Log(ATeamScore);
         
         int score = 0;
         int teamID = 0;
@@ -588,7 +587,6 @@ public class QuizSceneObject : GameSceneObject
         }
 
         await GameManager.Instance.TasksManager.AddTaskToList(AnimTaskListName, DestroyTeamButton(id, teamID));
-        Debug.Log(ATeamScore);
 
         if (id == _currentQuestion.correctAnswer)
         {

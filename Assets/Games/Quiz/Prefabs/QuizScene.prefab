@@ -284,7 +284,7 @@ Canvas:
   m_GameObject: {fileID: 315248939818481656}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -343,7 +343,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 315248939818481656}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7982773ccf37b1641b906f31dbd7c0ef, type: 3}
   m_Name: 
@@ -1216,7 +1216,7 @@ Canvas:
   m_GameObject: {fileID: 3111847904597562462}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -1275,7 +1275,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3111847904597562462}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7982773ccf37b1641b906f31dbd7c0ef, type: 3}
   m_Name: 
@@ -3573,7 +3573,7 @@ GameObject:
   - component: {fileID: 7924643816175712344}
   - component: {fileID: 2639533230551565952}
   - component: {fileID: 2407998732836365979}
-  - component: {fileID: 4601706512507517287}
+  - component: {fileID: 5633393298669652075}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -3639,7 +3639,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4601706512507517287
+--- !u!114 &5633393298669652075
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3648,13 +3648,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 6350601141308276897}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d110b00f55023548ba2c95427593e48, type: 3}
+  m_Script: {fileID: 11500000, guid: d3a2bf11cd65279449b7509c85accf86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeObject:
-  - {fileID: 5148966397435507090}
-  desactiveObject:
-  - {fileID: 2564873398355316900}
+  _event:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2564873398355316900}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5148966397435507090}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!1 &6489556524733523901
 GameObject:
   m_ObjectHideFlags: 0
@@ -5108,7 +5131,7 @@ Canvas:
   m_GameObject: {fileID: 9056565972679422532}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -5167,7 +5190,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9056565972679422532}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7982773ccf37b1641b906f31dbd7c0ef, type: 3}
   m_Name: 
