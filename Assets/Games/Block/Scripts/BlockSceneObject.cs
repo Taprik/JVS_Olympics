@@ -11,6 +11,7 @@ using System.Threading;
 using DG.Tweening;
 using System.Linq;
 using System.IO;
+using GlobalOutline;
 
 public class BlockSceneObject : GameSceneObject
 {
@@ -121,10 +122,7 @@ public class BlockSceneObject : GameSceneObject
 
     void GameUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            PlayGame();
-        }
+        
     }
 
     public async void PlayGame()
@@ -171,6 +169,8 @@ public class BlockSceneObject : GameSceneObject
         tasks[2] = timer;
 
         await Task.WhenAny(tasks);
+
+        //Go to Score
     }
 
     async Task PlayOneImage(Texture2D texture, int teamID, int id, bool notFirst = true)
@@ -256,17 +256,6 @@ public class BlockSceneObject : GameSceneObject
         TimerEnd?.Invoke(-1);
     }
 
-    async Task DecreaseTimer()
-    {
-        int gain = Mathf.FloorToInt(_currentTimer);
-        for (int i = 0; i < gain; i++)
-        {
-            _currentTimer -= 1f;
-            SetTimerText();
-            await Task.Delay(Mathf.RoundToInt(1f / gain * 1000));
-        }
-    }
-
     void SetTimerText(bool zero = false)
     {
         if (zero)
@@ -322,35 +311,35 @@ public class BlockSceneObject : GameSceneObject
     [SerializeField]
     Vector3 _scaleImage;
 
-    public async Task LoadImage(string path, int nbDivision, int teamID)
-    {
-        GameObject parent = Teams[teamID].ImageHolder;
-        Texture2D texture = await ToolBox.CreateTextureFromPath(path);
-        Teams[teamID].Parts = new ButtonPartRotation[nbDivision, nbDivision];
+    //public async Task LoadImage(string path, int nbDivision, int teamID)
+    //{
+    //    GameObject parent = Teams[teamID].ImageHolder;
+    //    Texture2D texture = await ToolBox.CreateTextureFromPath(path);
+    //    Teams[teamID].Parts = new ButtonPartRotation[nbDivision, nbDivision];
 
-        for (int i = 0; i < nbDivision; i++)
-        {
-            for (int j = 0; j < nbDivision; j++)
-            {
-                float h = texture.height / nbDivision;
-                float w = texture.width / nbDivision;
-                Sprite newSprite = Sprite.Create(texture, new Rect(i * w, j * h, w, h), new Vector2(0.5f, 0.5f));
-                GameObject n = Instantiate(_partPrefab, parent.transform);
-                Image sr = n.GetComponent<Image>();
-                RectTransform rt = n.GetComponent<RectTransform>();
-                rt.sizeDelta = new Vector2((parent.transform as RectTransform).rect.width / nbDivision, (parent.transform as RectTransform).rect.height / nbDivision);
-                sr.sprite = newSprite;
-                float imageWidth = sr.rectTransform.sizeDelta.x;
-                float imageHeight = sr.rectTransform.sizeDelta.y;
-                (n.transform as RectTransform).localPosition = new Vector3(
-                    i * imageWidth/* * _scaleImage.x */+ imageWidth/* * _scaleImage.x *// 2 - (parent.transform as RectTransform).rect.width / 2, 
-                    j * imageHeight/* * _scaleImage.y */+ imageHeight/* * _scaleImage.y *// 2 - (parent.transform as RectTransform).rect.height / 2,
-                    0);
-                sr.transform.localScale = _scaleImage;
-                Teams[teamID].AddPart(n, i, j);
-            }
-        }
-    }
+    //    for (int i = 0; i < nbDivision; i++)
+    //    {
+    //        for (int j = 0; j < nbDivision; j++)
+    //        {
+    //            float h = texture.height / nbDivision;
+    //            float w = texture.width / nbDivision;
+    //            Sprite newSprite = Sprite.Create(texture, new Rect(i * w, j * h, w, h), new Vector2(0.5f, 0.5f));
+    //            GameObject n = Instantiate(_partPrefab, parent.transform);
+    //            Image sr = n.GetComponent<Image>();
+    //            RectTransform rt = n.GetComponent<RectTransform>();
+    //            rt.sizeDelta = new Vector2((parent.transform as RectTransform).rect.width / nbDivision, (parent.transform as RectTransform).rect.height / nbDivision);
+    //            sr.sprite = newSprite;
+    //            float imageWidth = sr.rectTransform.sizeDelta.x;
+    //            float imageHeight = sr.rectTransform.sizeDelta.y;
+    //            (n.transform as RectTransform).localPosition = new Vector3(
+    //                i * imageWidth/* * _scaleImage.x */+ imageWidth/* * _scaleImage.x *// 2 - (parent.transform as RectTransform).rect.width / 2, 
+    //                j * imageHeight/* * _scaleImage.y */+ imageHeight/* * _scaleImage.y *// 2 - (parent.transform as RectTransform).rect.height / 2,
+    //                0);
+    //            sr.transform.localScale = _scaleImage;
+    //            Teams[teamID].AddPart(n, i, j);
+    //        }
+    //    }
+    //}
 
     public void LoadImage(Texture2D texture, Sprite[,] sprites, int nbDivision, int teamID)
     {
@@ -437,12 +426,21 @@ public class BlockSceneObject : GameSceneObject
         await HomeAwake();
         await GameAwake();
         await ScoreAwake();
+        HomePage.SetActive(true);
+        GamePage.SetActive(false);
+        ScorePage.SetActive(false);
     }
 
     public async override Task InitScene()
     {
         await GameInit();
         await base.InitScene();
+    }
+
+    public override void Play()
+    {
+        PlayGame();
+        base.Play();
     }
 
     private async void Start()
@@ -556,11 +554,12 @@ public class BlockSceneObject : GameSceneObject
         public void AddPart(GameObject part, int x, int y)
         {
             part.TryGetComponent(out ButtonPartRotation buttonPart);
-            UIOutline outline = part.GetComponentInChildren<UIOutline>();
+            GameManager.Instance.OutlineManager.AddGameObject(part);
+            OutlineEffect outline = part.GetComponent<OutlineEffect>();
             if (buttonPart != null && outline != null)
             {
                 buttonPart.Rotate += PartRotate;
-                buttonPart.OnActiveChange += (isActive) => outline.gameObject.SetActive(isActive);
+                buttonPart.OnActiveChange += (isActive) => outline.enabled = isActive;
                 buttonPart.IsActive = false;
                 Parts[x, y] = buttonPart;
             }
