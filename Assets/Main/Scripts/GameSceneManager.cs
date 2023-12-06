@@ -25,7 +25,7 @@ public class GameSceneManager : ScriptableObject
     }
 
 
-    public async Task LoadScene(SceneName scene)
+    public async void LoadScene(SceneName scene)
     {
         if(IsRunning) return;
 
@@ -62,20 +62,19 @@ public class GameSceneManager : ScriptableObject
         {
             Tween tween = GameManager.Instance.LoadScreenBar.DOValue(handle.PercentComplete, 0.1f);
 
-            GameManager.Instance.LoadScreenText.text = Mathf.RoundToInt(handle.PercentComplete * 100f).ToString() + "%";
+            GameManager.Instance.LoadScreenText.text = Mathf.RoundToInt(handle.PercentComplete * 50f).ToString() + "%";
 
             await tween.AsyncWaitForCompletion();
         }
 
-        if(GameManager.Instance.CurrentGameSceneObject != null)
-        {
-            await GameManager.Instance.CurrentGameSceneObject.InitScene(); 
-            GameManager.Instance.LoadScreenText.text = "100%";
-            GameManager.Instance.LoadScreenBar.DOValue(1f, 0.1f);
-            await Task.Delay(500);
-            GameManager.Instance.LoadScreen.SetActive(false);
-            GameManager.Instance.MainSceneObject.SetActive(false);
-        }
+        if (GameManager.Instance.CurrentGameSceneObject != null)
+            await GameManager.Instance.CurrentGameSceneObject.InitScene();
+
+        GameManager.Instance.LoadScreenText.text = "100%";
+        GameManager.Instance.LoadScreenBar.DOValue(1f, 0.1f);
+        await Task.Delay(500);
+        GameManager.Instance.LoadScreen.SetActive(false);
+        GameManager.Instance.MainSceneObject.SetActive(false);
     }
 
     public async Task UnloadScene(SceneName scene, bool isGoingToLoad = false)
@@ -118,7 +117,7 @@ public class GameSceneManager : ScriptableObject
 
 public enum SceneName
 {
-    MainScene,
-    Block,
-    Quiz,
+    MainScene = 0,
+    Block = 1,
+    Quiz = 2,
 }

@@ -1,3 +1,4 @@
+using GlobalOutline;
 using OSC;
 using System;
 using System.Collections;
@@ -43,6 +44,10 @@ public class GameManager : MonoBehaviour
     public TasksManager TasksManager => _tasksManager;
     [SerializeField]
     TasksManager _tasksManager;
+
+    public OutlineManager OutlineManager => _outlineManager;
+    [SerializeField]
+    OutlineManager _outlineManager;
 
     #endregion
 

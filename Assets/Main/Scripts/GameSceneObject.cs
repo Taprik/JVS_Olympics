@@ -15,4 +15,9 @@ public class GameSceneObject : MonoBehaviour
     {
         Debug.Log("Scene Init Complete");
     }
+
+    public virtual void Play()
+    {
+
+    }
 }

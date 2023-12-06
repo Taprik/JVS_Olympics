@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Tool;
 using System;
+using Unity.VisualScripting;
 
 public abstract class ButtonParent : MonoBehaviour, IReceivePoint
 {
@@ -22,10 +23,17 @@ public abstract class ButtonParent : MonoBehaviour, IReceivePoint
         }
     }
 
+    public void Awake()
+    {
+        Canvas canvas = gameObject.AddComponent<Canvas>();
+        if (canvas != null) canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        if (canvas != null) canvas.sortingOrder = 16960;
+    }
+
     public void ReceivePoint(float xPoint, float yPoint)
     {
         Vector2 hit = new Vector2(xPoint, yPoint);
-        //Debug.Log(this.gameObject.name + " : " + ToolBox.CheckPos(hit, this.transform) + " | Hit : " + hit + " | Pos : " + this.transform.position);
+        Debug.Log(this.gameObject.name + " : " + ToolBox.CheckPos(hit, this.transform) + " | Hit : " + hit + " | Pos : " + this.transform.position);
 
         if (ToolBox.CheckPos(hit, this.transform) && isActive)
         {
