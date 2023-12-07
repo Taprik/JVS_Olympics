@@ -49,6 +49,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     OutlineManager _outlineManager;
 
+    public ScoreBoardManager ScoreBoardManager => _scoreBoardManager;
+    [SerializeField]
+    ScoreBoardManager _scoreBoardManager;
+
     #endregion
 
     #region Loading

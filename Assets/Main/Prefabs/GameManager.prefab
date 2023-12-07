@@ -324,6 +324,7 @@ MonoBehaviour:
   _gameSceneManager: {fileID: 11400000, guid: e2bf6f267c5e5e940a7729b6e2f812c2, type: 2}
   _tasksManager: {fileID: 3590506782614604747}
   _outlineManager: {fileID: 8653625251434425146}
+  _scoreBoardManager: {fileID: 11400000, guid: a49dd1efff8710d418c6ab1901647733, type: 2}
   _loadScreen: {fileID: 3967417123565402701}
   _loadScreenBar: {fileID: 8851982206767907621}
   _loadScreenText: {fileID: 8771612394511853198}
@@ -370,6 +371,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _startMessage: 112
   _acceuilMessage: 97
+  _launchMessage: 111
+  _gameToLaunch: Blocks
 --- !u!1001 &5475493532866124870
 PrefabInstance:
   m_ObjectHideFlags: 0
