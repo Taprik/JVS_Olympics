@@ -127,6 +127,9 @@ public class BlockSceneObject : GameSceneObject
 
     public async void PlayGame()
     {
+        GamePage.SetActive(true);
+        HomePage.SetActive(false);
+
         Task[] tasks = new Task[3];
         ExecutionQueue teamAQueue = GameManager.Instance.TasksManager.CreateComplexTaskQueue("TeamA");
         ExecutionQueue teamBQueue = GameManager.Instance.TasksManager.CreateComplexTaskQueue("TeamB");
