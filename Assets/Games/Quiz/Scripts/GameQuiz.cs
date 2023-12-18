@@ -17,6 +17,10 @@ public class GameQuiz : GameSO
     [SerializeField] Sprite[] AnswerLetterSprites;
     public Sprite GetAnswerLetterSprite(int id) => AnswerLetterSprites.Length >= id + 1 ? AnswerLetterSprites[id] : null;
 
+    [SerializeField]
+    Sprite _defaultImage;
+    public Sprite GetDefaultImage() => _defaultImage;
+
     [Header("Question")]
     public List<Quiz_Question> Questions;
 

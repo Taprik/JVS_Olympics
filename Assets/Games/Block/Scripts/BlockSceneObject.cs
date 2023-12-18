@@ -276,7 +276,6 @@ public class BlockSceneObject : GameSceneObject
         //int millisecond = Mathf.FloorToInt(timer.Milliseconds);
         //millisecond = millisecond < 0 ? 0 : millisecond;
         string format = timer.ToString(@"ff");
-        Debug.Log(format);
 
         _timerTextFront.text = $"{second}:{format}";
         _timerTextBack.text = $"{second}:{format}";

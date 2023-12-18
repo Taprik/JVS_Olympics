@@ -10,7 +10,7 @@ public class GameBlock : GameSO
 #if UNITY_EDITOR
         "C:\\Users\\smartJeux\\Documents\\Capteur\\Personnalisation\\Blocks";
 #else
-        "Personnalisation\\Blocks";
+        "Documents\\Capteur\\Personnalisation\\Blocks";
 #endif
 
     public int[] NbDivision;

@@ -39,6 +39,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 0859904874b658a4c93c47b624ec80d2, type: 3}
   - {fileID: 21300000, guid: e32dacf67a8533f4bafe67f4962eaee6, type: 3}
   - {fileID: 21300000, guid: 6d6d5b7d679173e45bd039318b28056b, type: 3}
+  _defaultImage: {fileID: 21300000, guid: 4653ce123e7d9da488fe07ae39a8269f, type: 3}
   Questions:
   - sentence: Qui est arrive le premier ?
     image: {fileID: 0}

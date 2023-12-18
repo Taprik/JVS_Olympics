@@ -49,6 +49,8 @@ public class QuizSceneObject : GameSceneObject
     [SerializeField, Header("GamePage")]
     GameObject _gamePage;
 
+    Sprite DefaultImage => GameQuizSo.GetDefaultImage();
+
     public Image QuestionImage => _questionImage;
     [SerializeField]
     Image _questionImage;
@@ -175,8 +177,6 @@ public class QuizSceneObject : GameSceneObject
     TextMeshProUGUI _scoreTeam;
 
     #endregion
-
-
 
     public override async void Awake()
     {
@@ -446,7 +446,7 @@ public class QuizSceneObject : GameSceneObject
         string newPath = Path.GetFullPath(Path.Combine(appPath, @"..\..\..\..\"));
         newPath = Path.GetFullPath(Path.Combine(newPath, _fileLocation));
 
-        string csv = File.ReadAllText(newPath + "\\Questions.csv", Encoding.GetEncoding("ISO-8859-1"));
+        string csv = File.ReadAllText(newPath + "\\Questions.csv"/*, Encoding.GetEncoding("ISO-8859-1")*/);
         csv = csv.Replace("\u0092", "'");
         int collum = csv.Split(new string[] { "\n" }, StringSplitOptions.None).Length;
         int line = csv.Split(new string[] { "," }, StringSplitOptions.None).Length;
@@ -460,20 +460,24 @@ public class QuizSceneObject : GameSceneObject
 
             currentQuestion.answers = new string[4];
             currentQuestion.sentence = data[lineLength * i];
-            currentQuestion.sentence = currentQuestion.sentence.Replace("Ã¨", "è");
-            currentQuestion.sentence = currentQuestion.sentence.Replace("Ã©", "é");
             for (int j = 0; j < 4; j++)
             {
                 currentQuestion.answers[j] = data[lineLength * i + 2 + j];
-                currentQuestion.answers[j] = currentQuestion.answers[j].Replace("Ã¨", "è");
-                currentQuestion.answers[j] = currentQuestion.answers[j].Replace("Ã©", "é");
             }
             data[lineLength * i + 1] = data[lineLength * i + 1].Replace("\"", String.Empty);
             currentQuestion.correctAnswer = ValueFromString(data[lineLength * i + 6]);
 
-            Task<Sprite> sprite = ToolBox.CreateSpriteFromPath(Path.Combine(newPath, data[lineLength * i + 1]));
-            await sprite;
-            currentQuestion.image = sprite.Result;
+            if(File.Exists(Path.Combine(newPath, data[lineLength * i + 1])))
+            {
+                Task<Sprite> sprite = ToolBox.CreateSpriteFromPath(Path.Combine(newPath, data[lineLength * i + 1]));
+                await sprite;
+                currentQuestion.image = sprite.Result;
+            }
+            else
+            {
+                currentQuestion.image = DefaultImage;
+            }
+            
 
             currentQuestion.category = CategoryFromString(data[lineLength * i + 7]);
             Int32.TryParse(data[lineLength * i + 8], out int reflectionTimer);
