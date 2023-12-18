@@ -279,6 +279,7 @@ GameObject:
   - component: {fileID: 3889585140071283014}
   - component: {fileID: 6091421969335932996}
   - component: {fileID: 3590506782614604747}
+  - component: {fileID: 5889478963387246203}
   - component: {fileID: 4978519323456957444}
   - component: {fileID: 2823194597761941685}
   m_Layer: 0
@@ -324,7 +325,7 @@ MonoBehaviour:
   _gameSceneManager: {fileID: 11400000, guid: e2bf6f267c5e5e940a7729b6e2f812c2, type: 2}
   _tasksManager: {fileID: 3590506782614604747}
   _outlineManager: {fileID: 8653625251434425146}
-  _scoreBoardManager: {fileID: 11400000, guid: a49dd1efff8710d418c6ab1901647733, type: 2}
+  _scoreBoardManager: {fileID: 5889478963387246203}
   _loadScreen: {fileID: 3967417123565402701}
   _loadScreenBar: {fileID: 8851982206767907621}
   _loadScreenText: {fileID: 8771612394511853198}
@@ -345,6 +346,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   complexTasksQueue: []
+--- !u!114 &5889478963387246203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6617834252124186603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b7bef8da8f99845b6cfad22985d8e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4978519323456957444
 MonoBehaviour:
   m_ObjectHideFlags: 0

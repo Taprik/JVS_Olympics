@@ -320,7 +320,7 @@ public class QuizSceneObject : GameSceneObject
         PlayQuestion();
     }
 
-    public async void PlayScore()
+    public void PlayScore()
     {
         GamePage.SetActive(false);
         ScorePage.SetActive(true);

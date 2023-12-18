@@ -15,7 +15,7 @@ public class StarAnimation : CustomAnimation
     [SerializeField] protected int _travelStep;
     [SerializeField] private float _perStepAngle;
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
         StartCoroutine(Animate());
     }

@@ -6,12 +6,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ScoreBoardManager", menuName = "Manager/ScoreBoardManager")]
-public class ScoreBoardManager : ScriptableObject
+public class ScoreBoardManager : MonoBehaviour
 {
-    readonly string PATH = Application.persistentDataPath + "/ScoreBoard.json";
+    private string PATH { get; set; }
 
-    public async Task CreateScoreBoard(PlayerData[] playerDatas)
+    private void Awake()
+    {
+        PATH = Application.persistentDataPath + "/ScoreBoard.json";
+    }
+
+    public async Task CreateScoreBoard()
     {
         if (File.Exists(PATH))
         {
@@ -20,8 +24,8 @@ public class ScoreBoardManager : ScriptableObject
         }
 
         await using FileStream file = File.Create(PATH);
-        string json = JsonConvert.SerializeObject(playerDatas);
-        File.WriteAllText(PATH, json);
+        //string json = JsonConvert.SerializeObject(playerDatas);
+        //File.WriteAllText(PATH, json);
     }
 
     public PlayerData[] GetScoreBoard()
@@ -38,14 +42,13 @@ public class ScoreBoardManager : ScriptableObject
         return playerDatas;
     }
 
-    public int UpdateScoreBoard(PlayerData playerData)
+    public PlayerData[] UpdateScoreBoard(PlayerData playerData)
     {
-        int position = -1;
         PlayerData[] oldPlayerDatas = GetScoreBoard();
         if(oldPlayerDatas == null)
         {
             Debug.LogError("ScoreBoard is null");
-            return position;
+            return null;
         }
 
         List<PlayerData> finalJson = new List<PlayerData>();
@@ -59,7 +62,7 @@ public class ScoreBoardManager : ScriptableObject
                 if (!finalJson.Contains(playerData))
                 {
                     finalJson.Add(playerData);
-                    position = finalJson.Count;
+                    playerData.Rank = finalJson.Count;
                 }
                 break;
             }
@@ -67,31 +70,28 @@ public class ScoreBoardManager : ScriptableObject
             if (oldPlayerDatas[i].Score < playerData.Score)
             {
                 finalJson.Add(playerData);
-                position = finalJson.Count;
+                playerData.Rank = finalJson.Count;
 
                 if (finalJson.Count >= 30)
                     break;
-
-                finalJson.Add(oldPlayerDatas[i]);
             }
-            else
-                finalJson.Add(oldPlayerDatas[i]);
 
+            finalJson.Add(oldPlayerDatas[i]);
+            oldPlayerDatas[i].Rank = finalJson.Count;
         }
 
         string json = JsonConvert.SerializeObject(finalJson);
         File.WriteAllText(PATH, json);
-        return position;
+        return finalJson.ToArray();
     }
 
-    public Dictionary<PlayerData, int> UpdateScoreBoard(PlayerData[] playerDatas)
+    public PlayerData[] UpdateScoreBoard(PlayerData[] playerDatas)
     {
-        Dictionary<PlayerData, int> position = new Dictionary<PlayerData, int>();
         PlayerData[] oldPlayerDatas = GetScoreBoard();
         if (oldPlayerDatas == null)
         {
             Debug.LogError("ScoreBoard is null");
-            return position;
+            return null;
         }
 
         Queue<PlayerData> newPlayerDatas = new Queue<PlayerData>(playerDatas.OrderBy(x => x.Score));
@@ -105,7 +105,7 @@ public class ScoreBoardManager : ScriptableObject
             {
                 PlayerData playerData = newPlayerDatas.Dequeue();
                 finalJson.Add(playerData);
-                position.Add(playerData, finalJson.Count);
+                playerData.Rank = finalJson.Count;
                 continue;
             }
 
@@ -113,18 +113,19 @@ public class ScoreBoardManager : ScriptableObject
             {
                 PlayerData playerData = newPlayerDatas.Dequeue();
                 finalJson.Add(playerData);
-                position.Add(playerData, finalJson.Count);
+                playerData.Rank = finalJson.Count;
 
                 if (finalJson.Count >= 30)
                     break;
-
-                finalJson.Add(oldPlayerDatas[i]);
             }
+
+            finalJson.Add(oldPlayerDatas[i]);
+            oldPlayerDatas[i].Rank = finalJson.Count;
         }
 
         string json = JsonConvert.SerializeObject(finalJson);
         File.WriteAllText(PATH, json);
-        return position;
+        return finalJson.ToArray();
     }
 }
 
@@ -132,5 +133,6 @@ public struct PlayerData
 {
     public string Name;
     public string Date;
+    public int Rank;
     public float Score;
 }

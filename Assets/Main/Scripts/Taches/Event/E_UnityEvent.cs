@@ -6,7 +6,7 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "EventSO", menuName = "Game/Event/UnityEvent")]
 public class E_UnityEvent : EventSO
 {
-    public new UnityEvent Action;
+    public UnityEvent Action;
 
     public override void Raise() => Action?.Invoke();
 }
