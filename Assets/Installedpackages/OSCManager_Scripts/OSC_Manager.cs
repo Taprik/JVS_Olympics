@@ -100,7 +100,7 @@ namespace OSC
 
             _oscIn.Map(remoteVelo, onOSCVelo);
             _oscIn.Map(lesImpacts, onOSCPoint);
-            _oscIn.Map(remoteLaunch, onOSCLaunch);
+            //_oscIn.Map(remoteLaunch, onOSCLaunch);
             _oscIn.Map(remoteStart, onOSCStart);
             _oscIn.Map(remoteInstruction, onOSCInstruction);
             _oscIn.Map(remoteAccueil, onOSCAccueil);
@@ -120,7 +120,7 @@ namespace OSC
 
             _oscIn.Unmap(onOSCVelo);
             _oscIn.Unmap(onOSCPoint);
-            _oscIn.Unmap(onOSCLaunch);
+            //_oscIn.Unmap(onOSCLaunch);
             _oscIn.Unmap(onOSCStart);
             _oscIn.Unmap(onOSCInstruction);
             _oscIn.Unmap(onOSCAccueil);
@@ -181,32 +181,32 @@ namespace OSC
             OscPool.Recycle(message);
         }
 
-        public void onOSCLaunch(OscMessage message)
-        {
-            //ouvrir la scene accueil du jeu (sauf pour Monstres & Photoblock)
-            string nomJeu = "";
-            message.TryGet(0, ref nomJeu);
+        //public void onOSCLaunch(OscMessage message)
+        //{
+        //    //ouvrir la scene accueil du jeu (sauf pour Monstres & Photoblock)
+        //    string nomJeu = "";
+        //    message.TryGet(0, ref nomJeu);
 
-            //SceneManager.LoadScene("Accueil_" + nomJeu);
-            int sceneID = 0;
+        //    //SceneManager.LoadScene("Accueil_" + nomJeu);
+        //    int sceneID = 0;
 
-            switch (nomJeu)
-            {
-                case "Blocks":
-                    sceneID = 1;
-                    break;
-                case "Quiz":
-                    sceneID = 2;
-                    break;
-                default:
-                    break;
-            }
+        //    switch (nomJeu)
+        //    {
+        //        case "Blocks":
+        //            sceneID = 1;
+        //            break;
+        //        case "Quiz":
+        //            sceneID = 2;
+        //            break;
+        //        default:
+        //            break;
+        //    }
 
-            GameManager.Instance.GameSceneManager.LoadScene((SceneName)sceneID);
+        //    GameManager.Instance.GameSceneManager.LoadScene((SceneName)sceneID);
 
-            // Always recycle incoming messages when used.
-            OscPool.Recycle(message);
-        }
+        //    // Always recycle incoming messages when used.
+        //    OscPool.Recycle(message);
+        //}
 
         public void onOSCStart(OscMessage message)
         {
@@ -237,12 +237,27 @@ namespace OSC
 
         public void onOSCAccueil(OscMessage message)
         {
-            //ouvrir la scene accueil du jeu
+            //ouvrir la scene accueil du jeu (sauf pour Monstres & Photoblock)
             string nomJeu = "";
             message.TryGet(0, ref nomJeu);
 
-            SceneManager.LoadScene("Accueil_" + nomJeu);
-            onOSCAccueilAppli();
+            //SceneManager.LoadScene("Accueil_" + nomJeu);
+            int sceneID = 0;
+
+            switch (nomJeu)
+            {
+                case "Blocks":
+                    sceneID = 1;
+                    break;
+                case "Quiz":
+                    sceneID = 2;
+                    break;
+                default:
+                    break;
+            }
+
+            GameManager.Instance.GameSceneManager.LoadScene((SceneName)sceneID);
+
             // Always recycle incoming messages when used.
             OscPool.Recycle(message);
         }

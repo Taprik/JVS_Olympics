@@ -253,7 +253,7 @@ public class BlockSceneObject : GameSceneObject
                 return;
 
             _currentTimer -= 0.1f;
-            SetTimerText();
+            UnityMainThreadDispatcher.Instance().Enqueue(() => SetTimerText());
             await Task.Delay(100);
         }
         TimerEnd?.Invoke(-1);
@@ -263,8 +263,8 @@ public class BlockSceneObject : GameSceneObject
     {
         if (zero)
         {
-            _timerTextFront.text = "0:000";
-            _timerTextBack.text = "0:000";
+            _timerTextFront.text = "00:00";
+            _timerTextBack.text = "00:00";
             return;
         }
 
@@ -273,11 +273,13 @@ public class BlockSceneObject : GameSceneObject
         int second = Mathf.FloorToInt((float)timer.TotalSeconds);
         second = second < 0 ? 0 : second;
 
-        int millisecond = Mathf.FloorToInt(timer.Milliseconds);
-        millisecond = millisecond < 0 ? 0 : millisecond;
+        //int millisecond = Mathf.FloorToInt(timer.Milliseconds);
+        //millisecond = millisecond < 0 ? 0 : millisecond;
+        string format = timer.ToString(@"ff");
+        Debug.Log(format);
 
-        _timerTextFront.text = $"{second}:{millisecond}";
-        _timerTextBack.text = $"{second}:{millisecond}";
+        _timerTextFront.text = $"{second}:{format}";
+        _timerTextBack.text = $"{second}:{format}";
     }
 
     //void ShuffleParts()

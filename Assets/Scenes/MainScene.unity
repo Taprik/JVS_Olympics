@@ -244,6 +244,66 @@ PrefabInstance:
       propertyPath: _mainSceneObject
       value: 
       objectReference: {fileID: 807888560}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: newPlayerDatas.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: newPlayerDatas.Array.data[0].Name
+      value: Lucas
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: newPlayerDatas.Array.data[1].Name
+      value: Thib
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: newPlayerDatas.Array.data[2].Name
+      value: Raph
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: newPlayerDatas.Array.data[3].Name
+      value: Lune
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: newPlayerDatas.Array.data[4].Name
+      value: Random
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: newPlayerDatas.Array.data[5].Name
+      value: Bob
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: newPlayerDatas.Array.data[6].Name
+      value: Billy
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: newPlayerDatas.Array.data[0].Score
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: newPlayerDatas.Array.data[1].Score
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: newPlayerDatas.Array.data[2].Score
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: newPlayerDatas.Array.data[3].Score
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: newPlayerDatas.Array.data[4].Score
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: newPlayerDatas.Array.data[5].Score
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: newPlayerDatas.Array.data[6].Score
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 6617834252124186603, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
       propertyPath: m_Name
       value: GameManager
