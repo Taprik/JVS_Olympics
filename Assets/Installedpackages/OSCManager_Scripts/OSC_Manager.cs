@@ -25,12 +25,8 @@ namespace OSC
         const string remoteQuit = "/remote/Quit";                 //argument 1
                                                                   //pour les jeux
         const string lesImpacts = "/point";                     //list de float
-        const string remoteLaunch = "/remote/Launch";         //argument nom du jeu
         const string remoteStart = "/remote/Start";         //argument nom du jeu
-        const string remoteInstruction = "/remote/Instruction"; //argument nom du jeu
         const string remoteAccueil = "/remote/Accueil";     //argument nom du jeu
-        const string remoteFct1 = "/remote/Fonction_1";                 //argument nom du jeu
-        const string remoteFct2 = "/remote/Fonction_2";                 //argument nom du jeu
         const string remoteNameGamer = "/remote/nameGamer";                 //argument nom du joueur
         const string remoteCalibrage = "/remote/Calibrage";                 //argument nom du joueur
         const string remoteVelo = "/remote/Velo";                           //argument intervalle pédale et angle du guidon*
@@ -78,37 +74,18 @@ namespace OSC
             outOpened = _oscOut.Open(portOut);     //TODO : faire que ce soit une variable
         }
 
-        private void Update()
-        {
-            //if (Input.GetKeyDown(KeyCode.Escape))
-            //{
-            //    messageOutQuit();
-            //}
-            //if(Input.GetKeyDown(KeyCode.W)) 
-            //{
-            //    SendGamerName("Jean-Christophé     &é\"'(-è_çà@)]}~#{[|\\`^@    Jean&Christôphà                                         Jean Christophe  Jean Christophe");
-            //    //SendGamerName("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm                                        Jean Christophe  Jean Christophe");
-            //}
-        }
-
         void OnEnable()
         {
             //mapping des messages
             _oscIn.MapInt(remoteAccueilTous, onOSCAccueilTous);
             _oscIn.MapInt(remoteQuit, onOSCQuit);
-            _oscIn.MapInt(remoteCalibrage, onOSCCalibrage);
+            //_oscIn.MapInt(remoteCalibrage, onOSCCalibrage);
 
             _oscIn.Map(remoteVelo, onOSCVelo);
             _oscIn.Map(lesImpacts, onOSCPoint);
-            //_oscIn.Map(remoteLaunch, onOSCLaunch);
             _oscIn.Map(remoteStart, onOSCStart);
-            _oscIn.Map(remoteInstruction, onOSCInstruction);
             _oscIn.Map(remoteAccueil, onOSCAccueil);
-            _oscIn.Map(remoteFct1, onOSCFct1);
-            _oscIn.Map(remoteFct2, onOSCFct2);
             _oscIn.Map(remoteNameGamer, onOSCNameGamer);
-            //Show the player score
-            _oscIn.Map(remoteNameGamer, onShowScore);
         }
 
         void OnDisable()
@@ -116,18 +93,13 @@ namespace OSC
             // If you want to stop receiving messages you have to "unmap".
             _oscIn.UnmapInt(onOSCAccueilTous);
             _oscIn.UnmapInt(onOSCQuit);
-            _oscIn.UnmapInt(onOSCCalibrage);
+            //_oscIn.UnmapInt(onOSCCalibrage);
 
             _oscIn.Unmap(onOSCVelo);
             _oscIn.Unmap(onOSCPoint);
-            //_oscIn.Unmap(onOSCLaunch);
             _oscIn.Unmap(onOSCStart);
-            _oscIn.Unmap(onOSCInstruction);
             _oscIn.Unmap(onOSCAccueil);
-            _oscIn.Unmap(onOSCFct1);
-            _oscIn.Unmap(onOSCFct2);
             _oscIn.Unmap(onOSCNameGamer);
-            _oscIn.Unmap(onShowScore);
         }
 
         private void onOSCVelo(OscMessage message)
@@ -154,10 +126,10 @@ namespace OSC
             Application.Quit();
         }
 
-        public void onOSCCalibrage(int value)
-        {
-            SceneManager.LoadScene("Calibrage");
-        }
+        //public void onOSCCalibrage(int value)
+        //{
+        //    SceneManager.LoadScene("Calibrage");
+        //}
 
         public void onOSCPoint(OscMessage message)
         {
@@ -174,39 +146,11 @@ namespace OSC
                 rp.ReceivePoint(impactX, impactY);
             }
 
-            //Instantiate(ImpactPref, new Vector3((impactX - 960) * (205.28f / 1920), (impactY - 540) * (115.48f / 1080), 90), Quaternion.identity);
-            Instantiate(ImpactPref, new Vector3(impactX, impactY, 0), Quaternion.identity, Canvas);
+            Destroy(Instantiate(ImpactPref, new Vector3(impactX, impactY, 0), Quaternion.identity, Canvas), 1f);
 
             // Always recycle incoming messages when used.
             OscPool.Recycle(message);
         }
-
-        //public void onOSCLaunch(OscMessage message)
-        //{
-        //    //ouvrir la scene accueil du jeu (sauf pour Monstres & Photoblock)
-        //    string nomJeu = "";
-        //    message.TryGet(0, ref nomJeu);
-
-        //    //SceneManager.LoadScene("Accueil_" + nomJeu);
-        //    int sceneID = 0;
-
-        //    switch (nomJeu)
-        //    {
-        //        case "Blocks":
-        //            sceneID = 1;
-        //            break;
-        //        case "Quiz":
-        //            sceneID = 2;
-        //            break;
-        //        default:
-        //            break;
-        //    }
-
-        //    GameManager.Instance.GameSceneManager.LoadScene((SceneName)sceneID);
-
-        //    // Always recycle incoming messages when used.
-        //    OscPool.Recycle(message);
-        //}
 
         public void onOSCStart(OscMessage message)
         {
@@ -218,18 +162,6 @@ namespace OSC
             {
                 GameManager.Instance.CurrentGameSceneObject.Play();
             }
-
-            // Always recycle incoming messages when used.
-            OscPool.Recycle(message);
-        }
-
-        public void onOSCInstruction(OscMessage message)
-        {
-            //ouvrir la scene game du jeu
-            string nomJeu = "";
-            message.TryGet(0, ref nomJeu);
-
-            SceneManager.LoadScene("Intro_" + nomJeu);
 
             // Always recycle incoming messages when used.
             OscPool.Recycle(message);
@@ -262,38 +194,6 @@ namespace OSC
             OscPool.Recycle(message);
         }
 
-        public void onOSCFct1(OscMessage message)
-        {
-            //dans la scene score on fait defiler vers le haut
-            string nomJeu = "";
-            message.TryGet(0, ref nomJeu);
-
-
-            // Always recycle incoming messages when used.
-            OscPool.Recycle(message);
-        }
-
-        public void onOSCFct2(OscMessage message)
-        {
-            //dans la scene score on fait defiler vers le bas
-            string nomJeu = "";
-            message.TryGet(0, ref nomJeu);
-
-
-            // Always recycle incoming messages when used.
-            OscPool.Recycle(message);
-        }
-
-        public void onShowScore(OscMessage message)
-        {
-            string nomJoueur = "";
-            message.TryGet(0, ref nomJoueur);
-            SendGamerName(nomJoueur);
-           
-
-            OscPool.Recycle(message);
-        }
-
         public void onOSCNameGamer(OscMessage message)
         {
             //on renseigne le nom du joueur pour le tableau des scores
@@ -302,6 +202,8 @@ namespace OSC
             message.TryGet(0, ref nomGamer);
             SendGamerName(nomGamer);
 
+            if(GameManager.Instance.CurrentGameSceneObject != null)
+                GameManager.Instance.CurrentGameSceneObject.OnNameReceive(nomGamer);
 
             // Always recycle incoming messages when used.
             OscPool.Recycle(message);
@@ -324,7 +226,6 @@ namespace OSC
 
         public void GameEnCours()
         {
-
             _message = new OscMessage(enCours);
             _message.Set(0, 1);
             _oscOut.Send(_message);
