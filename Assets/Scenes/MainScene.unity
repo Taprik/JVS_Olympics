@@ -196,6 +196,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 963194227, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: m_ClearFlags
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 963194227, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963194227, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963194227, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3889585140071283014, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -240,10 +256,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5889478963387246203, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: _allScoreBoard.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5889478963387246203, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: _allScoreBoard.Array.data[1]
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
       propertyPath: _mainSceneObject
       value: 
       objectReference: {fileID: 807888560}
+    - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
+      propertyPath: _resetScoreBoard
+      value: 117
+      objectReference: {fileID: 0}
     - target: {fileID: 6091421969335932996, guid: 3769ed1f98c7504489cccfe73c45f84a, type: 3}
       propertyPath: newPlayerDatas.Array.size
       value: 7

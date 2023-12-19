@@ -18,6 +18,11 @@ public class GameSceneObject : MonoBehaviour
 
     public virtual void Play()
     {
+        GameManager.Instance.OSCManager.GameEnCours();
+    }
+
+    public virtual void OnNameReceive(string name)
+    {
 
     }
 }

@@ -14,7 +14,18 @@ public enum GameScoreBoard
 
 public class ScoreBoardManager : MonoBehaviour
 {
+    [SerializeField]
+    GameScoreBoard[] _allScoreBoard;
+
     string GetPath(GameScoreBoard game) => Application.persistentDataPath + "/" + game.ToString() + ".json";
+
+    public async void ResetAllScoreBoard()
+    {
+        foreach (GameScoreBoard scoreBoard in _allScoreBoard)
+        {
+            await CreateScoreBoard(scoreBoard);
+        }
+    }
 
     public async Task CreateScoreBoard(GameScoreBoard game)
     {
