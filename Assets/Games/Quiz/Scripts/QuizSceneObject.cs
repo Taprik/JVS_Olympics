@@ -291,7 +291,7 @@ public class QuizSceneObject : GameSceneObject
         });
 
         await Task.WhenAny(waitTimerOrRightAnswer);
-        _audioSource.Stop();
+        if(_audioSource != null) _audioSource.Stop();
         tokenSource.Dispose();
         tokenSourceAnimOups.Dispose();
 
@@ -337,23 +337,27 @@ public class QuizSceneObject : GameSceneObject
         else
         {
             int id = (Teams[0].Score > Teams[1].Score) ? 0 : 1;
-            
+
             ScoreTeam.font = GameQuizSo.GetFontAsset(id == 0 ? GameQuiz.TeamFontColor.Blue : GameQuiz.TeamFontColor.Orange);
             ScoreTeam.text = "Bravo équipe \n" + Teams[id].Name.ToString();
             ScoreTeam.color = Teams[id].Color;
-            
+
             ScoreText.font = GameQuizSo.GetFontAsset(id == 0 ? GameQuiz.TeamFontColor.Blue : GameQuiz.TeamFontColor.Orange);
             ScoreText.text = Teams[id].Score.ToString() + " pts";
             ScoreText.color = Teams[id].Color;
         }
+
+        GameManager.Instance.OSCManager.NeedName();
     }
 
     public async override void OnNameReceive(string name)
     {
         base.OnNameReceive(name);
-        PlayerData newPlayerData = new PlayerData();
-        newPlayerData.Name = name;
-        newPlayerData.Score = Teams[0].Score > Teams[1].Score ? Teams[0].Score : Teams[1].Score;
+        PlayerData newPlayerData = new()
+        {
+            Name = name,
+            Score = Teams[0].Score > Teams[1].Score ? Teams[0].Score : Teams[1].Score
+        };
         await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardDescendingOrder(newPlayerData, GameScoreBoard.QuizScoreBoard);
     }
 
@@ -759,7 +763,7 @@ public class QuizSceneObject : GameSceneObject
         {
             QuizTeam team = Teams[teamID];
             _scoreGainText.font = GameQuizSo.GetFontAsset(teamID == 0 ? GameQuiz.TeamFontColor.Blue : GameQuiz.TeamFontColor.Orange);
-            _scoreGainText.text = "Réponse : " + StringFromValue(_currentQuestion.correctAnswer) + "\n Bravo équipe " + team.Name + "\n +" + WinningScore.ToString() + "pts";
+            _scoreGainText.text = "Réponse : " + StringFromValue(_currentQuestion.correctAnswer)/* + "\n Bravo équipe " + team.Name */+ "\n +" + WinningScore.ToString() + "pts";
             _scoreGainText.color = team.Color;
         }
     }
@@ -768,6 +772,8 @@ public class QuizSceneObject : GameSceneObject
     {
         foreach (var t in Teams)
         {
+            if (t.TeamAnswersHolder == null) continue;
+
             t.TeamAnswersHolder.SetActive(false);
             for (int i = 0; i < t.TeamAnswers.Length; i++)
             {

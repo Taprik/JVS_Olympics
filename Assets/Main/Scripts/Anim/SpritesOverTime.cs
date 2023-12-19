@@ -17,7 +17,7 @@ public class SpritesOverTime : MonoBehaviour
     {
         for (int i = 0; i < _sprites.Length; i++)
         {
-            if(token.IsCancellationRequested) return;
+            if(token.IsCancellationRequested || _image == null) return;
 
             _image.sprite = _sprites[i];
             await Task.Delay(Mathf.RoundToInt((timer / _sprites.Length) * 1000));
