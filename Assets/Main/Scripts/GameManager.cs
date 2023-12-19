@@ -119,7 +119,7 @@ public class GameManager : MonoBehaviour
             Message(ref CurrentMessage, "Voulez-vous charger tous les assets ?", () => AddressablesManager.Init(), _loadAllAsset);
 
         if(Input.GetKeyDown(_quitApp))
-            Message(ref CurrentMessage, "Voulez-vous vraiment quitter ?", () => Application.Quit(), _quitApp);
+            Message(ref CurrentMessage, "Voulez-vous vraiment quitter ?", () => OSCManager.messageOutQuit(), _quitApp);
 
         if(Input.GetKeyDown(_backMainMenu))
             Message(ref CurrentMessage, "Voulez-vous retourner à l'acceuil ?" , () => GameSceneManager.LoadScene(SceneName.MainScene), _backMainMenu);

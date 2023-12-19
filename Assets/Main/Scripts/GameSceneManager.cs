@@ -60,7 +60,7 @@ public class GameSceneManager : ScriptableObject
 
         while (!handle.IsDone)
         {
-            Tween tween = GameManager.Instance.LoadScreenBar.DOValue(handle.PercentComplete, 0.1f);
+            Tween tween = GameManager.Instance.LoadScreenBar.DOValue(handle.PercentComplete * 0.5f, 0.1f);
 
             GameManager.Instance.LoadScreenText.text = Mathf.RoundToInt(handle.PercentComplete * 50f).ToString() + "%";
 
