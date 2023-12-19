@@ -41,6 +41,7 @@ namespace OSC
         const string photoBlockQuestion = "/remote/PhotoblockQuestion"; //argument 1
         const string hide = "/remote/Hide";                             //arguement 1
         const string show = "/remote/Show";                             //argument 1
+        const string ready = "/remote/Ready";                            //argument 1
         private const int _nbreOfCharacter = 25;
         OscMessage _message;
 
@@ -163,6 +164,8 @@ namespace OSC
                 GameManager.Instance.CurrentGameSceneObject.Play();
             }
 
+            Debug.Log(nomJeu);
+
             // Always recycle incoming messages when used.
             OscPool.Recycle(message);
         }
@@ -231,7 +234,7 @@ namespace OSC
             _oscOut.Send(_message);
         }
 
-        public void ShowSoftKeyboard()
+        public void NeedName()
         {
             _message = new OscMessage(nomJoueur);
             _message.Set(0, 1);
@@ -269,6 +272,13 @@ namespace OSC
         public void Show()
         {
             _message = new OscMessage(show);
+            _message.Set(0, 1);
+            _oscOut.Send(_message);
+        }
+
+        public void Ready()
+        {
+            _message = new OscMessage(ready);
             _message.Set(0, 1);
             _oscOut.Send(_message);
         }

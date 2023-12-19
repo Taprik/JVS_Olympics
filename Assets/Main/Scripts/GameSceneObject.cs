@@ -13,7 +13,7 @@ public class GameSceneObject : MonoBehaviour
 
     public virtual async Task InitScene()
     {
-        Debug.Log("Scene Init Complete");
+        GameManager.Instance.OSCManager.Ready();
     }
 
     public virtual void Play()
