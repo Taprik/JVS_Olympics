@@ -82,6 +82,10 @@ public class QuizSceneObject : GameSceneObject
     [SerializeField]
     Animator _fadeAnimator;
 
+    public Animator OverallFadeAnimator => _overallFadeAnimator;
+    [SerializeField]
+    Animator _overallFadeAnimator;
+
     [SerializeField]
     AnimationClip _etoileAnim;
 
@@ -178,7 +182,7 @@ public class QuizSceneObject : GameSceneObject
 
     #endregion
 
-    public override async void Awake()
+    public override void Awake()
     {
         base.Awake();
         HomePage.SetActive(true);
@@ -214,6 +218,7 @@ public class QuizSceneObject : GameSceneObject
 
     public override void Play()
     {
+        base.Play();
         PlayButtonHolder.SetActive(false);
         SelectCategoryHolder.SetActive(true);
     }
@@ -235,21 +240,16 @@ public class QuizSceneObject : GameSceneObject
 
         AudioSource.PlayClipAtPoint(GameQuizSo.StartSound, Vector3.zero);
         _quizStartObject.SetActive(true);
-        await _quizStartAnim.Anim(2f);
+        _quizStartAnim.Anim(2f);
+
+        await Task.Delay(1000);
+        float rng = (float)Random.Range(0, 4);
+        OverallFadeAnimator.SetFloat("Random", rng);
+        OverallFadeAnimator.SetTrigger("Fade");
+
+        await Task.Delay(2000);
         _quizStartObject.SetActive(false);
-
-        //bool isFadeInComplete = false;
-
-        //Transitioner.Instance.TransitionInWithoutChangingScene();
-        //Transitioner.Instance.OnTransitionComplete += () => isFadeInComplete = true;
-
-        //await Task.Run(async () =>
-        //{
-        //    while (!isFadeInComplete)
-        //    {
-        //        await Task.Delay(50);
-        //    }
-        //});
+        await Task.Delay(2000);
 
         UnityMainThreadDispatcher.Instance().Enqueue(async () => await _timerAnim.Anim(reflectionTimer - 1f, tokenSource.Token));
         await Task.Delay(Mathf.RoundToInt((reflectionTimer - 1f) * 1000));
@@ -346,6 +346,15 @@ public class QuizSceneObject : GameSceneObject
             ScoreText.text = Teams[id].Score.ToString() + " pts";
             ScoreText.color = Teams[id].Color;
         }
+    }
+
+    public async override void OnNameReceive(string name)
+    {
+        base.OnNameReceive(name);
+        PlayerData newPlayerData = new PlayerData();
+        newPlayerData.Name = name;
+        newPlayerData.Score = Teams[0].Score > Teams[1].Score ? Teams[0].Score : Teams[1].Score;
+        await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardDescendingOrder(newPlayerData, GameScoreBoard.QuizScoreBoard);
     }
 
     public float SetQuestion(Quiz_Question question)
