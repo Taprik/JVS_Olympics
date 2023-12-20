@@ -255,7 +255,10 @@ public class QuizSceneObject : GameSceneObject
         await Task.Delay(Mathf.RoundToInt((reflectionTimer - 1f) * 1000));
         FadeAnimator.SetTrigger("FadeIn");
         await Task.Delay(50);
+        float fadeInRealDuration = Time.time;
+        float fadeInDuration = Mathf.RoundToInt(FadeAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.averageDuration * 1100);
         await Task.Delay(Mathf.RoundToInt(FadeAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.averageDuration * 1100));
+        Debug.Log("FadeIn Duration : " + fadeInDuration + " | Reel Duration : " + (Time.time - fadeInRealDuration));
 
         SetTeamsButton();
 
@@ -307,12 +310,15 @@ public class QuizSceneObject : GameSceneObject
         await Task.Run(async () =>
         {
             while (!GameManager.Instance.TasksManager.AllTasksFinish())
-                await Task.Delay(10);
+                await Task.Delay(100);
         });
 
         FadeAnimator.SetTrigger("FadeOut");
         await Task.Delay(50);
+        float fadeOutRealDuration = Time.time;
+        float fadeOutDuration = Mathf.RoundToInt(FadeAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.averageDuration * 1100);
         await Task.Delay(Mathf.RoundToInt(FadeAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.averageDuration * 1100));
+        Debug.Log("FadeOut Duration : " + fadeOutDuration + " | Reel Duration : " + (Time.time - fadeOutRealDuration));
 
         if (!(selectedQuestionID < 0))
             _progressBarParts[selectedQuestionID - 1].color = Color.black;
@@ -352,13 +358,12 @@ public class QuizSceneObject : GameSceneObject
 
     public async override void OnNameReceive(string name)
     {
-        base.OnNameReceive(name);
         PlayerData newPlayerData = new()
         {
             Name = name,
             Score = Teams[0].Score > Teams[1].Score ? Teams[0].Score : Teams[1].Score
         };
-        await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardDescendingOrder(newPlayerData, GameScoreBoard.QuizScoreBoard);
+        await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardDescendingOrder(new PlayerData[1] { newPlayerData }, GameScoreBoard.QuizScoreBoard);
     }
 
     public float SetQuestion(Quiz_Question question)
@@ -604,15 +609,17 @@ public class QuizSceneObject : GameSceneObject
             AudioSource.PlayClipAtPoint(GameQuizSo.GetRandomWrongAnswerSound(), Vector3.zero);
         }
 
-        await GameManager.Instance.TasksManager.AddTaskToList(AnimTaskListName, DestroyTeamButton(id, teamID));
+        DestroyTeamButton(id, teamID);
 
         if (id == _currentQuestion.correctAnswer)
         {
+            float realDuration = Time.time;
             await GameManager.Instance.TasksManager.AddTaskToList(PlayVideoAnim(teamID));
-            GameManager.Instance.TasksManager.AddTaskToList(Teams[teamID].StarAnimation(_starAnimationObject, _nbStar));
+            Teams[teamID].StarAnimation(_starAnimationObject, _nbStar);
             AudioSource.PlayClipAtPoint(GameQuizSo.GainPtsSound, Vector3.zero);
             await GameManager.Instance.TasksManager.AddTaskToList(Teams[teamID].ScoreAnim(score, 1.5f));
             await GameManager.Instance.TasksManager.AddTaskToList(Task.Delay(4500));
+            Debug.Log("Total Duration of CorrectAnswer : " + (Time.time - realDuration));
         }
     }
 
@@ -632,7 +639,13 @@ public class QuizSceneObject : GameSceneObject
         _answerResultObject.SetActive(true);
         await Task.Delay(50);
         _videoAnimImage.gameObject.SetActive(true);
+
+        float realDuration = Time.time;
+        float duration = Mathf.RoundToInt((float)_videoAnimPlayer.clip.length * 1000);
+
         await Task.Delay(Mathf.RoundToInt((float)_videoAnimPlayer.clip.length * 1000));
+        Debug.Log("Video Duration : " + duration + " | Real Duration : " + (Time.time - realDuration));
+        
         _resultObject.SetActive(true);
         _videoAnimPlayer.gameObject.SetActive(false);
         _videoAnimImage.gameObject.SetActive(false);
@@ -655,22 +668,17 @@ public class QuizSceneObject : GameSceneObject
         _answerResultObject.SetActive(true);
         await Task.Delay(50);
         _videoAnimImage.gameObject.SetActive(true);
+
+        float realDuration = Time.time;
+        float duration = Mathf.RoundToInt((float)_videoAnimPlayer.clip.length * 1000);
+
         await Task.Delay(Mathf.RoundToInt((float)_videoAnimPlayer.clip.length * 1000));
+        Debug.Log("Video Duration : " + duration + " | Real Duration : " + (Time.time - realDuration));
+
         _resultObject.SetActive(true);
         _videoAnimPlayer.gameObject.SetActive(false);
         _videoAnimImage.gameObject.SetActive(false);
         _answerResultObject.SetActive(false);
-    }
-
-    async Task PlayVideoAnim(VideoClip clip)
-    {
-        _videoAnimPlayer.clip = clip;
-        _videoAnimPlayer.gameObject.SetActive(true);
-        await Task.Delay(50);
-        _videoAnimImage.gameObject.SetActive(true);
-        await Task.Delay(Mathf.RoundToInt((float)_videoAnimPlayer.clip.length * 1000));
-        _videoAnimPlayer.gameObject.SetActive(false);
-        _videoAnimImage.gameObject.SetActive(false);
     }
 
     int GetScore()
@@ -695,8 +703,8 @@ public class QuizSceneObject : GameSceneObject
                 RandomPosTeamsButton(t.TeamAnswers[i].transform as RectTransform);
                 t.TeamAnswers[i].GetComponent<ButtonParent>().IsActive = true;
                 t.TeamAnswers[i].SetActive(true);
-                t.SetColor(GameQuizSo);
                 t.TeamAnswers[i].GetComponent<Animator>().SetTrigger("Reset");
+                t.SetColor(GameQuizSo);
             }
         }
     }
@@ -778,6 +786,8 @@ public class QuizSceneObject : GameSceneObject
             for (int i = 0; i < t.TeamAnswers.Length; i++)
             {
                 t.TeamAnswers[i].GetComponent<ButtonParent>().IsActive = false;
+                t.TeamAnswers[i].GetComponent<Animator>().SetTrigger("Reset");
+                t.SetColor(GameQuizSo);
                 t.TeamAnswers[i].SetActive(false);
             }
         }
@@ -797,13 +807,15 @@ public class QuizSceneObject : GameSceneObject
                 if (t.TeamAnswers[i] != button)
                 {
                     t.TeamAnswers[i].GetComponent<ButtonParent>().IsActive = false;
+                    t.TeamAnswers[i].GetComponent<Animator>().SetTrigger("Reset");
+                    t.SetColor(GameQuizSo);
                     t.TeamAnswers[i].SetActive(false);
                 }
             }
         }
     }
 
-    public async Task DestroyTeamButton(int id, int teamID)
+    public void DestroyTeamButton(int id, int teamID)
     {
         Teams[teamID].TeamAnswers[id].GetComponent<Animator>().SetTrigger("IsDestroy");
         //await Task.Delay(Mathf.RoundToInt(_etoileAnim.length * 1000) + 200);
@@ -839,7 +851,7 @@ public class QuizSceneObject : GameSceneObject
             TeamScore.text = Score.ToString() + " pts";
         }
 
-        public async Task StarAnimation(StarAnimation pref, int nbPref)
+        public void StarAnimation(StarAnimation pref, int nbPref)
         {
             for (int i = 0; i < nbPref; i++)
             {
@@ -856,19 +868,16 @@ public class QuizSceneObject : GameSceneObject
         public void SetColor(GameObject go, Color color, GameQuiz gameQuiz)
         {
 
-            TextMeshProUGUI text = go.GetComponent<TextMeshProUGUI>();
-            if (text != null)
+            if (go.TryGetComponent<TextMeshProUGUI>(out var text))
             {
                 text.color = color;
                 text.font = gameQuiz.GetFontAsset(ID == 0 ? GameQuiz.TeamFontColor.Blue : GameQuiz.TeamFontColor.Orange);
             }
 
-            Image image = go.GetComponent<Image>();
-            if (image != null)
+            if (go.TryGetComponent<Image>(out var image))
                 image.color = color;
 
-            SpriteRenderer spriteRenderer = go.GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
+            if (go.TryGetComponent<SpriteRenderer>(out var spriteRenderer))
                 spriteRenderer.color = color;
         }
     }
