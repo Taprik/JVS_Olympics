@@ -24,7 +24,16 @@ public class SpritesOverTime : MonoBehaviour
         }
     }
 
-    public async Task Anim(float timer)
+    public async Task AnimTask(float timer)
+    {
+        for (int i = 0; i < _sprites.Length; i++)
+        {
+            _image.sprite = _sprites[i];
+            await Task.Delay(Mathf.RoundToInt((timer / _sprites.Length) * 1000));
+        }
+    }
+
+    public async void Anim(float timer)
     {
         for (int i = 0; i < _sprites.Length; i++)
         {

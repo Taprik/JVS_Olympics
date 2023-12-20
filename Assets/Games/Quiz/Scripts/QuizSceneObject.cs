@@ -232,6 +232,12 @@ public class QuizSceneObject : GameSceneObject
             return;
         }
 
+        float totalDuration = Time.time;
+        Debug.Log("Start Question " + selectedQuestionID);
+
+        float setUpRealDuration = Time.time;
+        float setUpDuration = 0;
+
         _resultObject.SetActive(false);
         _questionObject.SetActive(true);
         float reflectionTimer = SetQuestion(selectedQuestion[selectedQuestionID]);
@@ -242,14 +248,19 @@ public class QuizSceneObject : GameSceneObject
         _quizStartObject.SetActive(true);
         _quizStartAnim.Anim(2f);
 
+        setUpDuration += 1000;
         await Task.Delay(1000);
         float rng = (float)Random.Range(0, 4);
         OverallFadeAnimator.SetFloat("Random", rng);
         OverallFadeAnimator.SetTrigger("Fade");
 
+        setUpDuration += 2000;
         await Task.Delay(2000);
         _quizStartObject.SetActive(false);
+        setUpDuration += 2000;
         await Task.Delay(2000);
+
+        Debug.Log("SetUp Duration : " + setUpDuration + " | Real Duration : " + (Time.time - setUpRealDuration));
 
         UnityMainThreadDispatcher.Instance().Enqueue(async () => await _timerAnim.Anim(reflectionTimer - 1f, tokenSource.Token));
         await Task.Delay(Mathf.RoundToInt((reflectionTimer - 1f) * 1000));
@@ -323,6 +334,8 @@ public class QuizSceneObject : GameSceneObject
         if (!(selectedQuestionID < 0))
             _progressBarParts[selectedQuestionID - 1].color = Color.black;
 
+        Debug.Log("End Question " + (selectedQuestionID - 1) + ", Duration : " + (Time.time - totalDuration));
+
         PlayQuestion();
     }
 
@@ -363,7 +376,7 @@ public class QuizSceneObject : GameSceneObject
             Name = name,
             Score = Teams[0].Score > Teams[1].Score ? Teams[0].Score : Teams[1].Score
         };
-        await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardDescendingOrder(new PlayerData[1] { newPlayerData }, GameScoreBoard.QuizScoreBoard);
+        await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardDescendingOrder(newPlayerData, GameScoreBoard.QuizScoreBoard);
     }
 
     public float SetQuestion(Quiz_Question question)
