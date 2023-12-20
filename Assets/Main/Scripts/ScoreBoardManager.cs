@@ -71,6 +71,12 @@ public class ScoreBoardManager : MonoBehaviour
         }
 
         List<PlayerData> finalJson = new List<PlayerData>();
+
+        foreach (PlayerData d in oldPlayerDatas)
+            d.WinNow = false;
+
+        playerData.WinNow = true;
+
         List<PlayerData> allPlayerData = new List<PlayerData>(oldPlayerDatas)
         {
             playerData
@@ -82,9 +88,8 @@ public class ScoreBoardManager : MonoBehaviour
             if (allPlayerData.Count <= i)
                 break;
 
-            PlayerData data = allPlayerData[i];
-            data.Rank = i + 1;
-            finalJson.Add(data);
+            allPlayerData[i].Rank = i + 1;
+            finalJson.Add(allPlayerData[i]);
         }
 
         string json = JsonHelper.ToJson(finalJson.ToArray(), true);
@@ -102,6 +107,13 @@ public class ScoreBoardManager : MonoBehaviour
         }
 
         List<PlayerData> finalJson = new List<PlayerData>();
+
+        foreach (PlayerData d in oldPlayerDatas)
+            d.WinNow = false;
+
+        foreach (PlayerData d in playerDatas)
+            d.WinNow = true;
+
         List<PlayerData> allPlayerData = new List<PlayerData>(oldPlayerDatas);
         allPlayerData.AddRange(playerDatas);
         allPlayerData = allPlayerData.OrderBy(x => x.Score).ToList();
@@ -111,9 +123,8 @@ public class ScoreBoardManager : MonoBehaviour
             if (allPlayerData.Count <= i)
                 break;
 
-            PlayerData data = allPlayerData[i];
-            data.Rank = i + 1;
-            finalJson.Add(data);
+            allPlayerData[i].Rank = i + 1;
+            finalJson.Add(allPlayerData[i]);
         }
 
         string json = JsonHelper.ToJson(finalJson.ToArray(), true);
@@ -131,6 +142,12 @@ public class ScoreBoardManager : MonoBehaviour
         }
 
         List<PlayerData> finalJson = new List<PlayerData>();
+
+        foreach (PlayerData d in oldPlayerDatas)
+            d.WinNow = false;
+
+        playerData.WinNow = true;
+
         List<PlayerData> allPlayerData = new List<PlayerData>(oldPlayerDatas)
         {
             playerData
@@ -142,9 +159,8 @@ public class ScoreBoardManager : MonoBehaviour
             if (allPlayerData.Count <= i)
                 break;
 
-            PlayerData data = allPlayerData[i];
-            data.Rank = i + 1;
-            finalJson.Add(data);
+            allPlayerData[i].Rank = i + 1;
+            finalJson.Add(allPlayerData[i]);
         }
 
         string json = JsonHelper.ToJson(finalJson.ToArray(), true);
@@ -162,6 +178,13 @@ public class ScoreBoardManager : MonoBehaviour
         }
 
         List<PlayerData> finalJson = new List<PlayerData>();
+
+        foreach (PlayerData d in oldPlayerDatas)
+            d.WinNow = false;
+
+        foreach (PlayerData d in playerDatas)
+            d.WinNow = true;
+
         List<PlayerData> allPlayerData = new List<PlayerData>(oldPlayerDatas);
         allPlayerData.AddRange(playerDatas);
         allPlayerData = allPlayerData.OrderByDescending(x => x.Score).ToList();
@@ -171,9 +194,8 @@ public class ScoreBoardManager : MonoBehaviour
             if (allPlayerData.Count <= i)
                 break;
 
-            PlayerData data = allPlayerData[i];
-            data.Rank = i + 1;
-            finalJson.Add(data);
+            allPlayerData[i].Rank = i + 1;
+            finalJson.Add(allPlayerData[i]);
         }
 
         string json = JsonHelper.ToJson(finalJson.ToArray(), true);
@@ -183,10 +205,11 @@ public class ScoreBoardManager : MonoBehaviour
 }
 
 [System.Serializable]
-public struct PlayerData
+public class PlayerData
 {
     public string Name;
     public int Rank;
+    public bool WinNow;
     public float Score;
 }
 

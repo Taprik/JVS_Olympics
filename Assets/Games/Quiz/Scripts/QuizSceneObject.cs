@@ -180,6 +180,17 @@ public class QuizSceneObject : GameSceneObject
     [SerializeField]
     TextMeshProUGUI _scoreTeam;
 
+    [SerializeField]
+    GameObject _scoreBoardObject;
+
+    [SerializeField]
+    GameObject _scoreDisplay;
+
+    [SerializeField]
+    Transform[] _collums;
+
+    List<GameObject> _instantiateScoreDisplay = new();
+
     #endregion
 
     public override void Awake()
@@ -376,8 +387,31 @@ public class QuizSceneObject : GameSceneObject
             Name = name,
             Score = Teams[0].Score > Teams[1].Score ? Teams[0].Score : Teams[1].Score
         };
-        await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardDescendingOrder(newPlayerData, GameScoreBoard.QuizScoreBoard);
+
+        InitScoreBoard(await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardDescendingOrder(newPlayerData, GameScoreBoard.QuizScoreBoard), Teams[0].Score > Teams[1].Score ? 0 : 1);
     }
+
+    public void InitScoreBoard(PlayerData[] playerDatas, int teamID)
+    {
+        for (int i = 0; i < playerDatas.Length; i++)
+        {
+            int collum = i < 10 ? 0 : i < 20 ? 1 : 2;
+            Transform parent = _collums[collum];
+            GameObject go = Instantiate(_scoreDisplay, parent);
+            _instantiateScoreDisplay.Add(go);
+
+            string text = playerDatas[i].Rank + ". " + playerDatas[i].Name + " : " + playerDatas[i].Score + "pts";
+            Color outlineColor = i < 3 || playerDatas[i].WinNow ? Teams[teamID].Color : Color.black;
+            TMP_FontAsset font = playerDatas[i].WinNow ? GameQuizSo.GetFontAsset((GameQuiz.TeamFontColor)teamID) : null;
+
+            go.GetComponent<ScoreDisplayer>().Init(text, outlineColor, font);
+        }
+
+        DisplayScoreBoard();
+    }
+
+    public void DisplayScoreBoard() => _scoreBoardObject.SetActive(true);
+    public void HideScoreBoard() => _scoreBoardObject.SetActive(false);
 
     public float SetQuestion(Quiz_Question question)
     {
