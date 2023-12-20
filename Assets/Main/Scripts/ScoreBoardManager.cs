@@ -60,50 +60,50 @@ public class ScoreBoardManager : MonoBehaviour
         return playerDatas;
     }
 
-    public async Task<PlayerData[]> UpdateScoreBoardAscendingOrder(PlayerData playerData, GameScoreBoard game)
-    {
-        PlayerData[] oldPlayerDatas = await GetScoreBoard(game);
-        if(oldPlayerDatas == null)
-        {
-            Debug.LogError("ScoreBoard is null");
-            return null;
-        }
+    //public async Task<PlayerData[]> UpdateScoreBoardAscendingOrder(PlayerData playerData, GameScoreBoard game)
+    //{
+    //    PlayerData[] oldPlayerDatas = await GetScoreBoard(game);
+    //    if(oldPlayerDatas == null)
+    //    {
+    //        Debug.LogError("ScoreBoard is null");
+    //        return null;
+    //    }
 
-        List<PlayerData> finalJson = new List<PlayerData>();
-        for (int i = 0; i < 30; i++)
-        {
-            if (finalJson.Count >= 30)
-                break;
+    //    List<PlayerData> finalJson = new List<PlayerData>();
+    //    for (int i = 0; i < 30; i++)
+    //    {
+    //        if (finalJson.Count >= 30)
+    //            break;
 
-            if (oldPlayerDatas.Length <= i)
-            {
-                if (!finalJson.Contains(playerData))
-                {
-                    playerData.Rank = finalJson.Count + 1;
-                    playerData.Date = DateTime.UtcNow.ToString(@"dd\:HH\:mm\:ss\:ff");
-                    finalJson.Add(playerData);
-                }
-                break;
-            }
+    //        if (oldPlayerDatas.Length <= i)
+    //        {
+    //            if (!finalJson.Contains(playerData))
+    //            {
+    //                playerData.Rank = finalJson.Count + 1;
+    //                playerData.Date = DateTime.UtcNow.ToString(@"dd\:HH\:mm\:ss\:ff");
+    //                finalJson.Add(playerData);
+    //            }
+    //            break;
+    //        }
 
-            if (oldPlayerDatas[i].Score > playerData.Score)
-            {
-                playerData.Rank = finalJson.Count + 1;
-                playerData.Date = DateTime.UtcNow.ToString(@"dd\:HH\:mm\:ss\:ff");
-                finalJson.Add(playerData);
+    //        if (oldPlayerDatas[i].Score > playerData.Score)
+    //        {
+    //            playerData.Rank = finalJson.Count + 1;
+    //            playerData.Date = DateTime.UtcNow.ToString(@"dd\:HH\:mm\:ss\:ff");
+    //            finalJson.Add(playerData);
 
-                if (finalJson.Count >= 30)
-                    break;
-            }
+    //            if (finalJson.Count >= 30)
+    //                break;
+    //        }
 
-            oldPlayerDatas[i].Rank = finalJson.Count + 1;
-            finalJson.Add(oldPlayerDatas[i]);
-        }
+    //        oldPlayerDatas[i].Rank = finalJson.Count + 1;
+    //        finalJson.Add(oldPlayerDatas[i]);
+    //    }
 
-        string json = JsonHelper.ToJson(finalJson.ToArray(), true);
-        File.WriteAllText(GetPath(game), json);
-        return finalJson.ToArray();
-    }
+    //    string json = JsonHelper.ToJson(finalJson.ToArray(), true);
+    //    File.WriteAllText(GetPath(game), json);
+    //    return finalJson.ToArray();
+    //}
 
     public async Task<PlayerData[]> UpdateScoreBoardAscendingOrder(PlayerData[] playerDatas, GameScoreBoard game)
     {
@@ -153,50 +153,50 @@ public class ScoreBoardManager : MonoBehaviour
         return finalJson.ToArray();
     }
 
-    public async Task<PlayerData[]> UpdateScoreBoardDescendingOrder(PlayerData playerData, GameScoreBoard game)
-    {
-        PlayerData[] oldPlayerDatas = await GetScoreBoard(game);
-        if (oldPlayerDatas == null)
-        {
-            Debug.LogError("ScoreBoard is null");
-            return null;
-        }
+    //public async Task<PlayerData[]> UpdateScoreBoardDescendingOrder(PlayerData playerData, GameScoreBoard game)
+    //{
+    //    PlayerData[] oldPlayerDatas = await GetScoreBoard(game);
+    //    if (oldPlayerDatas == null)
+    //    {
+    //        Debug.LogError("ScoreBoard is null");
+    //        return null;
+    //    }
 
-        List<PlayerData> finalJson = new List<PlayerData>();
-        for (int i = 0; i < 30; i++)
-        {
-            if (finalJson.Count >= 30)
-                break;
+    //    List<PlayerData> finalJson = new List<PlayerData>();
+    //    for (int i = 0; i < 30; i++)
+    //    {
+    //        if (finalJson.Count >= 30)
+    //            break;
 
-            if (oldPlayerDatas.Length <= i)
-            {
-                if (!finalJson.Contains(playerData))
-                {
-                    playerData.Rank = finalJson.Count + 1;
-                    playerData.Date = DateTime.UtcNow.ToString(@"dd\:HH\:mm\:ss\:ff");
-                    finalJson.Add(playerData);
-                }
-                break;
-            }
+    //        if (oldPlayerDatas.Length <= i)
+    //        {
+    //            if (!finalJson.Contains(playerData))
+    //            {
+    //                playerData.Rank = finalJson.Count + 1;
+    //                playerData.Date = DateTime.UtcNow.ToString(@"dd\:HH\:mm\:ss\:ff");
+    //                finalJson.Add(playerData);
+    //            }
+    //            break;
+    //        }
 
-            if (oldPlayerDatas[i].Score < playerData.Score)
-            {
-                playerData.Rank = finalJson.Count + 1;
-                playerData.Date = DateTime.UtcNow.ToString(@"dd\:HH\:mm\:ss\:ff");
-                finalJson.Add(playerData);
+    //        if (oldPlayerDatas[i].Score < playerData.Score)
+    //        {
+    //            playerData.Rank = finalJson.Count + 1;
+    //            playerData.Date = DateTime.UtcNow.ToString(@"dd\:HH\:mm\:ss\:ff");
+    //            finalJson.Add(playerData);
 
-                if (finalJson.Count >= 30)
-                    break;
-            }
+    //            if (finalJson.Count >= 30)
+    //                break;
+    //        }
 
-            oldPlayerDatas[i].Rank = finalJson.Count + 1;
-            finalJson.Add(oldPlayerDatas[i]);
-        }
+    //        oldPlayerDatas[i].Rank = finalJson.Count + 1;
+    //        finalJson.Add(oldPlayerDatas[i]);
+    //    }
 
-        string json = JsonHelper.ToJson(finalJson.ToArray(), true);
-        File.WriteAllText(GetPath(game), json);
-        return finalJson.ToArray();
-    }
+    //    string json = JsonHelper.ToJson(finalJson.ToArray(), true);
+    //    File.WriteAllText(GetPath(game), json);
+    //    return finalJson.ToArray();
+    //}
 
     public async Task<PlayerData[]> UpdateScoreBoardDescendingOrder(PlayerData[] playerDatas, GameScoreBoard game)
     {
