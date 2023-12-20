@@ -47,5 +47,12 @@ public class OSCTester : MonoBehaviour
             msg.Add(_gameToLaunch);
             GameManager.Instance.OSCManager.onOSCAccueil(msg);
         }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            OscMessage msg = new OscMessage("/remote/nameGamer");
+            msg.Add("OSC Tester");
+            GameManager.Instance.OSCManager.onOSCNameGamer(msg);
+        }
     }
 }
