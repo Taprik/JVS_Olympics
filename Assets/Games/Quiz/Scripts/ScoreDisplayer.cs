@@ -7,15 +7,18 @@ using UnityEngine.UI;
 public class ScoreDisplayer : MonoBehaviour
 {
     [SerializeField]
-    TextMeshProUGUI _text;
+    TextMeshProUGUI[] _texts;
 
     [SerializeField]
     Image _image;
 
     public void Init(string text, Color outlineColor, TMP_FontAsset textFont = null)
     {
-        _text.text = text;
-        if(textFont != null) _text.font = textFont;
-        _image.color = outlineColor;
+        foreach (var t in _texts)
+        {
+            t.text = text;
+            if (textFont != null) t.font = textFont;
+            _image.color = outlineColor;
+        }
     }
 }

@@ -25,21 +25,6 @@ public class BlockSceneObject : GameSceneObject
     [SerializeField, Header("HomePage")]
     GameObject _homePage;
 
-    async Task HomeAwake()
-    {
-
-    }
-
-    async Task HomeStart()
-    {
-
-    }
-
-    void HomeUpdate()
-    {
-
-    }
-
     #endregion
 
     #region GamePage
@@ -173,7 +158,7 @@ public class BlockSceneObject : GameSceneObject
 
         await Task.WhenAny(tasks);
 
-        //Go to Score
+        AudioSource.PlayClipAtPoint(GameBlockSo.AudioWin, Vector3.zero);
     }
 
     async Task PlayOneImage(Texture2D texture, int teamID, int id, bool notFirst = true)
@@ -219,17 +204,16 @@ public class BlockSceneObject : GameSceneObject
 
         if (teamID < 0)
         {
-            //Oups Egalité
-
-            Debug.Log("Egalité !");
+            Debug.LogError("Egalité ?!");
             return;
         }
 
-        //await DecreaseTimer();
+        finalTimer = (DateTime.Now - _startTimer);
+        winningTeam = Teams[teamID];
 
         await Task.Delay(2000);
 
-        //Go to score
+        PlayScore();
 
         Debug.Log(Teams[teamID].Name + " Win !");
     }
@@ -273,39 +257,11 @@ public class BlockSceneObject : GameSceneObject
         int second = Mathf.FloorToInt((float)timer.TotalSeconds);
         second = second < 0 ? 0 : second;
 
-        //int millisecond = Mathf.FloorToInt(timer.Milliseconds);
-        //millisecond = millisecond < 0 ? 0 : millisecond;
         string format = timer.ToString(@"ff");
 
         _timerTextFront.text = $"{second}:{format}";
         _timerTextBack.text = $"{second}:{format}";
     }
-
-    //void ShuffleParts()
-    //{
-    //    for (int i = 0; i < Teams[0].Parts.Count; i++)
-    //    {
-    //        int rot = GetRandomRotation();
-    //        Teams[0].Parts[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, rot));
-    //        Teams[1].Parts[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, rot));
-    //    }
-    //}
-
-    //int GetRandomRotation()
-    //{
-    //    int rot = Random.Range(0, 3);
-    //    switch (rot)
-    //    {
-    //        case 0:
-    //            return 90;
-    //        case 1:
-    //            return 180;
-    //        case 2:
-    //            return 270;
-    //        default:
-    //            return -1;
-    //    }
-    //}
 
     #region SplitImage
 
@@ -404,20 +360,77 @@ public class BlockSceneObject : GameSceneObject
     [SerializeField, Header("ScorePage")]
     GameObject _scorePage;
 
-    async Task ScoreAwake()
-    {
+    [SerializeField]
+    GameObject _scoreBoardObject;
 
+    [SerializeField]
+    GameObject _finalScoreObject;
+
+    [SerializeField]
+    TextMeshProUGUI _finalScoreFrontText;
+
+    [SerializeField]
+    TextMeshProUGUI _finalScoreBackText;
+
+    [SerializeField]
+    Transform[] _collums;
+
+    [SerializeField]
+    GameObject _scoreDisplay;
+
+    TimeSpan finalTimer;
+    List<GameObject> _instantiateScoreDisplay = new();
+    BlockTeam winningTeam;
+
+    private void PlayScore()
+    {
+        GamePage.SetActive(false);
+        ScorePage.SetActive(true);
+        _scoreBoardObject.SetActive(false);
+        _finalScoreObject.SetActive(false);
+
+        _finalScoreFrontText.text = "Vous avez fini en " + Mathf.Clamp(Mathf.FloorToInt((float)finalTimer.TotalSeconds), 0, float.PositiveInfinity) + "," + finalTimer.ToString(@"ff") + " secondes";
+        _finalScoreFrontText.font = GameBlockSo.GetWinFont(winningTeam.ID);
+        _finalScoreBackText.text = "Vous avez fini en " + Mathf.Clamp(Mathf.FloorToInt((float)finalTimer.TotalSeconds), 0, float.PositiveInfinity) + "," + finalTimer.ToString(@"ff") + " secondes";
+        _finalScoreBackText.font = GameBlockSo.GetWinFont(winningTeam.ID);
+        
+        _finalScoreObject.SetActive(true);
+        GameManager.Instance.OSCManager.NeedName();
     }
 
-    async Task ScoreStart()
+    public async override void OnNameReceive(string name)
     {
+        PlayerData playerData = new()
+        {
+            Name = name,
+            Score = (float)finalTimer.TotalSeconds
+        };
 
+        InitScoreBoard(await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardAscendingOrder(playerData, GameScoreBoard.BlockScoreBoard), winningTeam);
     }
 
-    void ScoreUpdate()
+    public void InitScoreBoard(PlayerData[] playerDatas, BlockTeam team)
     {
+        for (int i = 0; i < playerDatas.Length; i++)
+        {
+            int collum = i < 10 ? 0 : i < 20 ? 1 : 2;
+            Transform parent = _collums[collum];
+            GameObject go = Instantiate(_scoreDisplay, parent);
+            _instantiateScoreDisplay.Add(go);
 
+            string text = playerDatas[i].Rank + ". " + playerDatas[i].Name + " : " + playerDatas[i].Score + "s";
+            Color outlineColor = i < 3 || playerDatas[i].WinNow ? team.Color : Color.black;
+            TMP_FontAsset font = playerDatas[i].WinNow ? GameBlockSo.GetWinFont(team.ID) : null;
+
+            go.GetComponent<ScoreDisplayer>().Init(text, outlineColor, font);
+        }
+
+        DisplayScoreBoard();
     }
+
+    public void DisplayScoreBoard() => _scoreBoardObject.SetActive(true);
+    public void HideScoreBoard() => _scoreBoardObject.SetActive(false);
+
 
     #endregion
 
@@ -427,9 +440,7 @@ public class BlockSceneObject : GameSceneObject
     {
         GameManager.Instance.CurrentGame = GameBlockSo;
         base.Awake();
-        await HomeAwake();
         await GameAwake();
-        await ScoreAwake();
         HomePage.SetActive(true);
         GamePage.SetActive(false);
         ScorePage.SetActive(false);
@@ -449,16 +460,12 @@ public class BlockSceneObject : GameSceneObject
 
     private async void Start()
     {
-        await HomeStart();
         await GameStart();
-        await ScoreStart();
     }
 
     private void Update()
     {
-        HomeUpdate();
         GameUpdate();
-        ScoreUpdate();
     }
 
     #endregion
