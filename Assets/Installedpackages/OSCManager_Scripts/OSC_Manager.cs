@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Linq;
+using Unity.VisualScripting;
 
 namespace OSC
 {
@@ -28,6 +29,8 @@ namespace OSC
         const string remoteStart = "/remote/Start";         //argument nom du jeu
         const string remoteAccueil = "/remote/Accueil";     //argument nom du jeu
         const string remoteNameGamer = "/remote/nameGamer";                 //argument nom du joueur
+        const string pageUp = "/remote/PageUp";
+        const string pageDown = "/remote/PageDown";
         const string remoteCalibrage = "/remote/Calibrage";                 //argument nom du joueur
         const string remoteVelo = "/remote/Velo";                           //argument intervalle pédale et angle du guidon*
 
@@ -82,6 +85,8 @@ namespace OSC
             _oscIn.MapInt(remoteQuit, onOSCQuit);
             //_oscIn.MapInt(remoteCalibrage, onOSCCalibrage);
 
+            _oscIn.Map(pageUp, onPageUp);
+            _oscIn.Map(pageDown, onPageDown);
             _oscIn.Map(remoteVelo, onOSCVelo);
             _oscIn.Map(lesImpacts, onOSCPoint);
             _oscIn.Map(remoteStart, onOSCStart);
@@ -96,6 +101,8 @@ namespace OSC
             _oscIn.UnmapInt(onOSCQuit);
             //_oscIn.UnmapInt(onOSCCalibrage);
 
+            _oscIn.Unmap(onPageUp);
+            _oscIn.Unmap(onPageDown);
             _oscIn.Unmap(onOSCVelo);
             _oscIn.Unmap(onOSCPoint);
             _oscIn.Unmap(onOSCStart);
@@ -131,6 +138,24 @@ namespace OSC
         //{
         //    SceneManager.LoadScene("Calibrage");
         //}
+
+        public void onPageUp(OscMessage message)
+        {
+            if (GameManager.Instance.CurrentGameSceneObject != null)
+            {
+                GameManager.Instance.CurrentGameSceneObject.PageUp();
+            }
+            OscPool.Recycle(message);
+        }
+
+        public void onPageDown(OscMessage message)
+        {
+            if (GameManager.Instance.CurrentGameSceneObject != null)
+            {
+                GameManager.Instance.CurrentGameSceneObject.PageDown();
+            }
+            OscPool.Recycle(message);
+        }
 
         public void onOSCPoint(OscMessage message)
         {

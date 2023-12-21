@@ -21,8 +21,7 @@ public class GameSceneObject : MonoBehaviour
         GameManager.Instance.OSCManager.GameEnCours();
     }
 
-    public virtual void OnNameReceive(string name)
-    {
-
-    }
+    public virtual void OnNameReceive(string name) { }
+    public virtual void PageUp() { }
+    public virtual void PageDown() { }
 }
