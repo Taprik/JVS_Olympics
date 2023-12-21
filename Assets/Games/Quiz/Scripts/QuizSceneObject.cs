@@ -181,15 +181,7 @@ public class QuizSceneObject : GameSceneObject
     TextMeshProUGUI _scoreTeam;
 
     [SerializeField]
-    GameObject _scoreBoardObject;
-
-    [SerializeField]
-    GameObject _scoreDisplay;
-
-    [SerializeField]
-    Transform[] _collums;
-
-    List<GameObject> _instantiateScoreDisplay = new();
+    ScoreBoardDisplayer _scoreBoardDisplayer;
 
     #endregion
 
@@ -332,7 +324,11 @@ public class QuizSceneObject : GameSceneObject
         await Task.Run(async () =>
         {
             while (!GameManager.Instance.TasksManager.AllTasksFinish())
-                await Task.Delay(100);
+            {
+                while (!GameManager.Instance.TasksManager.AllTasksFinish())
+                    await Task.Delay(100);
+                await Task.Delay(200);
+            }
         });
 
         FadeAnimator.SetTrigger("FadeOut");
@@ -382,36 +378,27 @@ public class QuizSceneObject : GameSceneObject
 
     public async override void OnNameReceive(string name)
     {
+        int teamID = Teams[0].Score > Teams[1].Score ? 0 : 1;
         PlayerData newPlayerData = new()
         {
             Name = name,
-            Score = Teams[0].Score > Teams[1].Score ? Teams[0].Score : Teams[1].Score
+            Score = Teams[teamID].Score
         };
 
-        InitScoreBoard(await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardDescendingOrder(newPlayerData, GameScoreBoard.QuizScoreBoard), Teams[0].Score > Teams[1].Score ? 0 : 1);
+        _scoreBoardDisplayer.InitScoreBoard(
+            await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardDescendingOrder(newPlayerData, GameScoreBoard.QuizScoreBoard),
+            () => GameQuizSo.GetFontAsset((GameQuiz.TeamFontColor)teamID));
     }
 
-    public void InitScoreBoard(PlayerData[] playerDatas, int teamID)
+    public override void PageUp()
     {
-        for (int i = 0; i < playerDatas.Length; i++)
-        {
-            int collum = i < 10 ? 0 : i < 20 ? 1 : 2;
-            Transform parent = _collums[collum];
-            GameObject go = Instantiate(_scoreDisplay, parent);
-            _instantiateScoreDisplay.Add(go);
-
-            string text = playerDatas[i].Rank + ". " + playerDatas[i].Name + " : " + playerDatas[i].Score + "pts";
-            Color outlineColor = i < 3 || playerDatas[i].WinNow ? Teams[teamID].Color : Color.black;
-            TMP_FontAsset font = playerDatas[i].WinNow ? GameQuizSo.GetFontAsset((GameQuiz.TeamFontColor)teamID) : null;
-
-            go.GetComponent<ScoreDisplayer>().Init(text, outlineColor, font);
-        }
-
-        DisplayScoreBoard();
+        _scoreBoardDisplayer.PageUp();
     }
 
-    public void DisplayScoreBoard() => _scoreBoardObject.SetActive(true);
-    public void HideScoreBoard() => _scoreBoardObject.SetActive(false);
+    public override void PageDown()
+    {
+        _scoreBoardDisplayer.PageDown();
+    }
 
     public float SetQuestion(Quiz_Question question)
     {

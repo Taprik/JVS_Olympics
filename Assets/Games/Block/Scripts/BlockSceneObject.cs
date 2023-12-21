@@ -422,7 +422,7 @@ public class BlockSceneObject : GameSceneObject
             Color outlineColor = i < 3 || playerDatas[i].WinNow ? team.Color : Color.black;
             TMP_FontAsset font = playerDatas[i].WinNow ? GameBlockSo.GetWinFont(team.ID) : null;
 
-            go.GetComponent<ScoreDisplayer>().Init(text, outlineColor, font);
+            go.GetComponent<ScoreDisplayer>().Init(text, font);
         }
 
         DisplayScoreBoard();
