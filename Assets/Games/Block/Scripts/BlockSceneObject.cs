@@ -361,7 +361,7 @@ public class BlockSceneObject : GameSceneObject
     GameObject _scorePage;
 
     [SerializeField]
-    GameObject _scoreBoardObject;
+    ScoreBoardDisplayer _scoreBoardDisplayer;
 
     [SerializeField]
     GameObject _finalScoreObject;
@@ -372,27 +372,19 @@ public class BlockSceneObject : GameSceneObject
     [SerializeField]
     TextMeshProUGUI _finalScoreBackText;
 
-    [SerializeField]
-    Transform[] _collums;
 
-    [SerializeField]
-    GameObject _scoreDisplay;
-
-    TimeSpan finalTimer;
-    List<GameObject> _instantiateScoreDisplay = new();
     BlockTeam winningTeam;
+    TimeSpan finalTimer;
 
     private void PlayScore()
     {
         GamePage.SetActive(false);
         ScorePage.SetActive(true);
-        _scoreBoardObject.SetActive(false);
+        _scoreBoardDisplayer.gameObject.SetActive(false);
         _finalScoreObject.SetActive(false);
 
         _finalScoreFrontText.text = "Vous avez fini en " + Mathf.Clamp(Mathf.FloorToInt((float)finalTimer.TotalSeconds), 0, float.PositiveInfinity) + "," + finalTimer.ToString(@"ff") + " secondes";
-        _finalScoreFrontText.font = GameBlockSo.GetWinFont(winningTeam.ID);
         _finalScoreBackText.text = "Vous avez fini en " + Mathf.Clamp(Mathf.FloorToInt((float)finalTimer.TotalSeconds), 0, float.PositiveInfinity) + "," + finalTimer.ToString(@"ff") + " secondes";
-        _finalScoreBackText.font = GameBlockSo.GetWinFont(winningTeam.ID);
         
         _finalScoreObject.SetActive(true);
         GameManager.Instance.OSCManager.NeedName();
@@ -403,33 +395,23 @@ public class BlockSceneObject : GameSceneObject
         PlayerData playerData = new()
         {
             Name = name,
-            Score = (float)finalTimer.TotalSeconds
+            Score = Mathf.RoundToInt((float)finalTimer.TotalSeconds * 100) / 100f
         };
 
-        InitScoreBoard(await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardAscendingOrder(playerData, GameScoreBoard.BlockScoreBoard), winningTeam);
+        _scoreBoardDisplayer.InitScoreBoard(await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardAscendingOrder(playerData, GameScoreBoard.BlockScoreBoard), () => GameBlockSo.GetWinFont(winningTeam.ID));
     }
 
-    public void InitScoreBoard(PlayerData[] playerDatas, BlockTeam team)
+    public override void PageUp()
     {
-        for (int i = 0; i < playerDatas.Length; i++)
-        {
-            int collum = i < 10 ? 0 : i < 20 ? 1 : 2;
-            Transform parent = _collums[collum];
-            GameObject go = Instantiate(_scoreDisplay, parent);
-            _instantiateScoreDisplay.Add(go);
-
-            string text = playerDatas[i].Rank + ". " + playerDatas[i].Name + " : " + playerDatas[i].Score + "s";
-            Color outlineColor = i < 3 || playerDatas[i].WinNow ? team.Color : Color.black;
-            TMP_FontAsset font = playerDatas[i].WinNow ? GameBlockSo.GetWinFont(team.ID) : null;
-
-            go.GetComponent<ScoreDisplayer>().Init(text, font);
-        }
-
-        DisplayScoreBoard();
+        base.PageUp();
+        _scoreBoardDisplayer.PageUp();
     }
 
-    public void DisplayScoreBoard() => _scoreBoardObject.SetActive(true);
-    public void HideScoreBoard() => _scoreBoardObject.SetActive(false);
+    public override void PageDown()
+    {
+        base.PageDown();
+        _scoreBoardDisplayer.PageDown();
+    }
 
 
     #endregion
