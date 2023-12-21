@@ -83,11 +83,8 @@ public class ScoreBoardManager : MonoBehaviour
         };
         allPlayerData = allPlayerData.OrderBy(x => x.Score).ToList();
 
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < allPlayerData.Count; i++)
         {
-            if (allPlayerData.Count <= i)
-                break;
-
             allPlayerData[i].Rank = i + 1;
             finalJson.Add(allPlayerData[i]);
         }
@@ -118,11 +115,8 @@ public class ScoreBoardManager : MonoBehaviour
         allPlayerData.AddRange(playerDatas);
         allPlayerData = allPlayerData.OrderBy(x => x.Score).ToList();
 
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < allPlayerData.Count; i++)
         {
-            if (allPlayerData.Count <= i)
-                break;
-
             allPlayerData[i].Rank = i + 1;
             finalJson.Add(allPlayerData[i]);
         }
@@ -154,11 +148,8 @@ public class ScoreBoardManager : MonoBehaviour
         };
         allPlayerData = allPlayerData.OrderByDescending(x => x.Score).ToList();
 
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < allPlayerData.Count; i++)
         {
-            if (allPlayerData.Count <= i)
-                break;
-
             allPlayerData[i].Rank = i + 1;
             finalJson.Add(allPlayerData[i]);
         }
@@ -189,11 +180,8 @@ public class ScoreBoardManager : MonoBehaviour
         allPlayerData.AddRange(playerDatas);
         allPlayerData = allPlayerData.OrderByDescending(x => x.Score).ToList();
 
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < allPlayerData.Count; i++)
         {
-            if (allPlayerData.Count <= i)
-                break;
-
             allPlayerData[i].Rank = i + 1;
             finalJson.Add(allPlayerData[i]);
         }
