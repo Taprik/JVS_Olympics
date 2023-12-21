@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bc315c88a81f7409504934c5cffcd8, type: 3}
   m_Name: Game_Block
   m_EditorClassIdentifier: 
-  ImagePath: C:\\Users\\psuchet\\Documents\\JVS_Olympics\\Personnalisation\\Blocks
   NbDivision: 020000000300000004000000
+  AudioWin: {fileID: 8300000, guid: 9cf6bb6dc192ad64784b33813f429984, type: 3}
+  AudioClic: {fileID: 8300000, guid: 969ba96d566eab444ba017c5afe1df82, type: 3}
+  WinFont:
+  - {fileID: 11400000, guid: a470359458b8bb548ba5e06d6b263810, type: 2}
+  - {fileID: 11400000, guid: 32fee02144614764ea0096cb33bcc452, type: 2}
