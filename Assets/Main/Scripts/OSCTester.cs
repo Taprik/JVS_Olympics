@@ -17,6 +17,12 @@ public class OSCTester : MonoBehaviour
     [SerializeField]
     string _gameToLaunch;
 
+    [SerializeField]
+    KeyCode _PageUpKey;
+
+    [SerializeField]
+    KeyCode _PageDownKey;
+
     public void Update()
     {
         if(Input.GetMouseButtonDown(0))
@@ -53,6 +59,18 @@ public class OSCTester : MonoBehaviour
             OscMessage msg = new OscMessage("/remote/nameGamer");
             msg.Add("OSC Tester");
             GameManager.Instance.OSCManager.onOSCNameGamer(msg);
+        }
+
+        if (Input.GetKeyDown(_PageUpKey))
+        {
+            OscMessage msg = new OscMessage("/remote/PageUp");
+            GameManager.Instance.OSCManager.onPageUp(msg);
+        }
+
+        if (Input.GetKeyDown(_PageDownKey))
+        {
+            OscMessage msg = new OscMessage("/remote/PageDown");
+            GameManager.Instance.OSCManager.onPageDown(msg);
         }
     }
 }

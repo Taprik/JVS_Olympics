@@ -40,12 +40,16 @@ public class ScoreBoardDisplayer : MonoBehaviour
 
     public void PageUp()
     {
+        if(!_scoreBoardObject.activeSelf) return;
+
         _currentRank = Mathf.Clamp(_currentRank - 8, 0, _datas.Length);
         Init(FindPlayerData(_currentRank));
     }
 
     public void PageDown()
     {
+        if (!_scoreBoardObject.activeSelf) return;
+
         _currentRank = Mathf.Clamp(_currentRank + 8, 0, _datas.Length);
         Init(FindPlayerData(_currentRank));
     }
@@ -56,6 +60,9 @@ public class ScoreBoardDisplayer : MonoBehaviour
         List<PlayerData> playerFind = new();
         for (int i = 0; i < 8; i++)
         {
+            if(((sec * 8) + i) >= _datas.Length)
+                continue;
+
             playerFind.Add(_datas[(sec * 8) + i]);
         }
         return playerFind.ToArray();
