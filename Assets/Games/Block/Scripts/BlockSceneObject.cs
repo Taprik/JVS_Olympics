@@ -50,18 +50,12 @@ public class BlockSceneObject : GameSceneObject
 
     Texture2D[] Tex = new Texture2D[3];
 
-    List<int[,]> RotationsSave;
-
-
-    async Task GameAwake()
+    List<int[,]> RotationsSave = new()
     {
-        RotationsSave = new()
-        {
-            null,
-            null,
-            null
-        };
-    }
+        null,
+        null,
+        null
+    };
 
     async Task GameInit()
     {
@@ -70,6 +64,7 @@ public class BlockSceneObject : GameSceneObject
         List<string> imagePath = ToolBox.GetFiles(path, "*.jpg");
         imagePath.Shuffle();
 
+        Tex = new Texture2D[3];
         for (int i = 0; i < 3; i++)
         {
             Tex[i] = await ToolBox.CreateTextureFromPath(imagePath[i]);
@@ -81,11 +76,11 @@ public class BlockSceneObject : GameSceneObject
             {
                 t.ImageSplitList?.Clear();
                 t.ImageSplitList = new();
+                t.DeActiveAllMark();
 
                 for (int i = 0; i < Tex.Length; i++)
                 {
                     t.ImageSplitList.Add(SplitImage(Tex[i], GameBlockSo.NbDivision[i], t.ID));
-                    t.DeActiveAllMark();
                     t.ImageCheckMarks[i].sprite = ToolBox.CreateSpriteFromTexture(Tex[i]);
 
                 }
@@ -94,24 +89,23 @@ public class BlockSceneObject : GameSceneObject
         });
     }
 
-    async Task GameStart()
+    void GameStart()
     {
-        //foreach (var t in Teams)
-        //{
-        //    //t.SetAllText();
-        //    t.Win += TeamWin;
-        //}
+        RotationsSave = new()
+        {
+            null,
+            null,
+            null
+        };
+
         _currentTimer = _initialTimer;
         SetTimerText(true);
     }
 
-    void GameUpdate()
-    {
-        
-    }
-
     public async void PlayGame()
     {
+        GameStart();
+
         GamePage.SetActive(true);
         HomePage.SetActive(false);
 
@@ -134,7 +128,10 @@ public class BlockSceneObject : GameSceneObject
 
         Task task = CheckShuffle();
 
-        await GameManager.Instance.AddressablesManager.LoadScreen(task);
+        while (!task.IsCompleted)
+        {
+            await Task.Delay(5);
+        }
 
         Task[] CountDowns = new Task[2];
         CountDowns[0] = Teams[0].CountDown();
@@ -192,7 +189,7 @@ public class BlockSceneObject : GameSceneObject
     async Task CheckShuffle()
     {
         while ((Teams[0].ImageLoaded && Teams[1].ImageLoaded) == false)
-            await Task.Delay(50);
+            await Task.Delay(5);
     }
 
     public async void FinishPlayGame(int teamID)
@@ -418,11 +415,10 @@ public class BlockSceneObject : GameSceneObject
 
     #region Unity Func
 
-    public override async void Awake()
+    public override void Awake()
     {
         GameManager.Instance.CurrentGame = GameBlockSo;
         base.Awake();
-        await GameAwake();
         HomePage.SetActive(true);
         GamePage.SetActive(false);
         ScorePage.SetActive(false);
@@ -434,20 +430,19 @@ public class BlockSceneObject : GameSceneObject
         await base.InitScene();
     }
 
-    public override void Play()
+    public async override void Play()
     {
-        PlayGame();
+        if(ScorePage.activeSelf)
+            await Replay();
+
         base.Play();
+        PlayGame();
     }
 
-    private async void Start()
+    public async override Task Replay()
     {
-        await GameStart();
-    }
-
-    private void Update()
-    {
-        GameUpdate();
+        ScorePage.SetActive(false);
+        await GameManager.Instance.AddressablesManager.LoadScreen(GameInit());
     }
 
     #endregion

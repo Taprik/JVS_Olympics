@@ -82,7 +82,7 @@ public class TasksManager : MonoBehaviour
     {
         ExecutionQueue queue = complexTasksQueue.Find(x => x.queueName == name).executionQueue;
         if (queue != null)
-            return queue;
+            queue = null;
 
         ExecutionQueue taskQueue = new();
         complexTasksQueue.Add(new(name, taskQueue));

@@ -219,11 +219,21 @@ public class QuizSceneObject : GameSceneObject
         await base.InitScene();
     }
 
-    public override void Play()
+    public async override void Play()
     {
+        if (ScorePage.activeSelf)
+            await Replay();
+
         base.Play();
         PlayButtonHolder.SetActive(false);
         SelectCategoryHolder.SetActive(true);
+    }
+
+    public async override Task Replay()
+    {
+        ScorePage.SetActive(false);
+        GamePage.SetActive(false);
+        HomePage.SetActive(true);
     }
 
     public async void PlayQuestion()
@@ -321,15 +331,18 @@ public class QuizSceneObject : GameSceneObject
         HideTeamsButton();
         SetTeamsScoreHolder(WinningTeam);
 
+        float waitDuration = Time.time;
+
         await Task.Run(async () =>
         {
+            await Task.Delay(1000);
             while (!GameManager.Instance.TasksManager.AllTasksFinish())
             {
-                while (!GameManager.Instance.TasksManager.AllTasksFinish())
-                    await Task.Delay(100);
-                await Task.Delay(200);
+                await Task.Delay(100);
             }
         });
+
+        Debug.Log("Wait Duration : " + (Time.time - waitDuration));
 
         FadeAnimator.SetTrigger("FadeOut");
         await Task.Delay(50);
@@ -350,6 +363,8 @@ public class QuizSceneObject : GameSceneObject
     {
         GamePage.SetActive(false);
         ScorePage.SetActive(true);
+        _scoreBoardDisplayer.gameObject.SetActive(false);
+
         if (Teams[0].Score == Teams[1].Score)
         {
             ScoreTeam.font = GameQuizSo.GetFontAsset(GameQuiz.TeamFontColor.Red);

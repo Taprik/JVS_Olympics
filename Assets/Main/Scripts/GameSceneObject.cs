@@ -21,6 +21,8 @@ public class GameSceneObject : MonoBehaviour
         GameManager.Instance.OSCManager.GameEnCours();
     }
 
+    public async virtual Task Replay() { }
+
     public virtual void OnNameReceive(string name) { }
     public virtual void PageUp() { }
     public virtual void PageDown() { }
