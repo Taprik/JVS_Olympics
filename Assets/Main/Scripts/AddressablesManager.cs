@@ -25,12 +25,18 @@ public class AddressablesManager : ScriptableObject
     {
         await LoadAssets<Object>(_loadAtStart, false);
 
-        List<Task> _gameInitTasks = new();
-        foreach (var gameSo in _allGameSo)
+        Task[] _gameInitTasks = new Task[_allGameSo.Count];
+
+        _gameInitTasks[0] = Task.Run(async () => await _allGameSo[0].GameInit());
+        _gameInitTasks[1] = Task.Run(async () => await _allGameSo[1].GameInit());
+
+        for (int i = 0; i < 2; i++)
         {
-            _gameInitTasks.Add(gameSo.GameInit());
+            Debug.Log("Index : " + i + " | GameSo : " + _allGameSo.Count + " | Tasks : " + _gameInitTasks.Length);
+            //_gameInitTasks[i] = Task.Run(async () => await _allGameSo[i].GameInit());
         }
-        await LoadScreen(_gameInitTasks.ToArray());
+
+        await LoadScreen(_gameInitTasks);
     }
 
     public async Task LoadAssets<T>(AssetReference[] references, bool closeAtEnd = true) where T : Object
@@ -119,26 +125,12 @@ public class AddressablesManager : ScriptableObject
         GameManager.Instance.LoadScreen.SetActive(true);
         await Task.Delay(50);
 
-        bool allComplete = false;
-        while (!allComplete)
+        for (int i = 0; i < tasks.Length; i++)
         {
-            allComplete = true;
-            foreach (var task in tasks)
-            {
-                if (!task.IsCompleted)
-                {
-                    allComplete = false;
-                    break;
-                }
-            }
-
-            var value = tasks.ToList().FindAll(x => x.IsCompleted).Count / tasks.Length;
-            GameManager.Instance.LoadScreenText.text = Mathf.RoundToInt(value * 100f).ToString() + "%";
-            GameManager.Instance.LoadScreenBar.DOValue(value, 0.1f);
-            await Task.Delay(50);
-            Debug.Log(allComplete);
+            await tasks[i];
+            while (!tasks[i].IsCompleted)
+                await Task.Delay(50);
         }
-        Debug.Log("Close LoadingScreen");
 
         GameManager.Instance.LoadScreenText.text = "100%";
         GameManager.Instance.LoadScreenBar.DOValue(1, 0.1f);
