@@ -44,8 +44,6 @@ MonoBehaviour:
   - sentence: Qui est arrive le premier ?
     image: {fileID: 0}
     category: 2
-    reflectionTime: 5
-    answersTime: 10
     answers:
     - Poule
     - Oeuf
@@ -55,8 +53,6 @@ MonoBehaviour:
   - sentence: Ou se trouve charlie ?
     image: {fileID: 0}
     category: 0
-    reflectionTime: 5
-    answersTime: 10
     answers:
     - Ici
     - La
@@ -66,25 +62,166 @@ MonoBehaviour:
   - sentence: 1 + 1 ?
     image: {fileID: 0}
     category: 0
-    reflectionTime: 5
-    answersTime: 10
     answers:
     - 2
     - 1
     - 11
     - 1000
     correctAnswer: 0
-  - sentence: Qui va gagner la coupe du monde de rugby ?
+  - sentence: Qui a gagne la coupe du monde de rugby 2023 ?
     image: {fileID: 0}
     category: 1
-    reflectionTime: 5
-    answersTime: 10
+    answers:
+    - La France
+    - L'Afrique du Sud
+    - L'Irlande
+    - La Nouvelle Zelande
+    correctAnswer: 1
+  - sentence: Qui a marche sur la Lune en premier ?
+    image: {fileID: 0}
+    category: 2
+    answers:
+    - Le Prtit Prince
+    - Tintin
+    - Neil Armstrong
+    - Buzz Aldrin
+    correctAnswer: 2
+  - sentence: Combien il y a eu de medailles distribuees au JO 2020 ?
+    image: {fileID: 0}
+    category: 1
+    answers:
+    - -15
+    - 42
+    - 1080
+    - 666
+    correctAnswer: 2
+  - sentence: Qui detient l'actuel record du monde au 100m masculin ?
+    image: {fileID: 0}
+    category: 1
+    answers:
+    - Usain Bolt
+    - Don Lippincott
+    - Jesse Owens
+    - Paul Nash
+    correctAnswer: 0
+  - sentence: Les JO se passent tout les ...
+    image: {fileID: 0}
+    category: 1
+    answers:
+    - 2 ans
+    - 4 ans
+    - 4 mois
+    - 10 ans
+    correctAnswer: 1
+  - sentence: Qui a initier les JO ?
+    image: {fileID: 0}
+    category: 1
+    answers:
+    - Pierre de Coubertin
+    - Le Pape
+    - Un Inconnue
+    - Moi
+    correctAnswer: 0
+  - sentence: Ou se sont passe les premier JO ?
+    image: {fileID: 0}
+    category: 1
+    answers:
+    - Paris
+    - Berlin
+    - Pekin
+    - "Ath\xE8nes"
+    correctAnswer: 3
+  - sentence: "Combien de quart d\u2019heure dans 45 minutes ?"
+    image: {fileID: 0}
+    category: 0
+    answers:
+    - Poule
+    - Oeuf
+    - Les deux
+    - Je sais pas
+    correctAnswer: 1
+  - sentence: "Quel pays est associ\xE9 \xE0 ce drapeau ?"
+    image: {fileID: 0}
+    category: 0
+    answers:
+    - "Ha\xEFti"
+    - Vietnam
+    - Toulouse
+    - Allemagne
+    correctAnswer: 3
+  - sentence: "On dit : Mettre du beurre dans les \u2026 ?"
+    image: {fileID: 0}
+    category: 0
+    answers:
+    - Nouilles
+    - Patates
+    - Epinards
+    - Poches
+    correctAnswer: 2
+  - sentence: "O\xF9 se d\xE9roulent les J.O. 2024 ?"
+    image: {fileID: 0}
+    category: 0
     answers:
     - La France
     - L'Afrique du Sud
     - L'Irlande
     - La Nouvelle Zelande
     correctAnswer: 0
+  - sentence: Comment se nomme cet animal ?
+    image: {fileID: 0}
+    category: 0
+    answers:
+    - Une vache
+    - une fourmi
+    - Un mouton
+    - Un ane
+    correctAnswer: 2
+  - sentence: "Traduire \xAB Je t\u2019aime \xBB en anglais"
+    image: {fileID: 0}
+    category: 0
+    answers:
+    - I love you
+    - Guten Tag
+    - Get off
+    - look at this
+    correctAnswer: 0
+  - sentence: "Comment s\u2019appelle l\u2019explosion \xE0 l\u2019origine de l\u2019univers
+      ?"
+    image: {fileID: 0}
+    category: 0
+    answers:
+    - Grand paf
+    - La claque
+    - Le big bang
+    - le pschitt
+    correctAnswer: 2
+  - sentence: "O\xF9 se trouve l\u2019os de la rotule ?"
+    image: {fileID: 0}
+    category: 0
+    answers:
+    - Le cerveau
+    - Le genou
+    - Le pied
+    - Les reins
+    correctAnswer: 1
+  - sentence: De quelle forme est la terre ?
+    image: {fileID: 0}
+    category: 0
+    answers:
+    - ronde
+    - plate
+    - "carr\xE9e"
+    - ne sais pas
+    correctAnswer: 0
+  - sentence: "O\xF9 le soleil se l\xE8ve t-il ?"
+    image: {fileID: 0}
+    category: 0
+    answers:
+    - Nord
+    - Sud
+    - Est
+    - Ouest
+    correctAnswer: 2
   TeamsFonts:
   - {fileID: 11400000, guid: e1c665ea6d9ce504b80d31af7e415589, type: 2}
   - {fileID: 11400000, guid: 01fa6739f5bad7d4ba2a0475b2a3757c, type: 2}

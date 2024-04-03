@@ -56,7 +56,7 @@ namespace Blocks
             null
         };
 
-        async Task GameInit()
+        Task GameInit()
         {
             _imagesDatas.Clear();
             var list = GameBlockSo.ImageDatas;
@@ -67,25 +67,23 @@ namespace Blocks
                 _imagesDatas.Add(data);
             }
 
-            await UnityMainThreadDispatcher.Instance().EnqueueAsync(() =>
+            foreach (var t in Teams)
             {
-                foreach (var t in Teams)
+                t.ImageSplitList?.Clear();
+                t.ImageSplitList = new();
+                t.DeActiveAllMark();
+
+                for (int i = 0; i < _imagesDatas.Count; i++)
                 {
-                    t.ImageSplitList?.Clear();
-                    t.ImageSplitList = new();
-                    t.DeActiveAllMark();
+                    Sprite[,] array = _imagesDatas[i].ImageSplit[i];
+                    t.ImageSplitList.Add(array);
+                    t.ImageCheckMarks[i].sprite = ToolBox.CreateSpriteFromTexture(_imagesDatas[i].Texture);
 
-                    for (int i = 0; i < _imagesDatas.Count; i++)
-                    {
-                        t.ImageSplitList.Add(_imagesDatas[i].ImageSplit[i]);
-                        t.ImageCheckMarks[i].sprite = ToolBox.CreateSpriteFromTexture(_imagesDatas[i].Texture);
-
-                    }
-                    Teams[t.ID].ImageLoaded = true;
                 }
-                Debug.Log("Finish Load Image");
-            });
-
+                Teams[t.ID].ImageLoaded = true;
+            }
+            Debug.Log("Finish Load Image");
+            return Task.CompletedTask;
         }
 
         void GameStart()

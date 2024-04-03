@@ -51,8 +51,6 @@ namespace Quiz
         [SerializeField, Header("GamePage")]
         GameObject _gamePage;
 
-        Sprite DefaultImage => GameQuizSo.GetDefaultImage();
-
         public Image QuestionImage => _questionImage;
         [SerializeField]
         Image _questionImage;
@@ -185,6 +183,12 @@ namespace Quiz
         [SerializeField]
         ScoreBoardDisplayer _scoreBoardDisplayer;
 
+        [Header("Time"), SerializeField]
+        float _answersTime;
+
+        [SerializeField]
+        float _reflectionTime;
+
         #endregion
 
         public override void Awake()
@@ -217,7 +221,6 @@ namespace Quiz
 
         public async override Task InitScene()
         {
-            await Read();
             await base.InitScene();
         }
 
@@ -290,7 +293,7 @@ namespace Quiz
 
             await Task.Delay(50);
             _audioSource.Play();
-            UnityMainThreadDispatcher.Instance().Enqueue(async () => await _timerAnim.Anim(_currentQuestion.answersTime, tokenSource.Token));
+            UnityMainThreadDispatcher.Instance().Enqueue(async () => await _timerAnim.Anim(_answersTime, tokenSource.Token));
 
             _timer = Time.time;
 
@@ -298,7 +301,7 @@ namespace Quiz
 
             waitTimerOrRightAnswer[0] = Task.Run(async () =>
             {
-                await Task.Delay(Mathf.RoundToInt(_currentQuestion.answersTime * 1000));
+                await Task.Delay(Mathf.RoundToInt(_answersTime * 1000));
                 tokenSource.Cancel();
             }).ContinueWith(async (task) =>
             {
@@ -424,6 +427,7 @@ namespace Quiz
 
             _currentQuestion = question;
             QuestionText.text = question.sentence;
+            Debug.Log(question.image == null);
             QuestionImage.sprite = question.image;
             for (int i = 0; i < question.answers.Length; i++)
             {
@@ -436,7 +440,7 @@ namespace Quiz
             }
 
             selectedQuestionID = NextQuestionID(selectedQuestionID);
-            return question.reflectionTime;
+            return _reflectionTime;
         }
 
         int NextQuestionID(int id)
@@ -490,90 +494,6 @@ namespace Quiz
         }
 
         #region Read Question
-
-        private bool _ready = false;
-        private string _fileLocation
-#if UNITY_EDITOR
-            = "Documents\\Capteur\\Personnalisation\\Quizz";
-#else
-        = "Personnalisation\\Quizz";
-#endif
-
-
-        public bool IsReady() => _ready;
-
-        private async Task Read()
-        {
-            if (IsReady())
-                return;
-
-
-            Debug.Log("Read !");
-            _ready = false;
-            GameQuizSo.Questions.Clear();
-            string appPath = Application.dataPath;
-            string newPath = Path.GetFullPath(Path.Combine(appPath, @"..\..\..\..\"));
-            newPath = Path.GetFullPath(Path.Combine(newPath, _fileLocation));
-
-            string csv = File.ReadAllText(newPath + "\\Questions.csv"/*, Encoding.GetEncoding("ISO-8859-1")*/);
-            csv = csv.Replace("\u0092", "'");
-            int collum = csv.Split(new string[] { "\n" }, StringSplitOptions.None).Length;
-            int line = csv.Split(new string[] { "," }, StringSplitOptions.None).Length;
-            int lineLength = (line + collum) / collum;
-            string[] data = csv.Split(new string[] { ",", "\n" }, StringSplitOptions.None);
-            int tableSize = (data.Length / lineLength) - 1;
-
-            for (int i = 1; i <= tableSize; i++)
-            {
-                Quiz_Question currentQuestion = new Quiz_Question();
-
-                currentQuestion.answers = new string[4];
-                currentQuestion.sentence = data[lineLength * i];
-                for (int j = 0; j < 4; j++)
-                {
-                    currentQuestion.answers[j] = data[lineLength * i + 2 + j];
-                }
-                data[lineLength * i + 1] = data[lineLength * i + 1].Replace("\"", String.Empty);
-                currentQuestion.correctAnswer = ValueFromString(data[lineLength * i + 6]);
-
-                if (File.Exists(Path.Combine(newPath, data[lineLength * i + 1])))
-                {
-                    Task<Sprite> sprite = ToolBox.CreateSpriteFromPath(Path.Combine(newPath, data[lineLength * i + 1]));
-                    await sprite;
-                    currentQuestion.image = sprite.Result;
-                }
-                else
-                {
-                    currentQuestion.image = DefaultImage;
-                }
-
-
-                currentQuestion.category = CategoryFromString(data[lineLength * i + 7]);
-                Int32.TryParse(data[lineLength * i + 8], out int reflectionTimer);
-                currentQuestion.reflectionTime = reflectionTimer;
-                Int32.TryParse(data[lineLength * i + 9], out int answersTimer);
-                currentQuestion.answersTime = answersTimer;
-                GameQuizSo.Questions.Add(currentQuestion);
-            }
-            _ready = true;
-            Debug.Log("Finish Reading");
-        }
-
-        private int ValueFromString(string text)
-        {
-            text = text.ToLower();
-            text = text.Trim();
-            if (text[0] == 'a')
-                return 0;
-            if (text[0] == 'b')
-                return 1;
-            if (text[0] == 'c')
-                return 2;
-            if (text[0] == 'd')
-                return 3;
-            Debug.LogError("Answer not found " + text[0] + " " + (text[0] == 'a'));
-            return 8000;
-        }
 
         private string StringFromValue(int value)
         {
@@ -736,7 +656,7 @@ namespace Quiz
         {
             int score = 1000;
 
-            float time = 1 - ((Time.time - _timer) / _currentQuestion.answersTime);
+            float time = 1 - ((Time.time - _timer) / _answersTime);
             score = Mathf.RoundToInt(score * time);
 
             WinningScore = score < 100 ? 100 : score;

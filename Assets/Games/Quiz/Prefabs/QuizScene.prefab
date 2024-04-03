@@ -1984,6 +1984,8 @@ MonoBehaviour:
   _scoreText: {fileID: 9013030546747084485}
   _scoreTeam: {fileID: 1905120947256274818}
   _scoreBoardDisplayer: {fileID: 5017913544246479041}
+  _answersTime: 10
+  _reflectionTime: 8
 --- !u!82 &3832886261846214416
 AudioSource:
   m_ObjectHideFlags: 0

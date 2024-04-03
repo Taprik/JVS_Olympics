@@ -14,7 +14,7 @@ namespace Blocks
         public string ImagePath => _imagePath;
         const string _imagePath =
 #if UNITY_EDITOR
-            "C:\\Users\\smartJeux\\Documents\\Capteur\\Personnalisation\\Blocks";
+        "C:\\Users\\smartJeux\\Documents\\Capteur\\Personnalisation\\Blocks";
 #else
         "Documents\\Capteur\\Personnalisation\\Blocks";
 #endif
