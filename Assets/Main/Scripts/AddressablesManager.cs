@@ -27,14 +27,8 @@ public class AddressablesManager : ScriptableObject
 
         Task[] _gameInitTasks = new Task[_allGameSo.Count];
 
-        _gameInitTasks[0] = Task.Run(async () => await _allGameSo[0].GameInit());
-        _gameInitTasks[1] = Task.Run(async () => await _allGameSo[1].GameInit());
-
         for (int i = 0; i < 2; i++)
-        {
-            Debug.Log("Index : " + i + " | GameSo : " + _allGameSo.Count + " | Tasks : " + _gameInitTasks.Length);
-            //_gameInitTasks[i] = Task.Run(async () => await _allGameSo[i].GameInit());
-        }
+            _gameInitTasks[i] = _allGameSo[i].GameInit();
 
         await LoadScreen(_gameInitTasks);
     }
@@ -77,15 +71,13 @@ public class AddressablesManager : ScriptableObject
 
     public async Task LoadScreen(AsyncOperationHandle handle, bool closeAtEnd = true)
     {
-        GameManager.Instance.LoadScreenText.text = "0%";
-        GameManager.Instance.LoadScreenBar.value = 0;
+        GameManager.Instance.SetLoadBar(0, 0);
         GameManager.Instance.LoadScreen.SetActive(true);
         await Task.Delay(50);
 
         handle.Completed += async (handle) =>
         {
-            GameManager.Instance.LoadScreenText.text = "100%";
-            GameManager.Instance.LoadScreenBar.DOValue(1, 0.1f);
+            GameManager.Instance.SetLoadBar(1, 0.1f);
             await Task.Delay(500);
             if(closeAtEnd) GameManager.Instance.LoadScreen.SetActive(false);
         };
@@ -102,8 +94,7 @@ public class AddressablesManager : ScriptableObject
 
     public async Task LoadScreen(Task task, bool closeAtEnd = true)
     {
-        GameManager.Instance.LoadScreenText.text = "0%";
-        GameManager.Instance.LoadScreenBar.value = 0;
+        GameManager.Instance.SetLoadBar(0, 0);
         GameManager.Instance.LoadScreen.SetActive(true);
         await Task.Delay(50);
 
@@ -112,28 +103,26 @@ public class AddressablesManager : ScriptableObject
             await Task.Delay(50);
         }
 
-        GameManager.Instance.LoadScreenText.text = "100%";
-        GameManager.Instance.LoadScreenBar.DOValue(1, 0.1f);
+        GameManager.Instance.SetLoadBar(1, 0.1f);
         await Task.Delay(500);
         if(closeAtEnd) GameManager.Instance.LoadScreen.SetActive(false);
     }
 
     public async Task LoadScreen(Task[] tasks, bool closeAtEnd = true)
     {
-        GameManager.Instance.LoadScreenText.text = "0%";
-        GameManager.Instance.LoadScreenBar.value = 0;
+        GameManager.Instance.SetLoadBar(0, 0);
         GameManager.Instance.LoadScreen.SetActive(true);
         await Task.Delay(50);
 
-        for (int i = 0; i < tasks.Length; i++)
+        while (!tasks.ToList().TrueForAll(x => x.IsCompleted == true))
         {
-            await tasks[i];
-            while (!tasks[i].IsCompleted)
-                await Task.Delay(50);
+            float value = tasks.ToList().FindAll(x => x.IsCompleted == true).Count / (float)tasks.Length;
+            GameManager.Instance.SetLoadBar(value, 0.1f);
+
+            await Task.Delay(50);
         }
 
-        GameManager.Instance.LoadScreenText.text = "100%";
-        GameManager.Instance.LoadScreenBar.DOValue(1, 0.1f);
+        GameManager.Instance.SetLoadBar(1, 0.1f);
         await Task.Delay(500);
         if(closeAtEnd) GameManager.Instance.LoadScreen.SetActive(false);
     }

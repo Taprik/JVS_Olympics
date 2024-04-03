@@ -1,3 +1,4 @@
+using DG.Tweening;
 using GlobalOutline;
 using OSC;
 using System;
@@ -139,6 +140,12 @@ public class GameManager : MonoBehaviour
         }
 
         msg ??= new KeyMessage(message, action, key, optionA, optionB, timer);
+    }
+
+    public void SetLoadBar(float value, float duration)
+    {
+        LoadScreenText.text = Mathf.RoundToInt(value * 100f) + "%";
+        LoadScreenBar.DOValue(value, duration);
     }
 }
 
