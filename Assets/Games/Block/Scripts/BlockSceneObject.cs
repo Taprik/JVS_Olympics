@@ -360,8 +360,9 @@ namespace Blocks
             _scoreBoardDisplayer.gameObject.SetActive(false);
             _finalScoreObject.SetActive(false);
 
-            _finalScoreFrontText.text = "Vous avez fini en " + Mathf.Clamp(Mathf.FloorToInt((float)finalTimer.TotalSeconds), 0, float.PositiveInfinity) + "," + finalTimer.ToString(@"ff") + " secondes";
-            _finalScoreBackText.text = "Vous avez fini en " + Mathf.Clamp(Mathf.FloorToInt((float)finalTimer.TotalSeconds), 0, float.PositiveInfinity) + "," + finalTimer.ToString(@"ff") + " secondes";
+            string text = "Vous avez fini en " + Mathf.Clamp(Mathf.FloorToInt((float)finalTimer.TotalSeconds), 0, float.PositiveInfinity) + "," + finalTimer.ToString(@"ff") + " secondes";
+            _finalScoreFrontText.text = text;
+            _finalScoreBackText.text = text;
 
             _finalScoreObject.SetActive(true);
             GameManager.Instance.OSCManager.NeedName();
