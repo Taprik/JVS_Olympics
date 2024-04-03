@@ -63,6 +63,7 @@ namespace Blocks
             list.Shuffle();
             for (int i = 0; i < 3; i++)
             {
+                if (i >= list.Count) break;
                 ImageData data = list[i];
                 _imagesDatas.Add(data);
             }

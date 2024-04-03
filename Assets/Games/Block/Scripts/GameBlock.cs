@@ -16,7 +16,7 @@ namespace Blocks
 #if UNITY_EDITOR
         "C:\\Users\\smartJeux\\Documents\\Capteur\\Personnalisation\\Blocks";
 #else
-        "Documents\\Capteur\\Personnalisation\\Blocks";
+        "Personnalisation\\Blocks";
 #endif
 
         public int[] NbDivision;
@@ -35,7 +35,8 @@ namespace Blocks
             ImageDatas?.Clear();
             string path = Path.GetFullPath(Path.Combine(Application.dataPath, @"..\..\..\..\"));
             path = Path.GetFullPath(Path.Combine(path, ImagePath));
-            List<string> imagePath = ToolBox.GetFiles(path, "*.jpg");
+            Debug.Log("Blocks Path : " + path);
+            List<string> imagePath = ToolBox.GetFiles(path, new string[2] { "*.jpg", "*.png" });
 
             for (int i = 0; i < imagePath.Count; i++)
             {
