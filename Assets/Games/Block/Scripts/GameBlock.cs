@@ -28,39 +28,44 @@ namespace Blocks
         TMP_FontAsset[] WinFont;
         public TMP_FontAsset GetWinFont(int id) => id < WinFont.Length && id >= 0 ? WinFont[id] : null;
 
-        public List<ImageData> ImageDatas;
+        public List<ImageData> ImageDatas = new();
 
         public override async Task GameInit()
         {
-            ImageDatas?.Clear();
-            string path = Path.GetFullPath(Path.Combine(Application.dataPath, @"..\..\..\..\"));
-            path = Path.GetFullPath(Path.Combine(path, ImagePath));
-            Debug.Log("Blocks Path : " + path);
-            List<string> imagePath = ToolBox.GetFiles(path, new string[2] { "*.jpg", "*.png" });
-
-            for (int i = 0; i < imagePath.Count; i++)
+            try
             {
-                ImageData data = new();
-                data.Texture = await ToolBox.CreateTextureFromPath(imagePath[i]);
-                await UnityMainThreadDispatcher.Instance().EnqueueAsync(() =>
+                ImageDatas?.Clear();
+                string path = Path.GetFullPath(Path.Combine(Application.dataPath, @"..\..\..\..\"));
+                path = Path.GetFullPath(Path.Combine(path, ImagePath));
+                Debug.Log("Blocks Path : " + path);
+                List<string> imagePath = ToolBox.GetFiles(path, new string[2] { "*.jpg", "*.png" });
+
+                for (int i = 0; i < imagePath.Count; i++)
                 {
-                    data.ImageSplit?.Clear();
-                    data.ImageSplit = new();
-
-                    for (int i = 0; i < NbDivision.Length; i++)
+                    ImageData data = new();
+                    data.Texture = await ToolBox.CreateTextureFromPath(imagePath[i]);
+                    await UnityMainThreadDispatcher.Instance().EnqueueAsync(() =>
                     {
-                        data.ImageSplit.Add(SplitImage(data.Texture, NbDivision[i]));
-                    }
-                    data.FullImage = ToolBox.CreateSpriteFromTexture(data.Texture);
-                    Debug.Log("Finish Load Image");
-                });
-                ImageDatas.Add(data);
+                        data.ImageSplit?.Clear();
+                        data.ImageSplit = new();
+
+                        for (int i = 0; i < NbDivision.Length; i++)
+                        {
+                            data.ImageSplit.Add(SplitImage(data.Texture, NbDivision[i]));
+                        }
+                        data.FullImage = ToolBox.CreateSpriteFromTexture(data.Texture);
+                    });
+                    ImageDatas.Add(data);
+                }
+
+                while (ImageDatas.Count < imagePath.Count)
+                    await Task.Delay(50);
+                Debug.LogWarning("End Load All : " + ImageDatas.Count);
             }
-
-            while (ImageDatas.Count < imagePath.Count)
-                await Task.Delay(50);
-            Debug.LogWarning("End Load All");
-
+            catch (System.Exception ex)
+            {
+                Debug.LogError(ex.Message);
+            }
         }
 
         Sprite[,] SplitImage(Texture2D texture, int nbDivision)

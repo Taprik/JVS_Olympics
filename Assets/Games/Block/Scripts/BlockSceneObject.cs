@@ -59,8 +59,10 @@ namespace Blocks
         Task GameInit()
         {
             _imagesDatas.Clear();
-            var list = GameBlockSo.ImageDatas;
+            Debug.Log("Total : " + GameBlockSo.ImageDatas.Count);
+            var list = new List<ImageData>(GameBlockSo.ImageDatas);
             list.Shuffle();
+            Debug.Log("Total List : " + list.Count);
             for (int i = 0; i < 3; i++)
             {
                 if (i >= list.Count) break;
@@ -68,11 +70,15 @@ namespace Blocks
                 _imagesDatas.Add(data);
             }
 
+            Debug.Log("Total Image Load : " + _imagesDatas.Count);
+
             foreach (var t in Teams)
             {
                 t.ImageSplitList?.Clear();
                 t.ImageSplitList = new();
                 t.DeActiveAllMark();
+
+                Debug.Log(_imagesDatas.Count);
 
                 for (int i = 0; i < _imagesDatas.Count; i++)
                 {
@@ -83,7 +89,7 @@ namespace Blocks
                 }
                 Teams[t.ID].ImageLoaded = true;
             }
-            Debug.Log("Finish Load Image");
+            Debug.Log("Finish Load Image : " + _imagesDatas.Count);
             return Task.CompletedTask;
         }
 
@@ -113,6 +119,7 @@ namespace Blocks
 
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
+                Debug.Log("Dispatcher");
                 teamAQueue.Run(() => PlayOneImage(_imagesDatas[0].Texture, 0, 0, false));
                 teamAQueue.Run(() => PlayOneImage(_imagesDatas[1].Texture, 0, 1));
                 teamAQueue.Run(() => PlayOneImage(_imagesDatas[2].Texture, 0, 2));
@@ -159,8 +166,8 @@ namespace Blocks
         async Task PlayOneImage(Texture2D texture, int teamID, int id, bool notFirst = true)
         {
             UnityMainThreadDispatcher.Instance().Enqueue(() => Teams[teamID].DestroyAllParts());
-            await UnityMainThreadDispatcher.Instance().EnqueueAsync(() => LoadImage(texture, Teams[teamID].ImageSplitList[id], GameBlockSo.NbDivision[id], teamID));
-
+            UnityMainThreadDispatcher.Instance().Enqueue(() => LoadImage(texture, Teams[teamID].ImageSplitList[id], GameBlockSo.NbDivision[id], teamID));
+            Debug.Log("Load Image : " + id);
 
             if (notFirst)
             {
@@ -300,6 +307,7 @@ namespace Blocks
         {
             GameObject parent = Teams[teamID].ImageHolder;
             Teams[teamID].Parts = new ButtonPartRotation[nbDivision, nbDivision];
+            Debug.Log("Parts : " + Teams[teamID].Parts.Length + " | NbDivision : " + nbDivision + " | Sprites : " + sprites.Length);
 
             for (int i = 0; i < nbDivision; i++)
             {
