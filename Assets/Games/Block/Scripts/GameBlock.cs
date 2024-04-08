@@ -28,13 +28,14 @@ namespace Blocks
         TMP_FontAsset[] WinFont;
         public TMP_FontAsset GetWinFont(int id) => id < WinFont.Length && id >= 0 ? WinFont[id] : null;
 
-        public List<ImageData> ImageDatas = new();
+        public List<ImageData> ImageDatas => _imageDatas;
+        List<ImageData> _imageDatas = new();
 
         public override async Task GameInit()
         {
             try
             {
-                ImageDatas?.Clear();
+                _imageDatas?.Clear();
                 string path = Path.GetFullPath(Path.Combine(Application.dataPath, @"..\..\..\..\"));
                 path = Path.GetFullPath(Path.Combine(path, ImagePath));
                 Debug.Log("Blocks Path : " + path);
@@ -55,12 +56,12 @@ namespace Blocks
                         }
                         data.FullImage = ToolBox.CreateSpriteFromTexture(data.Texture);
                     });
-                    ImageDatas.Add(data);
+                    _imageDatas.Add(data);
                 }
 
-                while (ImageDatas.Count < imagePath.Count)
+                while (_imageDatas.Count < imagePath.Count)
                     await Task.Delay(50);
-                Debug.LogWarning("End Load All : " + ImageDatas.Count);
+                Debug.LogWarning("End Load All : " + _imageDatas.Count);
             }
             catch (System.Exception ex)
             {

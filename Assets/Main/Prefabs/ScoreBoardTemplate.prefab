@@ -267,7 +267,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1eb7bab7ed5bb8c4baeca27e22827c6f, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -293,3 +293,7 @@ MonoBehaviour:
   _scoreBoardObject: {fileID: 9102576292360039372}
   _scoreDisplay: {fileID: 0}
   _collum: {fileID: 4172377930187250163}
+  _onDisplay:
+    m_PersistentCalls:
+      m_Calls: []
+  _demandNameOnEnable: 0

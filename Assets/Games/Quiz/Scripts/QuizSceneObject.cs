@@ -405,9 +405,16 @@ namespace Quiz
                 Score = Teams[teamID].Score
             };
 
+            PlayerData defaultPlayer = new()
+            {
+                Name = "Inconnu",
+                Score = 0f
+            };
+
             _scoreBoardDisplayer.InitScoreBoard(
                 await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardDescendingOrder(newPlayerData, GameScoreBoard.QuizScoreBoard),
-                () => GameQuizSo.GetFontAsset((GameQuiz.TeamFontColor)teamID));
+                () => GameQuizSo.GetFontAsset((GameQuiz.TeamFontColor)teamID),
+                defaultPlayer);
         }
 
         public override void PageUp()

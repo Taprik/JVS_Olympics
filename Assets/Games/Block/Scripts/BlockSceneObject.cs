@@ -58,11 +58,11 @@ namespace Blocks
 
         Task GameInit()
         {
-            _imagesDatas.Clear();
             Debug.Log("Total : " + GameBlockSo.ImageDatas.Count);
             var list = new List<ImageData>(GameBlockSo.ImageDatas);
             list.Shuffle();
             Debug.Log("Total List : " + list.Count);
+            _imagesDatas.Clear();
             for (int i = 0; i < 3; i++)
             {
                 if (i >= list.Count) break;
@@ -384,7 +384,13 @@ namespace Blocks
                 Score = Mathf.RoundToInt((float)finalTimer.TotalSeconds * 100) / 100f
             };
 
-            _scoreBoardDisplayer.InitScoreBoard(await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardAscendingOrder(playerData, GameScoreBoard.BlockScoreBoard), () => GameBlockSo.GetWinFont(winningTeam.ID));
+            PlayerData defaultPlayer = new()
+            {
+                Name = "Inconnu",
+                Score = float.MaxValue
+            };
+
+            _scoreBoardDisplayer.InitScoreBoard(await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardAscendingOrder(playerData, GameScoreBoard.BlockScoreBoard), () => GameBlockSo.GetWinFont(winningTeam.ID), defaultPlayer);
         }
 
         public override void PageUp()

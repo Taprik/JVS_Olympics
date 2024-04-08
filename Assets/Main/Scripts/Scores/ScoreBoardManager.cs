@@ -199,6 +199,7 @@ public class PlayerData
     public int Rank;
     public bool WinNow;
     public float Score;
+    public string Value;
 }
 
 public static class JsonHelper

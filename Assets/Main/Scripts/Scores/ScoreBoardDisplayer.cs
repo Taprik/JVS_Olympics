@@ -1,9 +1,11 @@
+using OSC;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ScoreBoardDisplayer : MonoBehaviour
 {
@@ -19,31 +21,67 @@ public class ScoreBoardDisplayer : MonoBehaviour
     [SerializeField]
     Transform _collum;
 
-    List<GameObject> _instantiateScoreDisplay = new();
+    [SerializeField]
+    UnityEvent _onDisplay;
+
+    [SerializeField]
+    bool _demandNameOnEnable = false;
+
+    List<GameObject> _instantiateScoreDisplay = new List<GameObject>();
 
     PlayerData[] _datas;
     PlayerData _currentWinner;
+    PlayerData _defaultPlayer;
     Func<TMP_FontAsset> _fontFunc;
+    Color _winnerColor = Color.white;
     int _currentRank;
+    bool _displayValue;
 
-    public void InitScoreBoard(PlayerData[] datas, Func<TMP_FontAsset> fontFunc)
+    private void Start()
     {
+        if (_demandNameOnEnable)
+            GameManager.Instance.OSCManager.NeedName();
+    }
+
+    public void InitScoreBoard(PlayerData[] datas, Func<TMP_FontAsset> fontFunc, PlayerData defaultPlayer = null, bool displayValue = false)
+    {
+        _onDisplay?.Invoke();
+
         _datas = datas;
         _currentWinner = _datas.ToList().Find(x => x.WinNow);
         _currentRank = _currentWinner.Rank;
         _fontFunc = fontFunc;
+        _defaultPlayer = defaultPlayer;
+        _displayValue = displayValue;
 
-        Init(FindPlayerData(_currentRank));
+        Init(FindPlayerData(_currentRank), _displayValue);
+
+        DisplayScoreBoard();
+    }
+
+    public void InitScoreBoard(PlayerData[] datas, Func<TMP_FontAsset> fontFunc, Color winnerColor, PlayerData defaultPlayer = null, bool displayValue = false)
+    {
+        _onDisplay?.Invoke();
+
+        _datas = datas;
+        _currentWinner = _datas.ToList().Find(x => x.WinNow);
+        _currentRank = _currentWinner.Rank;
+        _fontFunc = fontFunc;
+        _winnerColor = winnerColor;
+        _defaultPlayer = defaultPlayer;
+        _displayValue = displayValue;
+
+        Init(FindPlayerData(_currentRank), _displayValue);
 
         DisplayScoreBoard();
     }
 
     public void PageUp()
     {
-        if(!_scoreBoardObject.activeSelf) return;
+        if (!_scoreBoardObject.activeSelf) return;
 
         _currentRank = Mathf.Clamp(_currentRank - 8, 0, _datas.Length);
-        Init(FindPlayerData(_currentRank));
+        Init(FindPlayerData(_currentRank), _displayValue);
     }
 
     public void PageDown()
@@ -51,24 +89,36 @@ public class ScoreBoardDisplayer : MonoBehaviour
         if (!_scoreBoardObject.activeSelf) return;
 
         _currentRank = Mathf.Clamp(_currentRank + 8, 0, _datas.Length);
-        Init(FindPlayerData(_currentRank));
+        Init(FindPlayerData(_currentRank), _displayValue);
     }
 
     private PlayerData[] FindPlayerData(int rank)
     {
         int sec = (rank - 1) / 8;
-        List<PlayerData> playerFind = new();
+        List<PlayerData> playerFind = new List<PlayerData>();
         for (int i = 0; i < 8; i++)
         {
-            if(((sec * 8) + i) >= _datas.Length)
+            if (((sec * 8) + i) >= _datas.Length)
+            {
+                if (_defaultPlayer != null)
+                {
+                    PlayerData unknown = new PlayerData()
+                    {
+                        Name = _defaultPlayer.Name,
+                        Score = _defaultPlayer.Score,
+                        Rank = (sec * 8) + i + 1
+                    };
+                    playerFind.Add(unknown);
+                }
                 continue;
+            }
 
             playerFind.Add(_datas[(sec * 8) + i]);
         }
         return playerFind.ToArray();
     }
 
-    private void Init(PlayerData[] playerDatas)
+    private void Init(PlayerData[] playerDatas, bool displayValue = false)
     {
         ResetDisplay();
 
@@ -77,10 +127,16 @@ public class ScoreBoardDisplayer : MonoBehaviour
             GameObject go = Instantiate(_scoreDisplay, _collum);
             _instantiateScoreDisplay.Add(go);
 
-            string text = playerDatas[i].Rank + ". " + playerDatas[i].Name + " : " + playerDatas[i].Score + _unit;
+            string[] texts = new string[3]
+            {
+                playerDatas[i].Rank + ". ",
+                playerDatas[i].Name,
+                " : " + (displayValue ? playerDatas[i].Value : playerDatas[i].Score.ToString()) + _unit
+            };
             TMP_FontAsset font = playerDatas[i].WinNow ? _fontFunc() : null;
+            Color color = playerDatas[i].WinNow ? _winnerColor : Color.white;
 
-            go.GetComponent<ScoreDisplayer>().Init(text, font);
+            go.GetComponent<ScoreDisplayer>().Init(texts, color, font);
         }
     }
 

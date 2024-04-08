@@ -9,12 +9,15 @@ public class ScoreDisplayer : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI[] _texts;
 
-    public void Init(string text, TMP_FontAsset textFont = null)
+    public void Init(string[] texts, Color textColor, TMP_FontAsset textFont = null)
     {
-        foreach (var t in _texts)
+        for (int i = 0; i < texts.Length; i++)
         {
-            t.text = text;
-            if (textFont != null) t.font = textFont;
+            if (i >= _texts.Length) break;
+
+            _texts[i].text = texts[i];
+            _texts[i].color = textColor;
+            if (textFont != null) _texts[i].font = textFont;
         }
     }
 }
