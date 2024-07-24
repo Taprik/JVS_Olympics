@@ -44,7 +44,7 @@ namespace Blocks
                 for (int i = 0; i < imagePath.Count; i++)
                 {
                     ImageData data = new();
-                    data.Texture = await ToolBox.CreateTextureFromPath(imagePath[i]);
+                    data.Texture = ToolBox.CreateTextureFromPath(imagePath[i]);
                     await UnityMainThreadDispatcher.Instance().EnqueueAsync(() =>
                     {
                         data.ImageSplit?.Clear();

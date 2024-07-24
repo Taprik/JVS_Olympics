@@ -27,7 +27,7 @@ public class AddressablesManager : ScriptableObject
 
         Task[] _gameInitTasks = new Task[_allGameSo.Count];
 
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < _gameInitTasks.Length; i++)
             _gameInitTasks[i] = _allGameSo[i].GameInit();
 
         await LoadScreen(_gameInitTasks);

@@ -202,21 +202,24 @@ namespace OSC
             message.TryGet(0, ref nomJeu);
 
             //SceneManager.LoadScene("Accueil_" + nomJeu);
-            int sceneID = 0;
+            SceneName scene = SceneName.MainScene;
 
             switch (nomJeu)
             {
                 case "Blocks":
-                    sceneID = 1;
+                    scene = SceneName.Block;
                     break;
                 case "Quiz":
-                    sceneID = 2;
+                    scene = SceneName.Quiz;
+                    break;
+                case "Basket":
+                    scene = SceneName.Basket;
                     break;
                 default:
                     break;
             }
 
-            GameManager.Instance.GameSceneManager.LoadScene((SceneName)sceneID);
+            GameManager.Instance.GameSceneManager.LoadScene(scene);
 
             // Always recycle incoming messages when used.
             OscPool.Recycle(message);

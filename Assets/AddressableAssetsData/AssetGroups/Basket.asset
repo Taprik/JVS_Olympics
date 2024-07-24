@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Basket
+  m_EditorClassIdentifier: 
+  m_GroupName: Basket
+  m_Data:
+    m_SerializedData: []
+  m_GUID: f9a91a4b2042359499287aa42e0309e1
+  m_SerializeEntries:
+  - m_GUID: 178ee9a04c907a843973f50b68be757e
+    m_Address: Assets/Games/Basketball/Animations
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 30f1ceca72e07064e86aa29071f96fc9
+    m_Address: Assets/Games/Basketball/BasketballCourt
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 1a2cfa457ad400c43be998d08ea7b705
+    m_Address: Assets/Games/Basketball/Font
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: e506577963e2ac340af1cb8057e18228
+    m_Address: Assets/Games/Basketball/Materials
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 99e4a260ddedb144a87fb99daf762856
+    m_Address: Assets/Games/Basketball/Prefabs
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: f7b02080c47683b4483041ff3b294905
+    m_Address: Assets/Games/Basketball/Sounds
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: c80e16406ce6deb4eaa8d5dae92db1de
+    m_Address: Assets/Games/Basketball/Sprites
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 402cecacc6c42184b8a91e535aa0e2a0
+    m_Address: Basket
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 5700cec643af8394285c3590bb674918
+    m_Address: Assets/Games/Basketball/ScriptablesObjects
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 023023c01781d1b4093446c137e3b907, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: fd89349d24a1cd44f98b10a62ad64046, type: 2}
+    - {fileID: 11400000, guid: cf4406d641082d04e8d1b75eea22b0cf, type: 2}

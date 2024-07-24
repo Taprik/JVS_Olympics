@@ -120,4 +120,5 @@ public enum SceneName
     MainScene = 0,
     Block = 1,
     Quiz = 2,
+    Basket = 3,
 }

@@ -108,9 +108,8 @@ namespace Quiz
 
                     if (File.Exists(Path.Combine(newPath, data[lineLength * i + 1])))
                     {
-                        Task<Sprite> sprite = ToolBox.CreateSpriteFromPath(Path.Combine(newPath, data[lineLength * i + 1]));
-                        await sprite;
-                        currentQuestion.image = sprite.Result == null ? GetDefaultImage() : sprite.Result;
+                        Sprite sprite = ToolBox.CreateSpriteFromPath(Path.Combine(newPath, data[lineLength * i + 1]));
+                        currentQuestion.image = sprite == null ? GetDefaultImage() : sprite;
                     }
                     else
                     {

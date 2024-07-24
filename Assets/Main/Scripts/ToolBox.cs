@@ -1,16 +1,19 @@
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
+using DG.Tweening;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Tool
 {
     public static class ToolBox
     {
-        private static System.Random rng = new System.Random();
+        private readonly static System.Random rng = new System.Random();
 
         public static void Shuffle<T>(this IList<T> list)
         {
@@ -23,6 +26,21 @@ namespace Tool
                 list[k] = list[n];
                 list[n] = value;
             }
+        }
+
+        public static IList<T> ReturnShuffle<T>(this IList<T> list)
+        {
+            var temp = list;
+            int n = temp.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                T value = temp[k];
+                temp[k] = temp[n];
+                temp[n] = value;
+            }
+            return temp;
         }
 
         public static void Shuffle<T>(this T[,] array)
@@ -44,6 +62,16 @@ namespace Tool
             }
         }
 
+        public static T RandomElement<T>(this IList<T> list)
+        {
+            return list[Random.Range(0, list.Count)];
+        }
+
+        public static T RandomElement<T>(this T[] list)
+        {
+            return list[Random.Range(0, list.Length)];
+        }
+
         public static int Total(this IList<int> list)
         {
             int total = 0;
@@ -60,61 +88,106 @@ namespace Tool
             return total;
         }
 
-        public static bool CheckPos(Vector2 hit, RectTransform rect)
+        private static bool CheckPos(Vector2 hit, RectTransform rect)
         {
             //float ConvertX(float pos) => (pos + 102.64f) * (1920 / 205.28f);
             //float ConvertY(float pos) => (pos + 57.74f) * (1080 / 115.48f);
 
-            Vector2 pos = new Vector2(rect.transform.position.x, rect.transform.position.y);
-            if (hit.x < pos.x - (rect.rect.width / 2))
+            Vector2 pos = new Vector2(rect.gameObject.transform.position.x, rect.gameObject.transform.position.y);
+            hit = Camera.main.WorldToScreenPoint(hit);
+
+            //Debug.Log("Hit : " + hit + " | Pos : " + pos + " | Rect : w = " + (rect.rect.width * rect.lossyScale.x) + " ; h = " + (rect.rect.height * rect.lossyScale.y) + " | Scale : " + rect.lossyScale);
+
+            if (hit.x < pos.x - (rect.rect.width * rect.lossyScale.x / 2))
                 return false;
-            if (hit.y < pos.y - (rect.rect.height / 2))
+            if (hit.y < pos.y - (rect.rect.height * rect.lossyScale.y / 2))
                 return false;
 
-            if (hit.x > pos.x + (rect.rect.width / 2))
+            if (hit.x > pos.x + (rect.rect.width * rect.lossyScale.x / 2))
                 return false;
-            if (hit.y > pos.y + (rect.rect.height / 2))
+            if (hit.y > pos.y + (rect.rect.height * rect.lossyScale.y / 2))
                 return false;
 
             return true;
         }
 
-        public static bool CheckPos(Vector2 hit, GameObject gameObject)
+        private static bool CheckPos(Vector3 hit, GameObject gameObject, bool all)
         {
-            RaycastHit raycastHit;
-            Ray ray = Camera.main.ScreenPointToRay(hit);
-            if (Physics.Raycast(ray, out raycastHit, 100f))
+            var realHit = Camera.main.WorldToScreenPoint(hit);
+            Ray ray = Camera.main.ScreenPointToRay(realHit);
+            //Debug.Log("Touch : " + Physics.Raycast(ray, out raycastHit, float.PositiveInfinity) + " | Hit : " + realHit + " | Ray : " + ray);
+            //Debug.DrawRay(ray.origin, ray.direction, Color.red, 20);
+
+            if (!all)
             {
-                if (raycastHit.transform != null)
+                RaycastHit raycastHit;
+
+                if (Physics.Raycast(ray, out raycastHit, float.PositiveInfinity))
                 {
-                    return raycastHit.transform.gameObject == gameObject;
+                    if (raycastHit.transform != null)
+                    {
+                        return raycastHit.transform.gameObject == gameObject;
+                    }
+                }
+                return false;
+            }
+
+            RaycastHit[] raycastHits = Physics.RaycastAll(ray, float.PositiveInfinity);
+            foreach (var raycasthit in raycastHits)
+            {
+                if (raycasthit.transform.gameObject == gameObject)
+                {
+                    return true;
                 }
             }
             return false;
         }
 
-        public static bool CheckPos(Vector2 hit, Transform transform)
+        public static bool CheckPos(Vector3 hit, Transform transform, bool all = false)
         {
             if (transform is RectTransform)
-                return CheckPos(hit, transform as RectTransform);
+                return CheckPos((Vector2)hit, transform as RectTransform);
 
             if (transform is Transform)
-                return CheckPos(hit, transform.gameObject);
+                return CheckPos(hit, transform.gameObject, all);
 
             Debug.LogError("Check Pos Failed");
             return false;
         }
 
+        public static bool CheckPos(Vector3 hit, Bounds box, float verticalOffset = 0f, float horizontalOffset = 0f)
+        {
+            float top = box.center.y + box.extents.y + verticalOffset;
+            float bottom = box.center.y - box.extents.y + verticalOffset;
+
+            float right = box.center.x + box.extents.x + horizontalOffset;
+            float left = box.center.x - box.extents.x + horizontalOffset;
+
+            //Debug.Log("Box : " + box + " || Top : " + top + " | Bottom : " + bottom + " | Right : " + right + " | Left : " + left + " || Hit : " + hit);
+
+            if (hit.x > right)
+                return false;
+            if (hit.x < left)
+                return false;
+
+            if (hit.y > top)
+                return false;
+            if (hit.y < bottom)
+                return false;
+
+            return true;
+        }
+
         public static Sprite CreateSpriteFromTexture(Texture2D tex2D) => Sprite.Create(tex2D, new Rect(0, 0, tex2D.width, tex2D.height), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect);
 
-        public static async Task<Sprite> CreateSpriteFromPath(string filePath)
+        public static Sprite CreateSpriteFromPath(string filePath)
         {
             Texture2D tex2D;
             Sprite outSprite;
 
             if (File.Exists(filePath))
             {
-                var fileData = await File.ReadAllBytesAsync(filePath);
+                var fileData = File.ReadAllBytes(filePath);
                 tex2D = new Texture2D(2, 2);
 
                 if (ImageConversion.LoadImage(tex2D, fileData))
@@ -128,13 +201,13 @@ namespace Tool
             return null;
         }
 
-        public static async Task<Texture2D> CreateTextureFromPath(string filePath)
+        public static Texture2D CreateTextureFromPath(string filePath)
         {
             Texture2D tex2D;
 
             if (File.Exists(filePath))
             {
-                var fileData = await File.ReadAllBytesAsync(filePath);
+                var fileData = File.ReadAllBytes(filePath);
                 tex2D = new Texture2D(2, 2);
 
                 if (ImageConversion.LoadImage(tex2D, fileData))
@@ -173,7 +246,7 @@ namespace Tool
 
         public static List<string> GetFiles(string path) => Directory.GetFiles(path).ToList();
         public static List<string> GetFiles(string path, string extention) => Directory.GetFiles(path, extention).ToList();
-        public static List<string> GetFiles(string path, string[] extentions) 
+        public static List<string> GetFiles(string path, string[] extentions)
         {
             List<string> files = new List<string>();
             for (int i = 0; i < extentions.Length; i++)
@@ -184,5 +257,16 @@ namespace Tool
         }
 
         public static string GetFileNameFromPath(string path) => Path.GetFileName(path);
+
+        public static TweenerCore<Vector3, Vector3, VectorOptions> DOMoveInTargetLocalSpace(this Transform transform, Transform target, Vector3 targetLocalEndPosition, float duration)
+        {
+            var t = DOTween.To(
+                () => transform.position - target.transform.position, // Value getter
+                x => transform.position = x + target.transform.position, // Value setter
+                targetLocalEndPosition,
+                duration);
+            t.SetTarget(transform);
+            return t;
+        }
     }
 }

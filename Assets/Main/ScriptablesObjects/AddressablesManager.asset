@@ -17,3 +17,4 @@ MonoBehaviour:
   _allGameSo:
   - {fileID: 11400000, guid: b3ae59a0961ab344c89a5ee2fe5f2ac6, type: 2}
   - {fileID: 11400000, guid: 0c50df42045d20a489c5e2a0f489c76d, type: 2}
+  - {fileID: 11400000, guid: 5376451d2cebe2045b2576a963ab1fdf, type: 2}
