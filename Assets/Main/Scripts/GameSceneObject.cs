@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class GameSceneObject : MonoBehaviour
+public abstract class GameSceneObject : MonoBehaviour
 {
-    public virtual void Awake()
+    public virtual void Start()
     {
-        GameManager.Instance.CurrentGameSceneObject = this;
+        GameManager.CurrentGameSceneObject = this;
         GameManager.Instance.GameSceneManager.CurrentSceneObject = this.gameObject;
     }
 
@@ -21,9 +21,9 @@ public class GameSceneObject : MonoBehaviour
         GameManager.Instance.OSCManager.GameEnCours();
     }
 
-    public async virtual Task Replay() { }
+    public abstract Task Replay();
 
-    public virtual void OnNameReceive(string name) { }
-    public virtual void PageUp() { }
-    public virtual void PageDown() { }
+    public abstract void OnNameReceive(string name);
+    public abstract void PageUp();
+    public abstract void PageDown();
 }

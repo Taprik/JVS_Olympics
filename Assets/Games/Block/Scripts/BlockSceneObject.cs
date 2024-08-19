@@ -395,13 +395,11 @@ namespace Blocks
 
         public override void PageUp()
         {
-            base.PageUp();
             _scoreBoardDisplayer.PageUp();
         }
 
         public override void PageDown()
         {
-            base.PageDown();
             _scoreBoardDisplayer.PageDown();
         }
 
@@ -410,10 +408,10 @@ namespace Blocks
 
         #region Unity Func
 
-        public override void Awake()
+        public override void Start()
         {
-            GameManager.Instance.CurrentGame = GameBlockSo;
-            base.Awake();
+            GameManager.CurrentGame = GameBlockSo;
+            base.Start();
             HomePage.SetActive(true);
             GamePage.SetActive(false);
             ScorePage.SetActive(false);
@@ -577,7 +575,7 @@ namespace Blocks
                 Debug.Log(id + " | " + pourcent);
                 if (rotationsSave[id] != null)
                 {
-                    int l = (GameManager.Instance.CurrentGame as GameBlock).NbDivision[id];
+                    int l = (GameManager.CurrentGame as GameBlock).NbDivision[id];
                     for (int x = 0; x < l; x++)
                     {
                         for (int y = 0; y < l; y++)
@@ -620,7 +618,7 @@ namespace Blocks
                 {
                     parts[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, rots[i]));
                 }
-                return ConvertPartToTable(Parts, (GameManager.Instance.CurrentGame as GameBlock).NbDivision[id]);
+                return ConvertPartToTable(Parts, (GameManager.CurrentGame as GameBlock).NbDivision[id]);
             }
 
             int GetLimitThrow(float pourcent) => Mathf.RoundToInt(2 * Mathf.CeilToInt(Parts.Length * pourcent));

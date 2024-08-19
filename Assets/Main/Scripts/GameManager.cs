@@ -27,8 +27,8 @@ public class GameManager : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public GameSO CurrentGame { get; set; }
-    public GameSceneObject CurrentGameSceneObject { get; set; }
+    public static GameSO CurrentGame { get; set; }
+    public static GameSceneObject CurrentGameSceneObject { get; set; }
 
     #region Manager
 

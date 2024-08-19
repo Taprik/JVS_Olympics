@@ -191,14 +191,14 @@ namespace Quiz
 
         #endregion
 
-        public override void Awake()
+        public override void Start()
         {
-            base.Awake();
+            base.Start();
             HomePage.SetActive(true);
             GamePage.SetActive(false);
             ScorePage.SetActive(false);
 
-            GameManager.Instance.CurrentGame = GameQuizSo;
+            GameManager.CurrentGame = GameQuizSo;
 
             _playButtonHolder.SetActive(true);
             _selectCategoryHolder.SetActive(false);

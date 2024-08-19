@@ -67,8 +67,8 @@ public class GameSceneManager : ScriptableObject
             await tween.AsyncWaitForCompletion();
         }
 
-        if (GameManager.Instance.CurrentGameSceneObject != null)
-            await GameManager.Instance.CurrentGameSceneObject.InitScene();
+        if (GameManager.CurrentGameSceneObject != null)
+            await GameManager.CurrentGameSceneObject.InitScene();
 
         GameManager.Instance.LoadScreenText.text = "100%";
         GameManager.Instance.LoadScreenBar.DOValue(1f, 0.1f);

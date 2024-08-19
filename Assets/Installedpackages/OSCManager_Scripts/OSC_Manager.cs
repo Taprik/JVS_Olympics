@@ -141,18 +141,18 @@ namespace OSC
 
         public void onPageUp(OscMessage message)
         {
-            if (GameManager.Instance.CurrentGameSceneObject != null)
+            if (GameManager.CurrentGameSceneObject != null)
             {
-                GameManager.Instance.CurrentGameSceneObject.PageUp();
+                GameManager.CurrentGameSceneObject.PageUp();
             }
             OscPool.Recycle(message);
         }
 
         public void onPageDown(OscMessage message)
         {
-            if (GameManager.Instance.CurrentGameSceneObject != null)
+            if (GameManager.CurrentGameSceneObject != null)
             {
-                GameManager.Instance.CurrentGameSceneObject.PageDown();
+                GameManager.CurrentGameSceneObject.PageDown();
             }
             OscPool.Recycle(message);
         }
@@ -184,9 +184,9 @@ namespace OSC
             string nomJeu = "";
             message.TryGet(0, ref nomJeu);
 
-            if(GameManager.Instance.CurrentGameSceneObject != null)
+            if(GameManager.CurrentGameSceneObject != null)
             {
-                GameManager.Instance.CurrentGameSceneObject.Play();
+                GameManager.CurrentGameSceneObject.Play();
             }
 
             Debug.Log(nomJeu);
@@ -233,8 +233,8 @@ namespace OSC
             message.TryGet(0, ref nomGamer);
             SendGamerName(nomGamer);
 
-            if(GameManager.Instance.CurrentGameSceneObject != null)
-                GameManager.Instance.CurrentGameSceneObject.OnNameReceive(nomGamer);
+            if(GameManager.CurrentGameSceneObject != null)
+                GameManager.CurrentGameSceneObject.OnNameReceive(nomGamer);
 
             // Always recycle incoming messages when used.
             OscPool.Recycle(message);
