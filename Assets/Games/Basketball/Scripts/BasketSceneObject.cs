@@ -17,6 +17,14 @@ namespace Basket
         [SerializeField] GameObject _gamePage;
         public void SetGamePage(bool isActive) => _gamePage.SetActive(isActive);
 
+        [Header("Menu")]
+        [SerializeField] GameObject _menuPage;
+        public void SetMenuPage(bool isActive) => _menuPage.SetActive(isActive);
+
+        [Header("Score")]
+        [SerializeField] GameObject _scorePage;
+        public void SetScorePage(bool isActive) => _scorePage.SetActive(isActive);
+
         public override void Start()
         {
             base.Start();
