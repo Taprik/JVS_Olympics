@@ -31,6 +31,8 @@ namespace Basket
             GameManager.CurrentGame = GameSO;
             SetHomePage(true);
             SetGamePage(false);
+            SetMenuPage(false);
+            SetScorePage(false);
         }
 
         public async override Task InitScene()
@@ -43,6 +45,8 @@ namespace Basket
         {
             base.Play();
             SetHomePage(false);
+            SetMenuPage(false);
+            SetScorePage(false);
             SetGamePage(true);
         }
 
