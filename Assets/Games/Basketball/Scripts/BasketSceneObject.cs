@@ -43,16 +43,24 @@ namespace Basket
 
         public override void Play()
         {
-            base.Play();
             SetHomePage(false);
+            SetGamePage(true);
             SetMenuPage(false);
             SetScorePage(false);
-            SetGamePage(true);
+            base.Play();
+        }
+
+        public void PlayScore()
+        {
+            SetHomePage(false);
+            SetGamePage(false);
+            SetMenuPage(false);
+            SetScorePage(true);
         }
 
         public override void OnNameReceive(string name)
         {
-
+            Basket_ScoreBoardManager.i.OnReceiveName(name);
         }
 
         public override void PageDown()
@@ -68,6 +76,14 @@ namespace Basket
         public async override Task Replay()
         {
 
+        }
+
+        public override void OpenMenu()
+        {
+            SetHomePage(false);
+            SetGamePage(false);
+            SetMenuPage(true);
+            SetScorePage(false);
         }
     }
 }

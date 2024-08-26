@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
 
     public static GameSO CurrentGame { get; set; }
     public static GameSceneObject CurrentGameSceneObject { get; set; }
+    public static Action OnGameStart;
 
     #region Manager
 
@@ -93,6 +94,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     KeyCode _resetScoreBoard;
 
+    [SerializeField]
+    KeyCode _openMenu;
+
     #endregion
 
     #region Message
@@ -116,17 +120,17 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        if(Input.GetKeyDown(_loadAllAsset))
+        if (Input.GetKeyDown(_loadAllAsset))
             Message(ref CurrentMessage, "Voulez-vous charger tous les assets ?", () => AddressablesManager.Init(), _loadAllAsset);
 
-        if(Input.GetKeyDown(_quitApp))
+        if (Input.GetKeyDown(_quitApp))
             Message(ref CurrentMessage, "Voulez-vous vraiment quitter ?", () => OSCManager.messageOutQuit(), _quitApp);
 
-        if(Input.GetKeyDown(_backMainMenu))
+        if (Input.GetKeyDown(_backMainMenu))
             Message(ref CurrentMessage, "Voulez-vous retourner à l'acceuil ?" , () => GameSceneManager.LoadScene(SceneName.MainScene), _backMainMenu);
 
-        if(Input.GetKeyDown(_resetScoreBoard))
-            Message(ref CurrentMessage, "Voulez-vous reset tous les ScoreBoard ?", () => ScoreBoardManager.ResetAllScoreBoard(), _resetScoreBoard);
+        if (Input.GetKeyDown(_openMenu))
+            CurrentGameSceneObject.OpenMenu();
     }
 
     public void Message(ref KeyMessage msg, string message, Action action, KeyCode key, string optionA = "Oui", string optionB = "Non", float timer = 5f)

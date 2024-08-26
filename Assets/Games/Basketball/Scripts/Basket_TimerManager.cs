@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,8 @@ namespace Basket
             }
 
             i = this;
+
+            GameManager.OnGameStart += OnGameStart;
         }
 
         public UnityEvent OnTimerEnd;
@@ -24,6 +27,11 @@ namespace Basket
         int _timer;
 
         public void Start()
+        {
+            
+        }
+
+        private void OnGameStart()
         {
             int time = 120;
             if (PlayerPrefs.HasKey(Basket_GeneralVariable.TimerKey))

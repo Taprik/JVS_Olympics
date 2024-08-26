@@ -233,6 +233,7 @@ namespace OSC
             message.TryGet(0, ref nomGamer);
             SendGamerName(nomGamer);
 
+            //Debug.Log(GameManager.CurrentGameSceneObject.GetType());
             if(GameManager.CurrentGameSceneObject != null)
                 GameManager.CurrentGameSceneObject.OnNameReceive(nomGamer);
 

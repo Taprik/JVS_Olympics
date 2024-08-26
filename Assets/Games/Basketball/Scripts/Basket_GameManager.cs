@@ -6,7 +6,6 @@ using System.Linq;
 using TMPro;
 using Tool;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Basket
@@ -48,6 +47,9 @@ namespace Basket
 
             if(!PlayerPrefs.HasKey("Basket_Name2"))
                 PlayerPrefs.SetString("Basket_Name2", "Joueur 2");
+
+
+            GameManager.OnGameStart += OnGameStart;
         }
 
         public BasketTeam[] Teams => _teams;
@@ -58,7 +60,17 @@ namespace Basket
 
         public bool IsGameOver { get; private set; } = false;
 
-        public IEnumerator Start()
+        public void Start()
+        {
+
+        }
+
+        private void OnGameStart()
+        {
+            StartCoroutine(GameStart());
+        }
+
+        IEnumerator GameStart()
         {
             foreach (var team in Teams)
             {
@@ -66,26 +78,24 @@ namespace Basket
                 var pos = team.CamPoint.position;
                 pos.y = team.Cam.transform.position.y;
                 team.Cam.transform.position = pos;
+                team.Score = 0;
             }
 
-            
             yield return new WaitForSeconds(0.2f);
 
             IsGameOver = false;
 
             foreach (var team in Teams)
             {
-                team.Net._event.AddListener(() =>
+                IEnumerator Transition()
                 {
-                    IEnumerator Transition()
-                    {
-                        team.Target.SetActive(false);
-                        team.Ball.DOColor(new Color(0.52f, 0.52f, 0.52f, 0.94f), 0.25f);
-                        team.Ball.transform.DOScale(0.75f, 0.125f);
-                        team.ThrowManager.CanShot = false;
+                    team.Target.SetActive(false);
+                    team.Ball.DOColor(new Color(0.52f, 0.52f, 0.52f, 0.94f), 0.25f);
+                    team.Ball.transform.DOScale(0.75f, 0.125f);
+                    team.ThrowManager.CanShot = false;
 
-                        int[] rnd =
-                        {
+                    int[] rnd =
+                    {
                             -3,
                             -2,
                             -1,
@@ -95,8 +105,8 @@ namespace Basket
                             3
                         };
 
-                        float[] rndup =
-                        {
+                    float[] rndup =
+                    {
                             0.5f,
                             1,
                             1.5f,
@@ -105,8 +115,8 @@ namespace Basket
                             3
                         };
 
-                        float[] rng =
-                        {
+                    float[] rng =
+                    {
                             6f,
                             6.5f,
                             7f,
@@ -114,34 +124,35 @@ namespace Basket
                             8f
                         };
 
-                        var multiplicator = rng[Random.Range(0, rng.Length)] * (1 + (.5f * PlayerPrefs.GetInt(Basket_GeneralVariable.DifficultyKey)));
-                        team.Multiplicator = multiplicator / 6f;
-                        
-                        team.RotateCamPoint.localRotation = Quaternion.Euler(0f, rnd[Random.Range(0, rnd.Length)] * 15f, 0f);
-                        team.RotateCamPoint.GetChild(0).localPosition = new Vector3(0, Mathf.Abs(rndup.RandomElement()), multiplicator * -Mathf.Sign(team.RotateCamPoint.position.z));
+                    var multiplicator = rng[Random.Range(0, rng.Length)] * (1 + (.5f * PlayerPrefs.GetInt(Basket_GeneralVariable.DifficultyKey)));
+                    team.Multiplicator = multiplicator / 6f;
 
-                        yield return MoveCameraToPoint(team.Cam.transform, team.CamPoint.position);
+                    team.RotateCamPoint.localRotation = Quaternion.Euler(0f, rnd[Random.Range(0, rnd.Length)] * 15f, 0f);
+                    team.RotateCamPoint.GetChild(0).localPosition = new Vector3(0, Mathf.Abs(rndup.RandomElement()), multiplicator * -Mathf.Sign(team.RotateCamPoint.position.z));
 
-                        team.Next = false;
-                        team.ThrowManager.CanShot = true;
+                    yield return MoveCameraToPoint(team.Cam.transform, team.CamPoint.position);
 
-                        if(team.Score < 4) 
-                        { 
-                            team.Target.SetActive(true);
-                            team.Target.transform.DOScale(1f / team.Multiplicator, 0f);
-                        }
+                    team.Next = false;
+                    team.ThrowManager.CanShot = true;
 
-                        team.Ball.DOColor(Color.white, 0.25f);
-                        team.Ball.transform.DOScale(1.25f, 0.125f);
-
-                        //Debug.Log(team.Ball.color);
+                    if (team.Score < 4)
+                    {
+                        team.Target.SetActive(true);
+                        team.Target.transform.DOScale(1f / team.Multiplicator, 0f);
                     }
 
+                    team.Ball.DOColor(Color.white, 0.25f);
+                    team.Ball.transform.DOScale(1.25f, 0.125f);
+
+                    //Debug.Log(team.Ball.color);
+                }
+
+                team.Net._event.AddListener(() =>
+                {
                     StartCoroutine(Transition());
-                    
                 });
 
-                team.ThrowManager.CanShot = true;
+                StartCoroutine(Transition());
             }
 
             Basket_TimerManager.i.OnTimerEnd.AddListener(() =>
@@ -157,7 +168,7 @@ namespace Basket
                         t.Ball.transform.DOScale(0.75f, 0.25f);
                     }
 
-                    if(Teams[0].Score != Teams[1].Score)
+                    if (Teams[0].Score != Teams[1].Score)
                         _winnerText.text = $"{PlayerPrefs.GetString(Teams[0].Score > Teams[1].Score ? "Basket_Name1" : "Basket_Name2")} a gagne !";
                     else
                         _winnerText.text = $"Egalite, personne n'a su se demarquer.";
@@ -172,6 +183,8 @@ namespace Basket
 
                     PlayerPrefs.SetFloat(Basket_GeneralVariable.HighScoreKey, Mathf.Max(Teams[0].Score, Teams[1].Score));
                     //SceneManager.LoadScene(Basket_GeneralVariable.i.scoreScene);
+                    _winnerText.transform.parent.gameObject.SetActive(false);
+                    (GameManager.CurrentGameSceneObject as BasketSceneObject).PlayScore();
                 }
 
                 StartCoroutine(Finish());

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,11 +20,12 @@ public abstract class GameSceneObject : MonoBehaviour
     public virtual void Play()
     {
         GameManager.Instance.OSCManager.GameEnCours();
+        GameManager.OnGameStart?.Invoke();
     }
 
     public abstract Task Replay();
-
     public abstract void OnNameReceive(string name);
     public abstract void PageUp();
     public abstract void PageDown();
+    public abstract void OpenMenu();
 }

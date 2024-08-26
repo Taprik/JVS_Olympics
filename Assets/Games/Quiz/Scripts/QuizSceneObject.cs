@@ -799,6 +799,10 @@ namespace Quiz
             //await Task.Delay(Mathf.RoundToInt(_etoileAnim.length * 1000) + 200);
         }
 
+        public override void OpenMenu()
+        {
+
+        }
 
         [System.Serializable]
         public class QuizTeam

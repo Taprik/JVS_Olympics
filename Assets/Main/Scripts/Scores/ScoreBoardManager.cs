@@ -10,7 +10,8 @@ using UnityEngine;
 public enum GameScoreBoard
 {
     BlockScoreBoard,
-    QuizScoreBoard
+    QuizScoreBoard,
+    BasketballBoard,
 }
 
 public class ScoreBoardManager : MonoBehaviour

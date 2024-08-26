@@ -45,7 +45,7 @@ namespace Basket
                 Score = 0,
             };
 
-            //_scoreBoardDisplayer.InitScoreBoard(await ScoreBoardManager.UpdateScoreBoardDescendingOrder(data, GameScoreBoard.BasketballBoard), Font, _winnerColor, defaultPlayer);
+            _scoreBoardDisplayer.InitScoreBoard(await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardDescendingOrder(data, GameScoreBoard.BasketballBoard), Font, _winnerColor, defaultPlayer);
         }
     }
 }

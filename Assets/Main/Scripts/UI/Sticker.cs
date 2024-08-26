@@ -29,15 +29,20 @@ public class Sticker : MonoBehaviour
 
         Debug.Log(_path + ".png");
 
-        if (PlayerPrefs.HasKey(_playerPrefPath) && _playerPrefPath != string.Empty)
+        GameManager.OnGameStart += () =>
         {
-            if (PlayerPrefs.GetInt(_playerPrefPath) == 1)
+            if (PlayerPrefs.HasKey(_playerPrefPath) && _playerPrefPath != string.Empty)
+            {
+                if (PlayerPrefs.GetInt(_playerPrefPath) == 1)
+                    StartCoroutine(LoadImage());
+                else
+                    _img.enabled = false;
+            }
+            else
+            {
                 StartCoroutine(LoadImage());
-        }
-        else
-        {
-            StartCoroutine(LoadImage());
-        }
+            }
+        };
     }
 
     IEnumerator LoadImage()

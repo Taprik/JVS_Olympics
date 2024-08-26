@@ -438,6 +438,11 @@ namespace Blocks
             await GameManager.Instance.AddressablesManager.LoadScreen(GameInit());
         }
 
+        public override void OpenMenu()
+        {
+
+        }
+
         #endregion
 
         [System.Serializable]

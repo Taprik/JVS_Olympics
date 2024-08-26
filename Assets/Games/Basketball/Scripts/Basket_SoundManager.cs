@@ -17,21 +17,7 @@ namespace Basket
             }
 
             i = this;
-        }
 
-        public AudioSource _source;
-        public AudioSource _source2;
-        [SerializeField] AudioSource[] _netSource;
-
-        public AudioClip[] _ambiences;
-        public AudioClip[] _musics;
-        public AudioClip[] _hits;
-        public AudioClip[] _bounce;
-        public AudioClip[] _end;
-        public AudioClip _net;
-
-        public void Start()
-        {
             IEnumerator Ambiance()
             {
                 Queue<AudioClip> audios = new Queue<AudioClip>(_ambiences.ReturnShuffle());
@@ -65,8 +51,24 @@ namespace Basket
 
             }
 
-            StartCoroutine(Ambiance());
-            StartCoroutine(Music());
+            GameManager.OnGameStart += () => StartCoroutine(Ambiance());
+            GameManager.OnGameStart += () => StartCoroutine(Music());
+        }
+
+        public AudioSource _source;
+        public AudioSource _source2;
+        [SerializeField] AudioSource[] _netSource;
+
+        public AudioClip[] _ambiences;
+        public AudioClip[] _musics;
+        public AudioClip[] _hits;
+        public AudioClip[] _bounce;
+        public AudioClip[] _end;
+        public AudioClip _net;
+
+        public void Start()
+        {
+            
         }
 
         public void PlaySound(AudioClip clip)
