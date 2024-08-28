@@ -13,4 +13,3 @@ MonoBehaviour:
   m_Name: GameSceneManager
   m_EditorClassIdentifier: 
   _currentScene: 0
-  _mainSceneObject: {fileID: 0}

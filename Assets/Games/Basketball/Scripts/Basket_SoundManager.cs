@@ -18,6 +18,44 @@ namespace Basket
 
             i = this;
 
+            GameManager.OnGameStart += PlayMusic;
+        }
+
+        private void OnDestroy()
+        {
+            GameManager.OnGameStart -= PlayMusic;
+        }
+
+        public AudioSource _source;
+        public AudioSource _source2;
+        [SerializeField] AudioSource[] _netSource;
+
+        public AudioClip[] _ambiences;
+        public AudioClip[] _musics;
+        public AudioClip[] _hits;
+        public AudioClip[] _bounce;
+        public AudioClip[] _end;
+        public AudioClip _net;
+
+        public void PlaySound(AudioClip clip)
+        {
+            _source.clip = clip;
+            _source.Play();
+        }
+
+        public void PlaySound(AudioClip clip, Vector3 pos)
+        {
+            AudioSource.PlayClipAtPoint(clip, pos);
+        }
+
+        public void PlayNet(bool IsP1)
+        {
+            _netSource[IsP1 ? 1 : 0].clip = _net;
+            _netSource[IsP1 ? 1 : 0].Play();
+        }
+
+        private void PlayMusic()
+        {
             IEnumerator Ambiance()
             {
                 Queue<AudioClip> audios = new Queue<AudioClip>(_ambiences.ReturnShuffle());
@@ -51,41 +89,8 @@ namespace Basket
 
             }
 
-            GameManager.OnGameStart += () => StartCoroutine(Ambiance());
-            GameManager.OnGameStart += () => StartCoroutine(Music());
-        }
-
-        public AudioSource _source;
-        public AudioSource _source2;
-        [SerializeField] AudioSource[] _netSource;
-
-        public AudioClip[] _ambiences;
-        public AudioClip[] _musics;
-        public AudioClip[] _hits;
-        public AudioClip[] _bounce;
-        public AudioClip[] _end;
-        public AudioClip _net;
-
-        public void Start()
-        {
-            
-        }
-
-        public void PlaySound(AudioClip clip)
-        {
-            _source.clip = clip;
-            _source.Play();
-        }
-
-        public void PlaySound(AudioClip clip, Vector3 pos)
-        {
-            AudioSource.PlayClipAtPoint(clip, pos);
-        }
-
-        public void PlayNet(bool IsP1)
-        {
-            _netSource[IsP1 ? 1 : 0].clip = _net;
-            _netSource[IsP1 ? 1 : 0].Play();
+            StartCoroutine(Ambiance());
+            StartCoroutine(Music());
         }
     }
 }

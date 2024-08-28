@@ -15,6 +15,7 @@ namespace Basket
     {
         public string Name;
         public int Score;
+        public TextMeshProUGUI ScoreText;
         public NetSensor Net;
         public Cloth NetCloth;
         public ThrowSensor ThrowManager;
@@ -52,6 +53,11 @@ namespace Basket
             GameManager.OnGameStart += OnGameStart;
         }
 
+        private void OnDestroy()
+        {
+            GameManager.OnGameStart -= OnGameStart;
+        }
+
         public BasketTeam[] Teams => _teams;
         [SerializeField] BasketTeam[] _teams = new BasketTeam[2];
 
@@ -59,11 +65,6 @@ namespace Basket
         [SerializeField] AudioSource _source;
 
         public bool IsGameOver { get; private set; } = false;
-
-        public void Start()
-        {
-
-        }
 
         private void OnGameStart()
         {
@@ -79,6 +80,7 @@ namespace Basket
                 pos.y = team.Cam.transform.position.y;
                 team.Cam.transform.position = pos;
                 team.Score = 0;
+                team.ScoreText.text = "00tps";
             }
 
             yield return new WaitForSeconds(0.2f);

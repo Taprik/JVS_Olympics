@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -22,13 +23,20 @@ namespace Basket
             GameManager.OnGameStart += OnGameStart;
         }
 
+        private void OnDestroy()
+        {
+            GameManager.OnGameStart -= OnGameStart;
+        }
+
+        [SerializeField] TextMeshProUGUI _timerTextLeft;
+        [SerializeField] TextMeshProUGUI _timerTextRight;
         public UnityEvent OnTimerEnd;
         public UnityEvent<int> OnUpdateTimer;
         int _timer;
 
         public void Start()
         {
-            
+            OnUpdateTimer.AddListener(DisplayTimer);
         }
 
         private void OnGameStart()
@@ -51,6 +59,14 @@ namespace Basket
             }
 
             OnTimerEnd?.Invoke();
+        }
+
+        private void DisplayTimer(int timer)
+        {
+            int minutes = timer / 60;
+            int seconds = timer % 60;
+            _timerTextLeft.text = $"{minutes.ToString("00")}:";
+            _timerTextRight.text = $"{seconds.ToString("00")}";
         }
     }
 }

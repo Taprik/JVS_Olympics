@@ -35,42 +35,46 @@ public class OSCTester : MonoBehaviour
             GameManager.Instance.OSCManager.onOSCPoint(message);
         }
 
-        if(Input.GetKeyDown(_startMessage))
+        if (!GameManager.IsTyping)
         {
-            OscMessage msg = new OscMessage("/remote/Start");
-            GameManager.Instance.OSCManager.onOSCStart(msg);
-        }
+            if (Input.GetKeyDown(_startMessage))
+            {
+                OscMessage msg = new OscMessage("/remote/Start");
+                GameManager.Instance.OSCManager.onOSCStart(msg);
+            }
 
-        if(Input.GetKeyDown(_acceuilMessage))
-        {
-            OscMessage msg = new OscMessage("/remote/Accueil");
-            GameManager.Instance.OSCManager.onOSCAccueil(msg);
-        }
+            if (Input.GetKeyDown(_acceuilMessage))
+            {
+                OscMessage msg = new OscMessage("/remote/Accueil");
+                GameManager.Instance.OSCManager.onOSCAccueil(msg);
+            }
 
-        if (Input.GetKeyDown(_launchMessage))
-        {
-            OscMessage msg = new OscMessage("/remote/Accueil");
-            msg.Add(_gameToLaunch);
-            GameManager.Instance.OSCManager.onOSCAccueil(msg);
-        }
+            if (Input.GetKeyDown(_launchMessage))
+            {
+                OscMessage msg = new OscMessage("/remote/Accueil");
+                msg.Add(_gameToLaunch);
+                GameManager.Instance.OSCManager.onOSCAccueil(msg);
+            }
 
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            OscMessage msg = new OscMessage("/remote/nameGamer");
-            msg.Add("OSC Tester");
-            GameManager.Instance.OSCManager.onOSCNameGamer(msg);
-        }
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                OscMessage msg = new OscMessage("/remote/nameGamer");
+                msg.Add("OSC Tester");
+                GameManager.Instance.OSCManager.onOSCNameGamer(msg);
+            }
 
-        if (Input.GetKeyDown(_PageUpKey))
-        {
-            OscMessage msg = new OscMessage("/remote/PageUp");
-            GameManager.Instance.OSCManager.onPageUp(msg);
-        }
+            if (Input.GetKeyDown(_PageUpKey))
+            {
+                OscMessage msg = new OscMessage("/remote/PageUp");
+                GameManager.Instance.OSCManager.onPageUp(msg);
+            }
 
-        if (Input.GetKeyDown(_PageDownKey))
-        {
-            OscMessage msg = new OscMessage("/remote/PageDown");
-            GameManager.Instance.OSCManager.onPageDown(msg);
+            if (Input.GetKeyDown(_PageDownKey))
+            {
+                OscMessage msg = new OscMessage("/remote/PageDown");
+                GameManager.Instance.OSCManager.onPageDown(msg);
+            }
         }
+        
     }
 }
