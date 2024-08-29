@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Tir
+  m_EditorClassIdentifier: 
+  m_GroupName: Tir
+  m_Data:
+    m_SerializedData: []
+  m_GUID: da96f5eae58e87e4f9af9c5d9f7aafb8
+  m_SerializeEntries:
+  - m_GUID: 7e5f39b63f3890441afcfdf9d345526a
+    m_Address: Assets/Games/Tir/Anim
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: aa5db489fa14f4048b5d88b016d071da
+    m_Address: Assets/Games/Tir/Font
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 2b59d543c9974ee4087fd22933ff5b0f
+    m_Address: Assets/Games/Tir/Prefabs
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 66b11e580e1a0e842936597a70ae9352
+    m_Address: Assets/Games/Tir/Prefabs/Export
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: e289ffa6542302641a731f73ba9e7c62
+    m_Address: Assets/Games/Tir/Sound
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: cbcc83508792e24409adad927fdbae94
+    m_Address: Assets/Games/Tir/Sprites
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: dce45b70b7c7395408236702ae0e1ade
+    m_Address: Assets/Games/Tir/Tir.unity
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 023023c01781d1b4093446c137e3b907, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 731124777ae19814692ebc2cf2b5010c, type: 2}
+    - {fileID: 11400000, guid: cbe391221fbd27e45b4af429eaf0100d, type: 2}

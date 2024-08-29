@@ -94,7 +94,7 @@ namespace Tool
             //float ConvertY(float pos) => (pos + 57.74f) * (1080 / 115.48f);
 
             Vector2 pos = new Vector2(rect.gameObject.transform.position.x, rect.gameObject.transform.position.y);
-            hit = Camera.main.WorldToScreenPoint(hit);
+            //hit = Camera.main.WorldToScreenPoint(hit);
 
             //Debug.Log("Hit : " + hit + " | Pos : " + pos + " | Rect : w = " + (rect.rect.width * rect.lossyScale.x) + " ; h = " + (rect.rect.height * rect.lossyScale.y) + " | Scale : " + rect.lossyScale);
 

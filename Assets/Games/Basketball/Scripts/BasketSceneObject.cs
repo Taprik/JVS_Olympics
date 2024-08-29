@@ -9,30 +9,10 @@ namespace Basket
     {
         [SerializeField] GameBasket GameSO;
 
-        [Header("Home")]
-        [SerializeField] GameObject _homePage;
-        public void SetHomePage(bool isActive) => _homePage.SetActive(isActive);
-
-        [Header("Game")]
-        [SerializeField] GameObject _gamePage;
-        public void SetGamePage(bool isActive) => _gamePage.SetActive(isActive);
-
-        [Header("Menu")]
-        [SerializeField] GameObject _menuPage;
-        public void SetMenuPage(bool isActive) => _menuPage.SetActive(isActive);
-
-        [Header("Score")]
-        [SerializeField] GameObject _scorePage;
-        public void SetScorePage(bool isActive) => _scorePage.SetActive(isActive);
-
         public override void Start()
         {
             base.Start();
             GameManager.CurrentGame = GameSO;
-            SetHomePage(true);
-            SetGamePage(false);
-            SetMenuPage(false);
-            SetScorePage(false);
         }
 
         public async override Task InitScene()
@@ -43,19 +23,12 @@ namespace Basket
 
         public override void Play()
         {
-            SetHomePage(false);
-            SetGamePage(true);
-            SetMenuPage(false);
-            SetScorePage(false);
             base.Play();
         }
 
-        public void PlayScore()
+        public override void PlayScore()
         {
-            SetHomePage(false);
-            SetGamePage(false);
-            SetMenuPage(false);
-            SetScorePage(true);
+            base.PlayScore();
         }
 
         public override void OnNameReceive(string name)
@@ -80,10 +53,7 @@ namespace Basket
 
         public override void OpenMenu()
         {
-            SetHomePage(false);
-            SetGamePage(false);
-            SetMenuPage(true);
-            SetScorePage(false);
+            
         }
     }
 }

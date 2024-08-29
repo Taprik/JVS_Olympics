@@ -27,7 +27,7 @@ public class Sticker : MonoBehaviour
         _path = $"{Path.GetFullPath(Path.Combine(appPath, @"../../../../"))}Documents\\Capteur\\Personnalisation\\sticker";
 #endif
 
-        Debug.Log(_path + ".png");
+        //Debug.Log(_path + ".png");
 
         GameManager.OnGameStart += Load;
     }
@@ -39,6 +39,7 @@ public class Sticker : MonoBehaviour
 
     void Load()
     {
+        _img.enabled = true;
         if (PlayerPrefs.HasKey(_playerPrefPath) && _playerPrefPath != string.Empty)
         {
             if (PlayerPrefs.GetInt(_playerPrefPath) == 1)

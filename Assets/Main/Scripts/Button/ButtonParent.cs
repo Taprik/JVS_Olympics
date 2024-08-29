@@ -33,7 +33,7 @@ public abstract class ButtonParent : MonoBehaviour, IReceivePoint
     public void ReceivePoint(float xPoint, float yPoint)
     {
         Vector2 hit = new Vector2(xPoint, yPoint);
-        //Debug.Log(this.gameObject.name + " : " + ToolBox.CheckPos(hit, this.transform) + " | Hit : " + hit + " | Pos : " + this.transform.position);
+        //Debug.Log(this.gameObject.name + " : " + ToolBox.CheckPos(hit, this.transform) + " | Hit : " + hit + " | Pos : " + this.transform.position + " | Is Active : " + isActive);
 
         if (ToolBox.CheckPos(hit, this.transform) && isActive)
         {
