@@ -100,7 +100,8 @@ namespace Tir
         {
             yield return new WaitForSeconds(_timeBeforeGoingToScore);
             yield return new WaitUntil(() => ScoreManager.Teams.ToList().TrueForAll(x => x.EndAnimation == true));
-            SceneManager.LoadScene(Tir_Scene.Score_Tir);
+            //SceneManager.LoadScene(Tir_Scene.Score_Tir);
+            GameManager.CurrentGameSceneObject.PlayScore();
         }
 
         public void Update()

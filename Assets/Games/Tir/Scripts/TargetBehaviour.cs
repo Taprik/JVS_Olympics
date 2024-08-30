@@ -55,6 +55,11 @@ namespace Tir
             AjustShadowHeight();
         }
 
+        private void OnDisable()
+        {
+            Destroy(this.gameObject);
+        }
+
         public void StartAnim()
         {
             if (_coroutine != null)

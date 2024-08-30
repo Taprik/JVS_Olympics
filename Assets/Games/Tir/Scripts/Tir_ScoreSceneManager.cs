@@ -25,6 +25,8 @@ namespace Tir
         [SerializeField]
         TMP_FontAsset _winnerFont;
 
+        [SerializeField] Color _winnerColor;
+
         public async void OnReceiveName(string name)
         {
             PlayerData data = new PlayerData()
@@ -39,7 +41,7 @@ namespace Tir
                 Score = 0
             };
 
-            //_scoreBoardDisplayer.InitScoreBoard(await ScoreBoardManager.UpdateScoreBoardDescendingOrder(data, GameScoreBoard.TirScoreBoard), Font, defaultPlayer);
+            _scoreBoardDisplayer.InitScoreBoard(await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardDescendingOrder(data, GameScoreBoard.TirScoreBoard), Font, _winnerColor, defaultPlayer);
         }
     }
 }

@@ -36,5 +36,9 @@ namespace Tir
 
         }
 
+        public override void Play()
+        {
+            base.Play();
+        }
     }
 }

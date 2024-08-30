@@ -12,6 +12,7 @@ public enum GameScoreBoard
     BlockScoreBoard,
     QuizScoreBoard,
     BasketballBoard,
+    TirScoreBoard,
 }
 
 public class ScoreBoardManager : MonoBehaviour

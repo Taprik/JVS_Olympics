@@ -84,8 +84,8 @@ namespace Tir
             {
                 if (PlayerPrefs.HasKey(Tir_SceneObject.PlayerNameKey + (team.Id + 1).ToString()))
                     team.Name = PlayerPrefs.GetString(Tir_SceneObject.PlayerNameKey + (team.Id + 1).ToString());
-                team.UpdateNameAndScore();
                 team.Score = 0;
+                team.UpdateNameAndScore();
                 team.LastSpawn = DateTime.MinValue;
                 foreach (var target in team.SpawnTargets)
                 {
@@ -95,6 +95,7 @@ namespace Tir
                 team.PopUpAnimator.gameObject.SetActive(false);
                 team.EndAnimation = true;
             }
+            _congratulationText.transform.parent.gameObject.SetActive(false);
         }
 
         private void SaveWinnerScore()

@@ -4077,6 +4077,7 @@ GameObject:
   - component: {fileID: 8621560769488593317}
   - component: {fileID: 8621560769488593323}
   - component: {fileID: 8621560769488593316}
+  - component: {fileID: 1760593748164661654}
   - component: {fileID: 8621560769488593322}
   m_Layer: 5
   m_Name: InputField Player 1
@@ -4144,6 +4145,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1760593748164661654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8621560769488593318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e900cedda011e53438158e25c6fa2e2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8621560769488593322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4428,6 +4441,7 @@ GameObject:
   - component: {fileID: 8621560769523311852}
   - component: {fileID: 8621560769523311890}
   - component: {fileID: 8621560769523311891}
+  - component: {fileID: 8413138384094726098}
   - component: {fileID: 8621560769523311853}
   m_Layer: 5
   m_Name: InputField Player 2
@@ -4495,6 +4509,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8413138384094726098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8621560769523311854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e900cedda011e53438158e25c6fa2e2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8621560769523311853
 MonoBehaviour:
   m_ObjectHideFlags: 0
