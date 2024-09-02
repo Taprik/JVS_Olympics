@@ -27,8 +27,6 @@ namespace Quiz
         #region HomePage
 
         public GameObject HomePage => _homePage;
-        [SerializeField, Header("HomePage")]
-        GameObject _homePage;
 
         public GameObject PlayButtonHolder => _playButtonHolder;
         [SerializeField]
@@ -48,8 +46,6 @@ namespace Quiz
         #region GamePage
 
         public GameObject GamePage => _gamePage;
-        [SerializeField, Header("GamePage")]
-        GameObject _gamePage;
 
         public Image QuestionImage => _questionImage;
         [SerializeField]
@@ -169,8 +165,6 @@ namespace Quiz
         #region ScorePage
 
         public GameObject ScorePage => _scorePage;
-        [SerializeField, Header("ScorePage")]
-        GameObject _scorePage;
 
         public TextMeshProUGUI ScoreText => _scoreText;
         [SerializeField]

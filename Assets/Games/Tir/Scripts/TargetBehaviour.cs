@@ -47,7 +47,13 @@ namespace Tir
 
             _isDestroy = false;
             OnDestroy += (team, score, rect) => team.LastSpawn = DateTime.UtcNow;
-            Tir_GameManager.Instance.OnGameEnd += () => { if (!_isDestroy) StopCoroutine(_coroutine); };
+            Tir_GameManager.Instance.OnGameEnd += () => { 
+                if (!_isDestroy && this.gameObject.activeSelf)
+                {
+                    StopCoroutine(_coroutine); 
+
+                }
+            };
 
             if (_OnStart)
                 StartAnim();

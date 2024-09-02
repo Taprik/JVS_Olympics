@@ -22,16 +22,12 @@ namespace Blocks
         #region HomePage
 
         public GameObject HomePage => _homePage;
-        [SerializeField, Header("HomePage")]
-        GameObject _homePage;
 
         #endregion
 
         #region GamePage
 
         public GameObject GamePage => _gamePage;
-        [SerializeField, Header("GamePage")]
-        GameObject _gamePage;
 
         [SerializeField]
         float _initialTimer;
@@ -342,8 +338,6 @@ namespace Blocks
         #region ScorePage
 
         public GameObject ScorePage => _scorePage;
-        [SerializeField, Header("ScorePage")]
-        GameObject _scorePage;
 
         [SerializeField]
         ScoreBoardDisplayer _scoreBoardDisplayer;

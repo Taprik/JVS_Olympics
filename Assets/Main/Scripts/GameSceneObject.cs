@@ -16,7 +16,7 @@ public abstract class GameSceneObject : MonoBehaviour
 
     [Header("Menu")]
     [SerializeField] protected GameObject _menuPage;
-    public void SetMenuPage(bool isActive) => _menuPage.SetActive(isActive);
+   public void SetMenuPage(bool isActive) { if(_menuPage != null) _menuPage.SetActive(isActive); }
 
     [Header("Score")]
     [SerializeField] protected GameObject _scorePage;

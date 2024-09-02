@@ -80,6 +80,7 @@ namespace Basket
                 pos.y = team.Cam.transform.position.y;
                 team.Cam.transform.position = pos;
                 team.Score = 0;
+                team.ScoreDisplay.DisplayScore(team.Score);
                 team.ScoreText.text = "00tps";
             }
 
