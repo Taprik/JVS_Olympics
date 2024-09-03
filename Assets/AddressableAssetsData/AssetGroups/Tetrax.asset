@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Tetrax
+  m_EditorClassIdentifier: 
+  m_GroupName: Tetrax
+  m_Data:
+    m_SerializedData: []
+  m_GUID: b9706089ea206864d823909a8c15b4e7
+  m_SerializeEntries:
+  - m_GUID: b5da9a740c8eb274b89f0fa9b717c87c
+    m_Address: Assets/Games/Tetrax/Fonts
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 1d346b97ff2d1374d80e91a6b12ce871
+    m_Address: Assets/Games/Tetrax/SimpleParticlePack
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 8a14f7c8515019944bf05f2646ad4671
+    m_Address: Assets/Games/Tetrax/Tetrax V2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: b8e1abbeffddf614a8000178d7679b08
+    m_Address: Assets/Games/Tetrax/Tetrax_Sounds
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 9240a6dcf4124c8479661918269c1d0a
+    m_Address: Assets/Games/Tetrax/Tetrax_Sprites
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: b0326ee6384a25f42b7b94513fa8816b
+    m_Address: Assets/Games/Tetrax/Tetrax.unity
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 023023c01781d1b4093446c137e3b907, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: c7c866e2860237649aaab12672bd1f7d, type: 2}
+    - {fileID: 11400000, guid: 579d1244c6fd4954d9db995a60208585, type: 2}

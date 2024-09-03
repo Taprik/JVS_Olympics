@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 public class ButtonEvent : ButtonParent
 {
+    public UnityEvent Event => _event;
     [SerializeField]
     UnityEvent _event;
 

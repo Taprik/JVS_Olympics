@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Button))]
+[RequireComponent(typeof(ButtonEvent))]
 public class PlayButton : MonoBehaviour
 {
-    Button b;
+    ButtonEvent b;
 
     private void Start()
     {
-        b = GetComponent<Button>();
-        b.onClick.AddListener(OnClick);
+        b = GetComponent<ButtonEvent>();
+        b.Event.AddListener(OnClick);
     }
 
     void OnClick()
