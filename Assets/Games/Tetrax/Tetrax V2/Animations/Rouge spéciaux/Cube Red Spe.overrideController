@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Cube Red Spe
+  m_Controller: {fileID: 9100000, guid: 139a2aae16ebb334b8318ff198a1a498, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 55f37384729699749aa2d1cf1218264e, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 0e40fa16152f25f4c8bd0e6aa1633f17, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: f882913b4db73754d8b39c51ad6d1fa4, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d0ca2c73425d15246a08ca1a61bbfecc, type: 2}
