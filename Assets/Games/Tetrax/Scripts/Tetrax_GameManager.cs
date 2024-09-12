@@ -1,6 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Tetrax
 {
@@ -9,8 +13,13 @@ namespace Tetrax
     {
         public string Name;
         public TeamColor Color;
+        public int Score;
         public Transform CanvasPart;
         public Transform SpawnCubeHolder;
+        public TextMeshProUGUI ScoreText;
+        public AudioSource Source;
+        [HideInInspector] public List<GameObject> CubesList;
+        [HideInInspector] public bool IsGameOver;
     }
 
     [System.Serializable]
@@ -18,6 +27,7 @@ namespace Tetrax
     {
         public TeamColor Color;
         public bool IsSpe = false;
+        public int Score;
         public RuntimeAnimatorController Animator;
     }
 
@@ -29,6 +39,23 @@ namespace Tetrax
 
     public class Tetrax_GameManager : MonoBehaviour
     {
+        public static Tetrax_GameManager Instance;
+
+        public void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            GameManager.OnGameStart += OnGameStart;
+        }
+
         public TetraxTeam[] Teams => _teams;
         [SerializeField] TetraxTeam[] _teams;
 
@@ -37,12 +64,141 @@ namespace Tetrax
         public CubeData[] CubesDatas => _cubesDatas;
         [SerializeField] CubeData[] _cubesDatas;
 
-        public GameObject SpawnCube(CubeData data, Transform parent)
+        public bool IsGameOver { get; private set; } = false;
+        [SerializeField] private float _tick = 5f;
+        [SerializeField] private float _nbCube = 5f;
+        [SerializeField] private int _chanceToSpawn = 60;
+        [SerializeField] private int _chanceToSpawnSpeCube = 5;
+
+        [SerializeField] private AudioClip _victory;
+        [SerializeField] private AudioClip _failure;
+
+        public void OnDestroy()
+        {
+            GameManager.OnGameStart -= OnGameStart;
+        }
+
+        public void OnGameStart()
+        {
+            Debug.Log("Start");
+            foreach (var team in Teams)
+            {
+                team.Score = 0;
+                team.ScoreText.text = team.Score.ToString("00");
+                team.IsGameOver = false;
+                for (int i = 0; i < team.CubesList.Count; i++)
+                {
+                    if (team.CubesList[i] == null) continue;
+                    Destroy(team.CubesList[i]);
+                }
+                team.CubesList.Clear();
+            }
+            StartCoroutine(GameLoop());
+        }
+
+        private CubeData GetCubeData(TeamColor color, bool isSpe)
+        {
+            return CubesDatas.ToList().Find(x => x.IsSpe == isSpe && x.Color == color);
+        }
+
+        private GameObject SpawnCube(CubeData data, Transform parent, Vector2 pos)
         {
             var cube = Instantiate(_cubePref, parent);
+            cube.transform.localPosition = pos;
             var anim = cube.GetComponent<Animator>();
             anim.runtimeAnimatorController = data.Animator;
+            var behaviour = cube.GetComponent<CubeBehaviour>();
+            behaviour.Data = data;
             return cube;
+        }
+
+        IEnumerator GameLoop()
+        {
+            yield return null;
+
+            while (!IsGameOver)
+            {
+                foreach (var t in Teams)
+                {
+                    if (t.IsGameOver) continue;
+                    foreach (var cubes in t.CubesList)
+                    {
+                        if(cubes != null)
+                        {
+                            cubes.transform.localPosition += new Vector3(0, -135);
+                        }
+                    }
+                }
+
+                for (int i = 0; i < _nbCube; i++)
+                {
+                    if(Random.Range(0, 100) < _chanceToSpawn)
+                    {
+                        var pos = new Vector2(-410 + (135 * i), -70);
+                        bool isSpe = Random.Range(0, 100) < _chanceToSpawnSpeCube;
+                        foreach (var t in Teams)
+                        {
+                            if (t.IsGameOver) continue;
+                            var cube = SpawnCube(GetCubeData(t.Color, isSpe), t.SpawnCubeHolder, pos);
+                            t.CubesList.Add(cube);
+                        }
+                    }
+                }
+
+                foreach (var t in Teams)
+                {
+                    if (t.CubesList.Any(x => x.transform.localPosition.y <= -1150))
+                    {
+                        if(Teams.ToList().Any(t => t.IsGameOver) && !Teams.ToList().TrueForAll(t => t.IsGameOver) && !t.IsGameOver)
+                        {
+                            t.Source.clip = _victory;
+                            t.Source.Play();
+                        }
+                    }
+                }
+
+                bool anyLoose = Teams.ToList().Any(t => t.IsGameOver);
+
+                foreach (var t in Teams)
+                {
+                    if (t.CubesList.Any(x => x.transform.localPosition.y <= -1150) && !t.IsGameOver)
+                    {
+                        Debug.Log("Loose");
+                        t.IsGameOver = true;
+                        continue;
+                    }
+                }
+
+                if (!anyLoose && !Teams.ToList().TrueForAll(t => t.IsGameOver) && Teams.ToList().Any(t => t.IsGameOver))
+                {
+                    var t = Teams.ToList().Find(x => x.IsGameOver);
+                    t.Source.clip = _failure;
+                    t.Source.Play();
+                }
+                else if (Teams.ToList().TrueForAll(t => t.IsGameOver) && !anyLoose)
+                {
+                    foreach (var team in Teams)
+                    {
+                        team.Source.clip = Teams.ToList().Max(x => x.Score) == team.Score ? _victory : null;
+                        team.Source.Play();
+                    }
+                }
+
+                if (Teams.ToList().TrueForAll(t => t.IsGameOver))
+                {
+                    IsGameOver = true;
+                    yield return new WaitForSeconds(5);
+
+                    break;
+                }
+
+                yield return new WaitForSeconds(_tick);
+            }
+        }
+
+        public void OnNameReceive(string name)
+        {
+
         }
     }
 }

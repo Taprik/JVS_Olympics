@@ -22,6 +22,9 @@ public class ScoreBoardDisplayer : MonoBehaviour
     Transform _collum;
 
     [SerializeField]
+    UnityEvent _onDemandName;
+
+    [SerializeField]
     UnityEvent _onDisplay;
 
     [SerializeField]
@@ -39,8 +42,22 @@ public class ScoreBoardDisplayer : MonoBehaviour
 
     private void Start()
     {
+        GameManager.Instance.OSCManager.OnNeedName += OnNeedName;
+
         if (_demandNameOnEnable)
+        {
             GameManager.Instance.OSCManager.NeedName();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.OSCManager.OnNeedName -= OnNeedName;
+    }
+
+    void OnNeedName()
+    {
+        _onDemandName?.Invoke();
     }
 
     public void InitScoreBoard(PlayerData[] datas, Func<TMP_FontAsset> fontFunc, PlayerData defaultPlayer = null, bool displayValue = false)

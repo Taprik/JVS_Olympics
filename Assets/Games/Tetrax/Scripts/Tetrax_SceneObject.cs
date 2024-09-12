@@ -11,7 +11,7 @@ namespace Tetrax
 
         public override void OnNameReceive(string name)
         {
-            throw new System.NotImplementedException();
+            Tetrax_GameManager.Instance.OnNameReceive(name);
         }
 
         public override void PageDown()

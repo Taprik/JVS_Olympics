@@ -65,6 +65,8 @@ namespace OSC
         [SerializeField] GameObject ImpactPref;
         [SerializeField] RectTransform Canvas;
 
+        public Action OnNeedName;
+
         void Start()
         {
             // Ensure that we have a OscIn component and start receiving on port 7000.
@@ -265,6 +267,7 @@ namespace OSC
 
         public void NeedName()
         {
+            OnNeedName?.Invoke();
             _message = new OscMessage(nomJoueur);
             _message.Set(0, 1);
             _oscOut.Send(_message);
