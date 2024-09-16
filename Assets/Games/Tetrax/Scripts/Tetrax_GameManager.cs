@@ -1,8 +1,10 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Tool;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -17,6 +19,7 @@ namespace Tetrax
         public Transform CanvasPart;
         public Transform SpawnCubeHolder;
         public TextMeshProUGUI ScoreText;
+        public TextMeshProUGUI EndText;
         public AudioSource Source;
         [HideInInspector] public List<GameObject> CubesList;
         [HideInInspector] public bool IsGameOver;
@@ -56,6 +59,9 @@ namespace Tetrax
             GameManager.OnGameStart += OnGameStart;
         }
 
+        public static int WinnerScore;
+        public bool IsGameOver { get; private set; } = false;
+
         public TetraxTeam[] Teams => _teams;
         [SerializeField] TetraxTeam[] _teams;
 
@@ -64,10 +70,11 @@ namespace Tetrax
         public CubeData[] CubesDatas => _cubesDatas;
         [SerializeField] CubeData[] _cubesDatas;
 
-        public bool IsGameOver { get; private set; } = false;
         [SerializeField] private float _tick = 5f;
-        [SerializeField] private float _nbCube = 5f;
-        [SerializeField] private int _chanceToSpawn = 60;
+        //[SerializeField] private float _nbCube = 5f;
+        [SerializeField] private int _maxCube = 5;
+        [SerializeField] private int _minCube = 2;
+        //[SerializeField] private int _chanceToSpawn = 60;
         [SerializeField] private int _chanceToSpawnSpeCube = 5;
 
         [SerializeField] private AudioClip _victory;
@@ -92,7 +99,10 @@ namespace Tetrax
                     Destroy(team.CubesList[i]);
                 }
                 team.CubesList.Clear();
+                team.EndText.transform.parent.gameObject.SetActive(false);
             }
+            WinnerScore = 0;
+            IsGameOver = false;
             StartCoroutine(GameLoop());
         }
 
@@ -116,6 +126,7 @@ namespace Tetrax
         {
             yield return null;
 
+            int speed = 0;
             while (!IsGameOver)
             {
                 foreach (var t in Teams)
@@ -125,29 +136,46 @@ namespace Tetrax
                     {
                         if(cubes != null)
                         {
-                            cubes.transform.localPosition += new Vector3(0, -135);
+                            cubes.transform.DOLocalMoveY(cubes.transform.localPosition.y - 135, 0.15f);
+                            //cubes.transform.localPosition += new Vector3(0, -135);
                         }
                     }
                 }
 
-                for (int i = 0; i < _nbCube; i++)
+                //for (int i = 0; i < _nbCube; i++)
+                //{
+                //    if(Random.Range(0, 100) < _chanceToSpawn)
+                //    {
+                //        var pos = new Vector2(-410 + (135 * i), -70);
+                //        bool isSpe = Random.Range(0, 100) < _chanceToSpawnSpeCube;
+                //        foreach (var t in Teams)
+                //        {
+                //            if (t.IsGameOver) continue;
+                //            var cube = SpawnCube(GetCubeData(t.Color, isSpe), t.SpawnCubeHolder, pos);
+                //            t.CubesList.Add(cube);
+                //        }
+                //    }
+                //}
+
+                var rnd = Random.Range(_minCube, _maxCube + 1);
+                var rng = new List<int>() { 0, 1, 2, 3, 4 };
+                for (int i = 0; i < rnd; i++)
                 {
-                    if(Random.Range(0, 100) < _chanceToSpawn)
+                    var n = rng.RandomElement();
+                    rng.Remove(n);
+                    var pos = new Vector2(-410 + (135 * n), -70);
+                    bool isSpe = Random.Range(0, 100) < _chanceToSpawnSpeCube;
+                    foreach (var t in Teams)
                     {
-                        var pos = new Vector2(-410 + (135 * i), -70);
-                        bool isSpe = Random.Range(0, 100) < _chanceToSpawnSpeCube;
-                        foreach (var t in Teams)
-                        {
-                            if (t.IsGameOver) continue;
-                            var cube = SpawnCube(GetCubeData(t.Color, isSpe), t.SpawnCubeHolder, pos);
-                            t.CubesList.Add(cube);
-                        }
+                        if (t.IsGameOver) continue;
+                        var cube = SpawnCube(GetCubeData(t.Color, isSpe), t.SpawnCubeHolder, pos);
+                        t.CubesList.Add(cube);
                     }
                 }
 
                 foreach (var t in Teams)
                 {
-                    if (t.CubesList.Any(x => x.transform.localPosition.y <= -1150))
+                    if (t.CubesList.Any(x => x.transform.localPosition.y <= -1015))
                     {
                         if(Teams.ToList().Any(t => t.IsGameOver) && !Teams.ToList().TrueForAll(t => t.IsGameOver) && !t.IsGameOver)
                         {
@@ -161,7 +189,7 @@ namespace Tetrax
 
                 foreach (var t in Teams)
                 {
-                    if (t.CubesList.Any(x => x.transform.localPosition.y <= -1150) && !t.IsGameOver)
+                    if (t.CubesList.Any(x => x.transform.localPosition.y <= -1015) && !t.IsGameOver)
                     {
                         Debug.Log("Loose");
                         t.IsGameOver = true;
@@ -179,7 +207,8 @@ namespace Tetrax
                 {
                     foreach (var team in Teams)
                     {
-                        team.Source.clip = Teams.ToList().Max(x => x.Score) == team.Score ? _victory : null;
+                        bool win = Teams.ToList().Max(x => x.Score) == team.Score;
+                        team.Source.clip = win ? _victory : null;
                         team.Source.Play();
                     }
                 }
@@ -187,18 +216,24 @@ namespace Tetrax
                 if (Teams.ToList().TrueForAll(t => t.IsGameOver))
                 {
                     IsGameOver = true;
+                    WinnerScore = Teams.ToList().Max(x => x.Score);
+                    foreach (var team in Teams)
+                    {
+                        bool win = Teams.ToList().Max(x => x.Score) == team.Score;
+                        team.EndText.text = win ? "Vous avez gagne" : "Vous avez perdu";
+                        team.EndText.transform.parent.gameObject.SetActive(true);
+                    }
+
                     yield return new WaitForSeconds(5);
 
+                    GameManager.Instance.OSCManager.NeedName();
+                    GameManager.CurrentGameSceneObject.PlayScore();
                     break;
                 }
 
-                yield return new WaitForSeconds(_tick);
+                yield return new WaitForSeconds(Mathf.Lerp(_tick, 0.5f, speed / 100f));
+                speed++;
             }
-        }
-
-        public void OnNameReceive(string name)
-        {
-
         }
     }
 }

@@ -11,17 +11,17 @@ namespace Tetrax
 
         public override void OnNameReceive(string name)
         {
-            Tetrax_GameManager.Instance.OnNameReceive(name);
+            Tetrax_ScoreManager.Instance.OnReceiveName(name);
         }
 
         public override void PageDown()
         {
-            throw new System.NotImplementedException();
+            Tetrax_ScoreManager.Instance.PageDown();
         }
 
         public override void PageUp()
         {
-            throw new System.NotImplementedException();
+            Tetrax_ScoreManager.Instance.PageUp();
         }
 
         public override Task Replay()
