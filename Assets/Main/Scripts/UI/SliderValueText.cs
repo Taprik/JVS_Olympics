@@ -14,7 +14,7 @@ public class SliderValueText : MonoBehaviour
     private void Start()
     {
         _text = GetComponent<TextMeshProUGUI>();
-        _text.text = _slider.value.ToString("n1") + _unit;
-        _slider.onValueChanged.AddListener((value) => _text.text = value.ToString("n1") + _unit);
+        _text.text = _slider.value.ToString(_slider.wholeNumbers ? "0" : "n1") + _unit;
+        _slider.onValueChanged.AddListener((value) => _text.text = value.ToString(_slider.wholeNumbers ? "0" : "n1") + _unit);
     }
 }

@@ -8,6 +8,14 @@ public class PlayButton : MonoBehaviour
 {
     ButtonEvent b;
 
+    public void Awake()
+    {
+        if(gameObject.TryGetComponent(out Canvas canvas))
+        {
+            Destroy(canvas);
+        }
+    }
+
     private void Start()
     {
         b = GetComponent<ButtonEvent>();

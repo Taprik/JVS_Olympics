@@ -71,6 +71,7 @@ namespace Tetrax
         [SerializeField] CubeData[] _cubesDatas;
 
         [SerializeField] private float _tick = 5f;
+        [SerializeField] private int _acceleration = 1;
         //[SerializeField] private float _nbCube = 5f;
         [SerializeField] private int _maxCube = 5;
         [SerializeField] private int _minCube = 2;
@@ -103,6 +104,19 @@ namespace Tetrax
             }
             WinnerScore = 0;
             IsGameOver = false;
+
+            if (PlayerPrefs.HasKey("Tetrax_Tick")) _tick = PlayerPrefs.GetFloat("Tetrax_Tick");
+            else PlayerPrefs.SetFloat("Tetrax_Tick", _tick);
+            
+            if (PlayerPrefs.HasKey("Tetrax_Acceleration")) _acceleration = Mathf.RoundToInt(PlayerPrefs.GetFloat("Tetrax_Acceleration"));
+            else PlayerPrefs.SetFloat("Tetrax_Acceleration", _acceleration);
+
+            if (PlayerPrefs.HasKey("Tetrax_Max")) _maxCube = Mathf.RoundToInt(PlayerPrefs.GetFloat("Tetrax_Max"));
+            else PlayerPrefs.SetFloat("Tetrax_Max", _maxCube);
+
+            if (PlayerPrefs.HasKey("Tetrax_Min")) _minCube = Mathf.RoundToInt(PlayerPrefs.GetFloat("Tetrax_Min"));
+            else PlayerPrefs.SetFloat("Tetrax_Min", _minCube);
+
             StartCoroutine(GameLoop());
         }
 
@@ -231,8 +245,8 @@ namespace Tetrax
                     break;
                 }
 
-                yield return new WaitForSeconds(Mathf.Lerp(_tick, 0.5f, speed / 100f));
-                speed++;
+                yield return new WaitForSeconds(Mathf.Lerp(_tick, 0.5f, Mathf.Clamp01(speed / 100f)));
+                speed += _acceleration;
             }
         }
     }
