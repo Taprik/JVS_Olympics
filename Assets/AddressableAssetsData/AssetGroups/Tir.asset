@@ -48,7 +48,7 @@ MonoBehaviour:
     m_SerializedLabels:
     - LoadAtStart
   - m_GUID: dce45b70b7c7395408236702ae0e1ade
-    m_Address: Assets/Games/Tir/Tir.unity
+    m_Address: Tir
     m_ReadOnly: 0
     m_SerializedLabels:
     - LoadAtStart

@@ -206,20 +206,29 @@ namespace OSC
             //SceneManager.LoadScene("Accueil_" + nomJeu);
             SceneName scene = SceneName.MainScene;
 
-            switch (nomJeu)
+            var list = Enum.GetNames(typeof(SceneName)).ToList();
+            if (list.Contains(nomJeu))
             {
-                case "Blocks":
-                    scene = SceneName.Block;
-                    break;
-                case "Quiz":
-                    scene = SceneName.Quiz;
-                    break;
-                case "Basket":
-                    scene = SceneName.Basket;
-                    break;
-                default:
-                    break;
+                if(Enum.TryParse(nomJeu, out SceneName name))
+                {
+                    scene = name;
+                }
             }
+
+            //switch (nomJeu)
+            //{
+            //    case "Blocks":
+            //        scene = SceneName.Block;
+            //        break;
+            //    case "Quiz":
+            //        scene = SceneName.Quiz;
+            //        break;
+            //    case "Basket":
+            //        scene = SceneName.Basket;
+            //        break;
+            //    default:
+            //        break;
+            //}
 
             GameManager.Instance.GameSceneManager.LoadScene(scene);
 

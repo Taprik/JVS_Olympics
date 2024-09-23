@@ -14,18 +14,20 @@ public enum GameScoreBoard
     BasketballBoard,
     TirScoreBoard,
     TetraxScoreBoard,
+    TargetScoreBoard,
+    ZombieScoreBoard,
+    MosquitosScoreBoard,
+    AtletismeScoreBoard,
+    CleanCollectScoreBoard,
 }
 
 public class ScoreBoardManager : MonoBehaviour
 {
-    [SerializeField]
-    GameScoreBoard[] _allScoreBoard;
-
     string GetPath(GameScoreBoard game) => Application.persistentDataPath + "/" + game.ToString() + ".json";
 
     public async void ResetAllScoreBoard()
     {
-        foreach (GameScoreBoard scoreBoard in _allScoreBoard)
+        foreach (GameScoreBoard scoreBoard in Enum.GetValues(typeof(GameScoreBoard)))
         {
             await CreateScoreBoard(scoreBoard);
         }

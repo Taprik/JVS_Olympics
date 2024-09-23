@@ -43,7 +43,7 @@ MonoBehaviour:
     m_SerializedLabels:
     - LoadAtStart
   - m_GUID: b0326ee6384a25f42b7b94513fa8816b
-    m_Address: Assets/Games/Tetrax/Tetrax.unity
+    m_Address: Tetrax
     m_ReadOnly: 0
     m_SerializedLabels:
     - LoadAtStart

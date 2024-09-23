@@ -121,4 +121,11 @@ public enum SceneName
     Block = 1,
     Quiz = 2,
     Basket = 3,
+    Tir = 4,
+    Tetrax = 5,
+    Target = 6,
+    Zombie = 7,
+    Mosquitos = 8,
+    Atletisme = 9,
+    Clean_Collect = 10,
 }

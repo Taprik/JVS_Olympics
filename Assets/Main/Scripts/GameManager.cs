@@ -134,6 +134,9 @@ public class GameManager : MonoBehaviour
 
             if (Input.GetKeyDown(_openMenu))
                 CurrentGameSceneObject.OpenMenu();
+
+            if (Input.GetKeyDown(_resetScoreBoard))
+                ScoreBoardManager.ResetAllScoreBoard();
         }
 
     }

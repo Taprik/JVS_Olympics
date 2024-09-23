@@ -1,14 +1,10 @@
 using DG.Tweening;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.SceneManagement;
 using System.Linq;
 
 [CreateAssetMenu(fileName = "AddressablesManager", menuName = "Manager/AddressablesManager")]

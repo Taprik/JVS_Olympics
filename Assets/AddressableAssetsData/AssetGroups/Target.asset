@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Target
+  m_EditorClassIdentifier: 
+  m_GroupName: Target
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 039c59136ab0335449a3a678d02e47a1
+  m_SerializeEntries:
+  - m_GUID: 9c054264c23a7494eb06c2c157d9d533
+    m_Address: Assets/Games/Target/Sprites
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 12609dc84ec3b5544ae2df46c43d29c8
+    m_Address: Target
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 023023c01781d1b4093446c137e3b907, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 548f40d4e80a57546a9dfaadea035d02, type: 2}
+    - {fileID: 11400000, guid: 77c7a30e39b452d4898a9ae67b322297, type: 2}
