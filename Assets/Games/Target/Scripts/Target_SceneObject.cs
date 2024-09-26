@@ -9,22 +9,22 @@ namespace Target
     {
         public override void OnNameReceive(string name)
         {
-            throw new System.NotImplementedException();
+
         }
 
         public override void PageDown()
         {
-            throw new System.NotImplementedException();
+
         }
 
         public override void PageUp()
         {
-            throw new System.NotImplementedException();
+
         }
 
-        public override Task Replay()
+        public async override Task Replay()
         {
-            throw new System.NotImplementedException();
+
         }
     }
 }

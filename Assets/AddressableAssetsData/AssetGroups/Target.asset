@@ -27,6 +27,21 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - LoadAtStart
+  - m_GUID: 4dfd405161715b94da34793bd9f6c85f
+    m_Address: Assets/Games/Target/Prefabs
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: 17f31de2cf3c1fe4fba7d745e83f0fa3
+    m_Address: Assets/Games/Target/Scripts
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
+  - m_GUID: cf8528abef0cd4b4ebce95e304814f13
+    m_Address: Assets/Games/Target/Sounds
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 023023c01781d1b4093446c137e3b907, type: 2}
   m_SchemaSet:
