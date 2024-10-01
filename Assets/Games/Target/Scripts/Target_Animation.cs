@@ -1,54 +1,36 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Target_Animation : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer[] sprites;
+    [SerializeField] private SpriteRenderer[] _main;
+    [SerializeField] private Collider[] _mainCollider;
+    [SerializeField] private SpriteRenderer[] _shadow;
 
-    public int stepAnim;
-    [HideInInspector] public GameObject shadow;
-
-    // Use this for initialization
-    void Start()
+    public IEnumerator Start()
     {
-        for (int i = 0; i < sprites.Length; i++)
+        for (int i = 0; i < _main.Length; i++)
         {
-            sprites[i].sortingOrder = sprites[0].sortingOrder;
+            _mainCollider[i].enabled = false;
+            _main[i].material.DOFloat(360f, Shader.PropertyToID("_Arc1"), 0f);
+            _shadow[i].material.DOFloat(360f, Shader.PropertyToID("_Arc1"), 0f);
         }
-        stepAnim = 1;
-    }
 
-    void goStep2()
-    {
-        stepAnim = 2;
-    }
-
-    void goStep3()
-    {
-        stepAnim = 3;
-    }
-
-    void goStep4()
-    {
-        stepAnim = 4;
-    }
-
-    int getStep()
-    {
-        return stepAnim;
-    }
-
-    public void SetActiveF()
-    {
-        gameObject.SetActive(false);
-    }
-
-    public void SetSorting(int number)
-    {
-        for (int i = 0; i < sprites.Length; i++)
+        //Debug.Log("Start");
+        for (int i = 0; i < _main.Length; i++)
         {
-            sprites[i].sortingOrder = number;
+            //Debug.Log(i);
+            _mainCollider[i].enabled = true;
+            _main[i].material.DOFloat(0f, Shader.PropertyToID("_Arc1"), 1f);
+            _shadow[i].material.DOFloat(0f, Shader.PropertyToID("_Arc1"), 1f);
+            yield return new WaitForSeconds(1.5f);
         }
+    }
+
+    public void OnKill()
+    {
+        Destroy(gameObject);
     }
 }

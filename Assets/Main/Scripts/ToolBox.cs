@@ -115,12 +115,12 @@ namespace Tool
         {
             var realHit = Camera.main.WorldToScreenPoint(hit);
             Ray ray = Camera.main.ScreenPointToRay(realHit);
-            //Debug.Log("Touch : " + Physics.Raycast(ray, out raycastHit, float.PositiveInfinity) + " | Hit : " + realHit + " | Ray : " + ray);
-            //Debug.DrawRay(ray.origin, ray.direction, Color.red, 20);
+            //Debug.DrawRay(ray.origin, ray.direction * 200, Color.red, 20);
 
             if (!all)
             {
                 RaycastHit raycastHit;
+                //Debug.Log("Touch : " + Physics.Raycast(ray, out raycastHit, float.PositiveInfinity) + " | Hit : " + realHit + " | Ray : " + ray);
 
                 if (Physics.Raycast(ray, out raycastHit, float.PositiveInfinity))
                 {
