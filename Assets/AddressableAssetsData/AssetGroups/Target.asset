@@ -42,6 +42,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - LoadAtStart
+  - m_GUID: 30e1fc71d31dcea4599e5bc2c43a4dc3
+    m_Address: Assets/Games/Target/Materials
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - LoadAtStart
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 023023c01781d1b4093446c137e3b907, type: 2}
   m_SchemaSet:
