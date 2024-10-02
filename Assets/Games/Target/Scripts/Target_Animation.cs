@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Target;
 using UnityEngine;
 
 public class Target_Animation : MonoBehaviour
@@ -31,6 +32,17 @@ public class Target_Animation : MonoBehaviour
 
     public void OnKill()
     {
+        Target_GameManager.Instance.Targets.Remove(this);
+        Target_GameManager.Instance.AddPoint();
         Destroy(gameObject);
+    }
+
+    public void AddOrderInLayer(int nb)
+    {
+        for (int i = 0; i < _main.Length; i++)
+        {
+            _main[i].sortingOrder += nb;
+            _shadow[i].sortingOrder += nb;
+        }
     }
 }

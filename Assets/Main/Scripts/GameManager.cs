@@ -124,13 +124,13 @@ public class GameManager : MonoBehaviour
         if (!IsTyping)
         {
             if (Input.GetKeyDown(_loadAllAsset))
-                Message(ref CurrentMessage, "Voulez-vous charger tous les assets ?", () => AddressablesManager.Init(), _loadAllAsset);
+                /*Message(ref CurrentMessage, "Voulez-vous charger tous les assets ?", () => */AddressablesManager.Init();/*, _loadAllAsset);*/
 
             if (Input.GetKeyDown(_quitApp))
-                Message(ref CurrentMessage, "Voulez-vous vraiment quitter ?", () => OSCManager.messageOutQuit(), _quitApp);
+                /*Message(ref CurrentMessage, "Voulez-vous vraiment quitter ?", () => */OSCManager.messageOutQuit();/*, _quitApp);*/
 
             if (Input.GetKeyDown(_backMainMenu))
-                Message(ref CurrentMessage, "Voulez-vous retourner à l'acceuil ?", () => GameSceneManager.LoadScene(SceneName.MainScene), _backMainMenu);
+                /*Message(ref CurrentMessage, "Voulez-vous retourner à l'acceuil ?", () => { */OSCManager.onOSCAccueilTous(0);/* }, _backMainMenu);*/
 
             if (Input.GetKeyDown(_openMenu))
                 CurrentGameSceneObject.OpenMenu();

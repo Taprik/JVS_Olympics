@@ -46,7 +46,8 @@ public class OSCTester : MonoBehaviour
             if (Input.GetKeyDown(_acceuilMessage))
             {
                 OscMessage msg = new OscMessage("/remote/Accueil");
-                GameManager.Instance.OSCManager.onOSCAccueil(msg);
+                GameManager.Instance.GameSceneManager.LoadScene(GameManager.Instance.GameSceneManager.CurrentScene);
+                GameManager.Instance.OSCManager.onOSCAccueilAppli();
             }
 
             if (Input.GetKeyDown(_launchMessage))
