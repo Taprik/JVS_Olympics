@@ -9,6 +9,7 @@ public class Target_Animation : MonoBehaviour
     [SerializeField] private SpriteRenderer[] _main;
     [SerializeField] private Collider[] _mainCollider;
     [SerializeField] private SpriteRenderer[] _shadow;
+    int state = 0;
 
     public IEnumerator Start()
     {
@@ -23,6 +24,7 @@ public class Target_Animation : MonoBehaviour
         for (int i = 0; i < _main.Length; i++)
         {
             //Debug.Log(i);
+            state++;
             _mainCollider[i].enabled = true;
             _main[i].material.DOFloat(0f, Shader.PropertyToID("_Arc1"), 1f);
             _shadow[i].material.DOFloat(0f, Shader.PropertyToID("_Arc1"), 1f);
@@ -33,7 +35,7 @@ public class Target_Animation : MonoBehaviour
     public void OnKill()
     {
         Target_GameManager.Instance.Targets.Remove(this);
-        Target_GameManager.Instance.AddPoint();
+        Target_GameManager.Instance.AddPoint(5 - state);
         Destroy(gameObject);
     }
 

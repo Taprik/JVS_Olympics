@@ -32,6 +32,7 @@ namespace Target
         [SerializeField] Transform TargetHolder;
         [SerializeField] int _maxTarget;
         [SerializeField] TextMeshProUGUI _scoreText;
+        [SerializeField] TextMeshProUGUI _endText;
         [SerializeField] int _timer;
 
         public void Start()
@@ -108,15 +109,17 @@ namespace Target
         private IEnumerator End()
         {
             Debug.Log("End");
+            _endText.gameObject.SetActive(true);
 
             for (int i = 0; i < 10; i++)
             {
-
+                _endText.text = (10 - i).ToString();
                 yield return new WaitForSeconds(1f);
-
             }
 
+            _endText.gameObject.SetActive(false);
             IsGameOver = true;
+            GameManager.CurrentGameSceneObject.PlayScore();
         }
 
         private void SpawnTarget(int nb)
@@ -129,9 +132,9 @@ namespace Target
 
         }
 
-        public void AddPoint()
+        public void AddPoint(int point)
         {
-            Score++;
+            Score += point;
             _scoreText.text = Score.ToString();
         }
     }
