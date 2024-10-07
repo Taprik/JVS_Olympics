@@ -2601,6 +2601,8 @@ MonoBehaviour:
   _scoreText: {fileID: 808961704}
   _endText: {fileID: 1987686048}
   _timer: 120
+  _scoreboard: {fileID: 1196802673647223784}
+  _font: {fileID: 0}
 --- !u!1 &1161095617
 GameObject:
   m_ObjectHideFlags: 0

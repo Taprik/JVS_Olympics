@@ -35,6 +35,12 @@ namespace Target
         [SerializeField] TextMeshProUGUI _endText;
         [SerializeField] int _timer;
 
+        public ScoreBoardDisplayer ScoreBaord => _scoreboard;
+        [SerializeField] ScoreBoardDisplayer _scoreboard;
+        [SerializeField] TMP_FontAsset _font;
+        public TMP_FontAsset Font() => _font;
+
+
         public void Start()
         {
             GameManager.OnGameStart += GameStart;
@@ -120,6 +126,7 @@ namespace Target
             _endText.gameObject.SetActive(false);
             IsGameOver = true;
             GameManager.CurrentGameSceneObject.PlayScore();
+            GameManager.Instance.OSCManager.NeedName();
         }
 
         private void SpawnTarget(int nb)
@@ -136,6 +143,23 @@ namespace Target
         {
             Score += point;
             _scoreText.text = Score.ToString();
+        }
+
+        public async void OnReceiveName(string name)
+        {
+            PlayerData data = new PlayerData()
+            {
+                Name = name,
+                Score = Score
+            };
+
+            PlayerData defaultPlayer = new PlayerData()
+            {
+                Name = "Inconnue",
+                Score = 0
+            };
+
+            _scoreboard.InitScoreBoard(await GameManager.Instance.ScoreBoardManager.UpdateScoreBoardDescendingOrder(data, GameScoreBoard.TargetScoreBoard), Font, defaultPlayer);
         }
     }
 }
