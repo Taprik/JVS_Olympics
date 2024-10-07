@@ -434,7 +434,7 @@ namespace Blocks
 
         public override void OpenMenu()
         {
-
+            base.OpenMenu();
         }
 
         #endregion

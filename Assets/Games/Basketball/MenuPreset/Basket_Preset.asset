@@ -10,10 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f3045bfa15373542ac5250a6bb392b9, type: 3}
-  m_Name: Preset
+  m_Name: Basket_Preset
   m_EditorClassIdentifier: 
   AllValues:
-  - {fileID: 11400000, guid: 01b0acb1038d70945af96236fdde34d4, type: 2}
-  - {fileID: 11400000, guid: 076943bc50871c349a6b031cd5654f44, type: 2}
-  - {fileID: 11400000, guid: d00bef8a1869c5641a1093f7ee894ed9, type: 2}
-  - {fileID: 11400000, guid: 0771c5a70eb5fc043b655f0da958010a, type: 2}
+  - {fileID: 11400000, guid: 0947d413331195f428691ac8ee2f74b4, type: 2}
+  - {fileID: 11400000, guid: 08028d76353cbea4ab12c4f49a100445, type: 2}

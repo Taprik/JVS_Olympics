@@ -6,4 +6,20 @@ using UnityEngine;
 public class Preset : ScriptableObject
 {
     [SerializeField] List<ValuePreset> AllValues;
+
+    public void SavePreset(ValuePreset.PresetEnum type)
+    {
+        foreach (var v in AllValues)
+        {
+            v.SetValue(type);
+        }
+    }
+
+    public void ActivePreset(ValuePreset.PresetEnum type)
+    {
+        foreach (var v in AllValues)
+        {
+            v.SaveValue(type);
+        }
+    }
 }

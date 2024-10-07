@@ -795,7 +795,7 @@ namespace Quiz
 
         public override void OpenMenu()
         {
-
+            base.OpenMenu();
         }
 
         [System.Serializable]

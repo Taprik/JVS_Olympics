@@ -53,7 +53,7 @@ namespace Basket
 
         public override void OpenMenu()
         {
-            
+            base.OpenMenu();
         }
     }
 }
