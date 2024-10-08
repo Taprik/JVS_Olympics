@@ -187,6 +187,7 @@ namespace Basket
                     PlayerPrefs.SetFloat(Basket_GeneralVariable.HighScoreKey, Mathf.Max(Teams[0].Score, Teams[1].Score));
                     //SceneManager.LoadScene(Basket_GeneralVariable.i.scoreScene);
                     _winnerText.transform.parent.gameObject.SetActive(false);
+                    GameManager.Instance.OSCManager.NeedName();
                     (GameManager.CurrentGameSceneObject as BasketSceneObject).PlayScore();
                 }
 
