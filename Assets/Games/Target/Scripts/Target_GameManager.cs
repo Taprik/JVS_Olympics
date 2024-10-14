@@ -116,14 +116,20 @@ namespace Target
         {
             Debug.Log("End");
             _endText.gameObject.SetActive(true);
-
             for (int i = 0; i < 10; i++)
             {
                 _endText.text = (10 - i).ToString();
                 yield return new WaitForSeconds(1f);
             }
-
             _endText.gameObject.SetActive(false);
+
+            Target_SoundManager.Instance.PlayEndSound();
+            yield return null;
+            while (Target_SoundManager.Instance.Source.isPlaying)
+            {
+                yield return null;
+            }
+
             IsGameOver = true;
             GameManager.CurrentGameSceneObject.PlayScore();
             GameManager.Instance.OSCManager.NeedName();

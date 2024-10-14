@@ -1,18 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
+using Tool;
 using UnityEngine;
 
-public class Target_SoundManager : MonoBehaviour
+namespace Target
 {
-    // Start is called before the first frame update
-    void Start()
+    public class Target_SoundManager : MonoBehaviour
     {
-        
-    }
+        public static Target_SoundManager Instance;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public void Awake()
+        {
+            if (Instance != null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+        }
+
+        public AudioSource Source => source;
+        [SerializeField] AudioSource source;
+        [SerializeField] AudioClip[] TargetBreakSound;
+        [SerializeField] AudioClip[] EndSound;
+
+        public void PlayTargetBreakSound()
+        {
+            Source.clip = TargetBreakSound.RandomElement();
+            Source.Play();
+        }
+
+        public void PlayEndSound()
+        {
+            Source.clip = EndSound.RandomElement();
+            Source.Play();
+        }
     }
 }
