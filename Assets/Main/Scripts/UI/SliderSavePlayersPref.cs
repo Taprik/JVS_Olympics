@@ -15,6 +15,8 @@ public class SliderSavePlayersPref : MonoBehaviour
         _slider = GetComponent<Slider>();
         if (PlayerPrefs.HasKey(_playerPrefKey))
             _slider.value = PlayerPrefs.GetFloat(_playerPrefKey);
+
+        GameManager.OnPlayerPrefs += () => { if (PlayerPrefs.HasKey(_playerPrefKey)) _slider.value = PlayerPrefs.GetFloat(_playerPrefKey); };
         _slider.onValueChanged.AddListener((value) => PlayerPrefs.SetFloat(_playerPrefKey, value));
     }
 }

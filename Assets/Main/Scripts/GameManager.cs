@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     public static GameSO CurrentGame { get; set; }
     public static GameSceneObject CurrentGameSceneObject { get; set; }
     public static Action OnGameStart;
+    public static Action OnPlayerPrefs;
     public static bool IsTyping = false;
 
     #region Manager

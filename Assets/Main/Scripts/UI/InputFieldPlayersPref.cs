@@ -27,5 +27,12 @@ public class InputFieldPlayersPref : MonoBehaviour
         {
             _inputField.text = PlayerPrefs.GetString(_key);
         }
+
+        GameManager.OnPlayerPrefs += () => {
+            if (PlayerPrefs.HasKey(_key))
+            {
+                _inputField.text = PlayerPrefs.GetString(_key);
+            }
+        };
     }
 }

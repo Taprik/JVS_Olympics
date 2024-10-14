@@ -17,6 +17,7 @@ public class TogglePlayersPref : MonoBehaviour
         if (PlayerPrefs.HasKey(_key))
             _toogle.isOn = PlayerPrefs.GetInt(_key) == 1;
 
+        GameManager.OnPlayerPrefs += () => { if (PlayerPrefs.HasKey(_key)) _toogle.isOn = PlayerPrefs.GetInt(_key) == 1; };
         _toogle.onValueChanged.AddListener((value) => PlayerPrefs.SetInt(_key, value ? 1 : 0));
     }
 }

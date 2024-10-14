@@ -34,6 +34,7 @@ namespace Target
         [SerializeField] TextMeshProUGUI _scoreText;
         [SerializeField] TextMeshProUGUI _endText;
         [SerializeField] int _timer;
+        private float delay = 4f;
 
         public ScoreBoardDisplayer ScoreBaord => _scoreboard;
         [SerializeField] ScoreBoardDisplayer _scoreboard;
@@ -61,6 +62,15 @@ namespace Target
             Score = 0;
             IsGameOver = false;
 
+            if (PlayerPrefs.HasKey("Target_Timer"))
+                _timer = PlayerPrefs.GetInt("Target_Timer") * 30 + 60;
+
+            if (PlayerPrefs.HasKey("Target_MaxSpawn"))
+                _maxTarget = Mathf.RoundToInt(PlayerPrefs.GetFloat("Target_MaxSpawn"));
+
+            if (PlayerPrefs.HasKey("Target_SpawnRate"))
+                delay = Mathf.RoundToInt(PlayerPrefs.GetFloat("Target_SpawnRate"));
+
             StartCoroutine(GameLoop());
         }
 
@@ -77,7 +87,7 @@ namespace Target
                 {
                     nbTarget++;
                     SpawnTarget(nbTarget);
-                    yield return new WaitForSeconds(4f);
+                    yield return new WaitForSeconds(delay);
 
                     if ((float)(DateTime.UtcNow - time).TotalSeconds > _timer - 10f)
                     {

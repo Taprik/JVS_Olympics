@@ -21,5 +21,6 @@ public class Preset : ScriptableObject
         {
             v.SaveValue(type);
         }
+        GameManager.OnPlayerPrefs?.Invoke();
     }
 }

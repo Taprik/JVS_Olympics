@@ -16,6 +16,10 @@ public class DropDownPlayersPref : MonoBehaviour
         if (PlayerPrefs.HasKey(_key))
             _dropdown.value = PlayerPrefs.GetInt(_key);
 
+        GameManager.OnPlayerPrefs += () => {
+            if (PlayerPrefs.HasKey(_key))
+                _dropdown.value = PlayerPrefs.GetInt(_key);
+        };
         _dropdown.onValueChanged.AddListener((value) => PlayerPrefs.SetInt(_key, value));
     }
 }
