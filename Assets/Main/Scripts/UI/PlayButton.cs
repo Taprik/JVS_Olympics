@@ -16,6 +16,14 @@ public class PlayButton : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        if (gameObject.TryGetComponent(out Canvas canvas))
+        {
+            Destroy(canvas);
+        }
+    }
+
     private void Start()
     {
         b = GetComponent<ButtonEvent>();
