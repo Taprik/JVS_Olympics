@@ -3190,6 +3190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WaveHolder: {fileID: 4316657086850073315}
+  WaveEmptySprite: {fileID: 21300000, guid: be0667a9280d8ac4fb3910dfdb9f6cb3, type: 3}
   WaveFillSprite: {fileID: 21300000, guid: 3c9d1f9ec6124014dbfe6bd8d9f1cc3b, type: 3}
   BubbleHolder: {fileID: 729799500}
   BubbleSprite:

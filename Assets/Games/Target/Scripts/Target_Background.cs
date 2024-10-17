@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using Tool;
 using UnityEngine;
 using UnityEngine.UI;
-using static Tir.Tir_GameManager;
 
 namespace Target
 {
     public class Target_Background : MonoBehaviour
     {
         [SerializeField] Transform WaveHolder;
+        [SerializeField] Sprite WaveEmptySprite;
         [SerializeField] Sprite WaveFillSprite;
         [SerializeField] Transform BubbleHolder;
         [SerializeField] Sprite[] BubbleSprite;
@@ -24,6 +24,12 @@ namespace Target
 
         private void GameStart()
         {
+            for (int i = 0; i < WaveHolder.childCount; i++)
+            {
+                Image wave = WaveHolder.GetChild(WaveHolder.childCount - i - 1).GetComponent<Image>();
+                wave.sprite = WaveEmptySprite;
+            }
+
             StartCoroutine(StartBackgroundAnim());
             StartCoroutine(StartBubbleAnim());
         }

@@ -61,6 +61,7 @@ namespace Target
             Targets.Clear();
             Score = 0;
             IsGameOver = false;
+            _scoreText.text = "0";
 
             if (PlayerPrefs.HasKey("Target_Timer"))
                 _timer = PlayerPrefs.GetInt("Target_Timer") * 30 + 60;
