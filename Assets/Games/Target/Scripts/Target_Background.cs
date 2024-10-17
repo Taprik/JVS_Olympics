@@ -62,7 +62,7 @@ namespace Target
         {
             while (!Target_GameManager.Instance.IsGameOver)
             {
-                yield return new WaitForSeconds(UnityEngine.Random.Range(0.2f, 0.5f));
+                yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 1.5f));
                 var b = Instantiate(BubblePrefab, BubbleHolder);
                 b.transform.localPosition = new Vector3(UnityEngine.Random.Range(-900, 900), -500);
                 b.sprite = BubbleSprite.RandomElement();
