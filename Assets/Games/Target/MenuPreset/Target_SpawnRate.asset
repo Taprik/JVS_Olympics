@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Target_SpawnRate
   m_EditorClassIdentifier: 
   _key: Target_SpawnRate
-  _valueEasy: 0
-  _valueMedium: 0
-  _valueHard: 0
+  _valueEasy: 5
+  _valueMedium: 4
+  _valueHard: 3

@@ -28,7 +28,7 @@ namespace Target
         public bool IsGameOver { get; private set; } = false;
 
         public int Score;
-        public List<Target_Animation> Targets;
+        public List<Target_Animation> Targets = new();
         [SerializeField] Transform TargetHolder;
         [SerializeField] int _maxTarget;
         [SerializeField] TextMeshProUGUI _scoreText;

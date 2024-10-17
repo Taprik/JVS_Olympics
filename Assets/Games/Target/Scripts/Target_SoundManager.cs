@@ -27,8 +27,7 @@ namespace Target
 
         public void PlayTargetBreakSound()
         {
-            Source.clip = TargetBreakSound.RandomElement();
-            Source.Play();
+            AudioSource.PlayClipAtPoint(TargetBreakSound.RandomElement(), Camera.main.transform.position);
         }
 
         public void PlayEndSound()

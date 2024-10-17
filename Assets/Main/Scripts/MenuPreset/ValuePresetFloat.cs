@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Game/Menu/ValueFloat")]
@@ -67,5 +68,8 @@ public class ValuePresetFloat : ValuePreset<float>
             default:
                 break;
         }
+#if UNITY_EDITOR
+        EditorUtility.SetDirty(this);
+#endif
     }
 }

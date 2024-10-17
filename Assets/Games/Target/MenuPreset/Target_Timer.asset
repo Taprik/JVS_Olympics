@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Target_Timer
   m_EditorClassIdentifier: 
   _key: Target_Timer
-  _valueEasy: 0
-  _valueMedium: 0
+  _valueEasy: 2
+  _valueMedium: 1
   _valueHard: 0

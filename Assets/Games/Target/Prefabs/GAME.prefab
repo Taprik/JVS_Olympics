@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 729799500}
   m_Layer: 0
-  m_Name: Bubble
+  m_Name: BubbleHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -792,7 +792,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e23cd35b78db16e4bb1f13ceedc922c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  source: {fileID: 0}
+  source: {fileID: 1138822567}
   TargetBreakSound:
   - {fileID: 8300000, guid: 1cd75febbd9fdeb4ca193245cbdb52ba, type: 3}
   - {fileID: 8300000, guid: 2bb76e0d81f8c6d41a8c65c5a263f195, type: 3}
@@ -3195,6 +3195,7 @@ MonoBehaviour:
   BubbleSprite:
   - {fileID: 21300000, guid: 82b5c355dcb3ce648a44ad68759bd8d3, type: 3}
   - {fileID: 21300000, guid: 40bf5cce354226843b04ae349d45c716, type: 3}
+  BubblePrefab: {fileID: 5297770611993634585, guid: d28692d1ebd586e448fe07cdc6817c31, type: 3}
 --- !u!1 &4316657086510471078
 GameObject:
   m_ObjectHideFlags: 0

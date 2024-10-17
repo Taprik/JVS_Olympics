@@ -1,6 +1,7 @@
 using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Game/Menu/ValueInt")]
@@ -68,5 +69,8 @@ public class ValuePresetInt : ValuePreset<int>
             default:
                 break;
         }
+#if UNITY_EDITOR
+        EditorUtility.SetDirty(this);
+#endif
     }
 }

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Target_MaxSpawn
   m_EditorClassIdentifier: 
   _key: Target_MaxSpawn
-  _valueEasy: 0
-  _valueMedium: 0
-  _valueHard: 0
+  _valueEasy: 5
+  _valueMedium: 6
+  _valueHard: 7
